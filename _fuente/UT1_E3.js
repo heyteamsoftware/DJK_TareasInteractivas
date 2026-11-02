@@ -339,11 +339,12 @@ CICLOS.mc_sp = {
   },
   siglas: [['LSE','Lengua de signos española'],['SAAC','Sistemas aumentativos y alternativos de comunicación'],['FM','Frecuencia modulada (sistema de transmisión de sonido a audífonos e implantes)'],['IA','Inteligencia artificial'],['RGPD','Reglamento General de Protección de Datos']]
 };
-const ORDEN = ['af','as','ei','hb','is','ei_sp','is_sp','mc_sp'];
+// Los semipresenciales hacen el remix UT1_SP; siguen en CICLOS para poder abrir borradores antiguos
+const ORDEN = ['af','as','ei','hb','is'];
 
 // Fase 2: como máximo 5 preguntas por ciclo, cogiendo una de cada grupo por turnos
 const MAX_FAQ = 5;
-for (const k of ORDEN){
+for (const k of Object.keys(CICLOS)){
   const gs = CICLOS[k].f2.grupos, sel = gs.map(() => []);
   let n = 0;
   for (let r = 0; n < MAX_FAQ; r++){

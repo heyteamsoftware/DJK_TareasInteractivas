@@ -3,7 +3,7 @@
 | Dato | Valor |
 |---|---|
 | Asignatura | Digitalización aplicada a los sectores productivos (DJK) |
-| Organización | Una carpeta por unidad (`UT1` … `UT5`) |
+| Organización | Una carpeta por unidad (`UT1` … `UT5`) + carpeta `SEMI` con el ejercicio único de cada unidad para semipresencial |
 | Nombre de archivo | `UTn_Em_Titulo_Corto.html` (un HTML por ejercicio) + `UTn_Em_EJEMPLO_relleno.html` |
 | Código fuente | `_fuente/`: piezas comunes + un archivo de datos por ejercicio. Se genera con `node _fuente/construir.js` |
 | Skill | `_skill/djk-creador-tareas/SKILL.md` (actualizada con las normas 1–20). Para que sea permanente hay que subir `_skill/djk-creador-tareas.zip` en claude.ai → Skills. |
@@ -21,6 +21,7 @@
 | UT1_E1 | Revoluciones industriales canarias y quinta revolución industrial | RA1 | a, b | AF, AS, EI, HB, IS + EI SP, IS SP, MC SP | A | [UT1_E1](UT1/UT1_E1_Revoluciones_Industriales_Canarias.html) | [Ejemplo](UT1/UT1_E1_EJEMPLO_relleno.html) | Sí | Sí | Hecho |
 | UT1_E2 | Combinación de sistemas ciberfísicos | RA1 | e, f, g | AF, AS, EI, HB, IS + EI SP, IS SP, MC SP | A (bocadillos + diapositivas) | [UT1_E2](UT1/UT1_E2_Combinacion_Sistemas_Ciberfisicos.html) | [Ejemplo](UT1/UT1_E2_EJEMPLO_relleno.html) | Sí (4·2·2·1·1) | Sí | Hecho |
 | UT1_E3 | Sistemas ciberfísicos y digitalización del sector | RA1 | c, d, e, f | AF, AS, EI, HB, IS + EI SP, IS SP, MC SP | A | [UT1_E3](UT1/UT1_E3_Digitalizacion_Sistemas_CiberFisicos.html) | [Ejemplo](UT1/UT1_E3_EJEMPLO_relleno.html) | Sí | Sí | Hecho |
+| UT1_SP | Remix semipresencial de la UT1 (E1 + E2 + E3, versión corta) | RA1 | a, b, c, d, e, f, g | Solo EI SP, IS SP y MC SP | A (remix) | [UT1_SP](SEMI/UT1_SP_Remix_UT1.html) | [Ejemplo](SEMI/UT1_SP_EJEMPLO_relleno.html) | Sí (1·1·1·1,5·1,5·1·1,5·1,5) | Sí | Hecho |
 | UT2_E1 | Parejas de tecnologías habilitadoras (juego) | RA2 | a | AF, AS, EI, HB, IS + EI SP, IS SP, MC SP | C (juego en el motor común) | [UT2_E1](UT2/UT2_E1_Parejas_Tecnologias_Habilitadoras.html) | [Ejemplo](UT2/UT2_E1_EJEMPLO_relleno.html) | Sí (5 rondas × 2) | Sí | Hecho |
 | UT2_E2 | Tecnologías habilitadoras en tu centro (plano) | RA2 | a, c, d, e | Los 8 · plano y banco de 20 adaptados a cada especialidad | B | [UT2_E2](UT2/UT2_E2_Tecnologias_Habilitadoras.html) | `?ejemplo` | Sí (otro reparto) | Sí (original) | Hecho (antes era UT2_E1) |
 
@@ -74,6 +75,26 @@ Cada especialidad ve 20 de las 50 tecnologías (las que más se relacionan con s
 | Integración Social (y SP) | Videoconferencia · Aula virtual · Documentos compartidos en línea · Calendario compartido · Mensajería instantánea de grupo · Firma electrónica · Certificado digital · Escáner de documentos · Impresora multifunción · Copias de seguridad · Antivirus · Gestor de contraseñas · Videoportero · Cámaras de videovigilancia · Cerradura electrónica · Lector de huella dactilar · Tarjeta de acceso · Detector de humo · Desfibrilador (DEA) · Termostato programable |
 | Mediación Comunicativa SP | Tablets · Ordenadores portátiles · Videoconferencia · Aula virtual · Documentos compartidos en línea · Mensajería instantánea de grupo · Calendario compartido · Pizarra digital interactiva · Pantalla de avisos digital · Reloj inteligente · Códigos QR · Wi-Fi · Bluetooth · Fibra óptica · Megafonía · Firma electrónica · Certificado digital · Escáner de documentos · Antivirus · Verificación en dos pasos |
 
+
+## Semipresencial: un ejercicio por unidad (carpeta SEMI)
+
+En semipresencial solo hay un ejercicio por unidad: un «remix» de los ejercicios de esa unidad. Los ciclos semipresenciales ya no aparecen en la lista de ciclos de los ejercicios normales de esa unidad (siguen pudiendo abrir sus borradores antiguos y recuperarlos con su código).
+
+| Pieza | Cómo es |
+|---|---|
+| Código y archivo | `UTn_SP` en `SEMI/UTn_SP_Remix_UTn.html` + `SEMI/UTn_SP_EJEMPLO_relleno.html` |
+| Ciclos | Solo EI SP, IS SP y MC SP (individual) |
+| Contenido | Los ejercicios de la unidad enteros, con la mitad de elementos. Se saca de los originales en cada construcción (`_fuente/remix_UTn_SP.js`): si cambias UTn_Em, el remix se actualiza solo |
+| Color | El de la unidad |
+| Administración | Bloque propio «Semipresencial» en la lista de ejercicios (amarillo) |
+| Servidor | Las API aceptan `UTn_Em` y `UTn_SP` |
+
+| UT1_SP | De dónde sale | Qué tiene (antes → ahora) | Puntos |
+|---|---|---|---|
+| Bloque 1 | UT1_E1 | Revoluciones en Canarias 4 → 2 (3ª y 4ª) · debate de la 5ª revolución 2 preguntas → 1 · mi profesión 3 → 2 | 1 · 1 · 1 |
+| Bloque 2 | UT1_E2 | Dispositivo (mismas imágenes) · tecnologías 4 → 2 (bocadillos de arriba) · funciones combinadas · actividades 4 → 2 (bocadillos de abajo) · ventajas e inconvenientes · diapositivas 6 → 3 | 1,5 · 1,5 · 1 |
+| Bloque 3 | UT1_E3 | Productos reales 5 → 3 · preguntas frecuentes 5 → 3 | 1,5 · 1,5 |
+| Checks | — | 2 pasos, 2 normas y 2 comprobaciones por bloque | — |
 
 ## Planos de UT2_E2 por especialidad
 
@@ -151,6 +172,7 @@ Todos los ejercicios muestran una tabla «Cómo se califica» con esta forma, de
 | 13 | Todos los ejercicios tienen versión para ordenador y para móvil/tablet, adaptada para que el alumno trabaje cómodo en cada dispositivo (ver «Versión por dispositivo»). |
 | 14 | El resultado de aprendizaje y sus criterios se muestran en la pantalla de inicio (junto al nombre, apellidos y ciclo), no dentro del ejercicio. En el PDF se mantienen. |
 | 21 | No hay bloque «Entrega» en la página: la entrega (formato, plazo, aula virtual) la comunica el profesor en clase. La página solo tiene Objetivo, Cómo se califica, la tarea, «Antes de entregar, comprueba» y las siglas. |
+| 22 | Semipresencial: un solo ejercicio por unidad (`UTn_SP`, carpeta `SEMI`), remix de los ejercicios de la unidad con la mitad de elementos. Los ciclos semipresenciales se quitan de la lista de ciclos de los ejercicios normales de esa unidad. |
 | 15 | Cada unidad tiene su color (UT1 lavanda · UT2 menta · UT3 melocotón · UT4 cielo · UT5 rosa) en la administración, el ejercicio y el PDF. |
 
 ## Versión por dispositivo

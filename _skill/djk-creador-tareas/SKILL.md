@@ -26,6 +26,13 @@ Proyecto: `C:\Users\ferna\OneDrive\Documentos\DJK_Ejercicios_interactivos`
 - **Juegos en el motor (ejemplo: UT2_E1, parejas de tecnologías):** el juego vive en `construirTarea`, guarda su estado como JSON en un `<input type="hidden" data-campo="…">` (llamando a `programarGuardado()` tras cada jugada), se repinta en `alActualizar()` cuando cambia ese valor (al cargar un borrador), y usa `progresoPropio()` + `COMUN.sinFuentes`. Debe funcionar con ratón (clic y arrastrar), con el dedo (tocar–tocar y mantener pulsado para arrastrar, sin bloquear el scroll) y con teclado.
 - UT2_E2 (plano con 50 tecnologías, adaptado a cada especialidad; antes era UT2_E1) NO está en el motor: se modifica con scripts sobre su HTML. Cualquier norma nueva hay que aplicarla también ahí.
 
+## Semipresencial (un ejercicio por unidad)
+
+- En semipresencial (EI SP, IS SP, MC SP) hay **un solo ejercicio por unidad**: `UTn_SP`, un «remix» de los ejercicios de la unidad con la mitad de elementos, en la carpeta `SEMI/` (`SEMI/UTn_SP_Remix_UTn.html`).
+- Se hace con el motor: `_fuente/UTn_SP.js` (con `const D = __DATOS__;`) + `_fuente/remix_UTn_SP.js`, que saca el contenido de los ejercicios originales en cada construcción. En `construir.js`: `dir: 'SEMI', img: 'UTn_Em' (si usa sus imágenes), remix: 'remix_UTn_SP.js'`.
+- `CICLOS`/`ORDEN` solo con los 3 semipresenciales. En los ejercicios normales de esa unidad se quitan de `ORDEN` (pero se dejan en `CICLOS` para abrir borradores antiguos).
+- En la administración va en el bloque «Semipresencial» (`semi: true` en `LISTA`). Las API aceptan `UTn_SP`.
+
 ## Normas de todos los ejercicios
 
 - **Inicio:** Nombre, Apellidos y Ciclo a elegir (8 opciones). El resultado de aprendizaje y sus criterios se muestran en esta pantalla, no dentro del ejercicio. Casilla «¿Empezaste en otro ordenador o móvil?» para recuperar con código («Si lo has perdido, pídeselo a tu profesor»).

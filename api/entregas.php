@@ -15,7 +15,7 @@ $ciclo = $limpia($in['ciclo'] ?? '');
 $nombre = $limpia($in['nombre'] ?? '');
 $apellidos = $limpia($in['apellidos'] ?? '');
 
-if (!preg_match('/^UT\d{1,2}_E\d{1,2}$/', $ejercicio) || !in_array($ciclo, CICLOS, true)
+if (!preg_match('/^UT\d{1,2}_(E\d{1,2}|SP)$/', $ejercicio) || !in_array($ciclo, CICLOS, true)
     || mb_strlen($nombre) < 1 || mb_strlen($nombre) > 60 || mb_strlen($apellidos) < 1 || mb_strlen($apellidos) > 80) {
     salir(400, ['ok' => false]);
 }

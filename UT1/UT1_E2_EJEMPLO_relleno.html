@@ -835,7 +835,8 @@ const CICLOS = {
 CICLOS.ei_sp = Object.assign(structuredClone(CICLOS.ei), { nombre: 'Educación Infantil Semipresencial', semipresencial: true });
 CICLOS.is_sp = Object.assign(structuredClone(CICLOS.is), { nombre: 'Integración Social Semipresencial', semipresencial: true });
 CICLOS.mc_sp = { nombre: 'Mediación Comunicativa Semipresencial', semipresencial: true, usuario: 'una persona sorda, sordociega o con dificultades de comunicación a la que acompaña el mediador comunicativo' };
-const ORDEN = ['af','as','ei','hb','is','ei_sp','is_sp','mc_sp'];
+// Los semipresenciales hacen el remix UT1_SP; siguen en CICLOS para poder abrir borradores antiguos
+const ORDEN = ['af','as','ei','hb','is'];
 
 const dispositivoElegido = () => COMUN.dispositivos.find(d => d.k === campo('dispositivo'));
 const textoDe = id => { const ed = edDeId(id); return ed ? ed.textContent.replace(/\s+/g, ' ').trim() : ''; };
@@ -1727,7 +1728,7 @@ function pintarRA(){
 pintarRA();
 pintarCiclos();
 if (EJEMPLO){
-  abrirEditor('ei', 'Nombre', 'Apellido1 Apellido2', null);
+  abrirEditor(CICLOS.ei ? 'ei' : ORDEN[0], 'Nombre', 'Apellido1 Apellido2', null);   // el remix semipresencial no tiene «ei»
   document.querySelectorAll('.ed').forEach(ed => { const h = ejemploRespuesta(ed.dataset.id); if (h) ed.innerHTML = h; });
   actualizarProgreso();
 } else { pintarBorradores(); cargarBloqueos(); if (enServidor()) $('#recuperar').classList.remove('hidden'); }

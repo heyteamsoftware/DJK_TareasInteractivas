@@ -2014,7 +2014,7 @@ function pintarRA(){
 pintarRA();
 pintarCiclos();
 if (EJEMPLO){
-  abrirEditor('ei', 'Nombre', 'Apellido1 Apellido2', null);
+  abrirEditor(CICLOS.ei ? 'ei' : ORDEN[0], 'Nombre', 'Apellido1 Apellido2', null);   // el remix semipresencial no tiene «ei»
   document.querySelectorAll('.ed').forEach(ed => { const h = ejemploRespuesta(ed.dataset.id); if (h) ed.innerHTML = h; });
   actualizarProgreso();
 } else { pintarBorradores(); cargarBloqueos(); if (enServidor()) $('#recuperar').classList.remove('hidden'); }

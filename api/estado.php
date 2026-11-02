@@ -5,7 +5,7 @@ declare(strict_types=1);
 require __DIR__ . '/comun.php';
 
 $ejercicio = (string) ($_GET['ejercicio'] ?? '');
-if (!preg_match('/^UT\d{1,2}_E\d{1,2}$/', $ejercicio)) salir(400, ['ok' => false]);
+if (!preg_match('/^UT\d{1,2}_(E\d{1,2}|SP)$/', $ejercicio)) salir(400, ['ok' => false]);
 try {
     $q = bd()->prepare('SELECT ciclo FROM bloqueos WHERE ejercicio = ?');
     $q->execute([$ejercicio]);

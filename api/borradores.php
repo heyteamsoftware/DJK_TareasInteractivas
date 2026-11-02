@@ -10,7 +10,7 @@ require __DIR__ . '/comun.php';
 const MAX_BYTES = 6 * 1024 * 1024;   // el servidor acepta 8 MB por envío
 
 $codigoValido = fn(string $c): bool => (bool) preg_match('/^[A-HJ-NP-Z2-9]{4}-[A-HJ-NP-Z2-9]{4}-[A-HJ-NP-Z2-9]{2}$/', $c);
-$ejercicioValido = fn(string $e): bool => (bool) preg_match('/^UT\d{1,2}_E\d{1,2}$/', $e);
+$ejercicioValido = fn(string $e): bool => (bool) preg_match('/^UT\d{1,2}_(E\d{1,2}|SP)$/', $e);
 
 try {
     if ($_SERVER['REQUEST_METHOD'] === 'GET') {

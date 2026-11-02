@@ -47,7 +47,7 @@ try {
         $id = (int) ($in['id'] ?? 0);
         $codigo = (string) ($in['codigo'] ?? '');
         $ejercicio = (string) ($in['ejercicio'] ?? '');
-        $hayCopia = preg_match('/^[A-HJ-NP-Z2-9]{4}-[A-HJ-NP-Z2-9]{4}-[A-HJ-NP-Z2-9]{2}$/', $codigo) && preg_match('/^UT\d{1,2}_E\d{1,2}$/', $ejercicio);
+        $hayCopia = preg_match('/^[A-HJ-NP-Z2-9]{4}-[A-HJ-NP-Z2-9]{4}-[A-HJ-NP-Z2-9]{2}$/', $codigo) && preg_match('/^UT\d{1,2}_(E\d{1,2}|SP)$/', $ejercicio);
         if ($id <= 0 && !$hayCopia) salir(400, ['ok' => false]);
         if ($id > 0) $db->prepare('DELETE FROM entregas WHERE id = ?')->execute([$id]);
         if ($hayCopia) bdb()->prepare('DELETE FROM borradores WHERE codigo = ? AND ejercicio = ?')->execute([$codigo, $ejercicio]);
@@ -56,7 +56,7 @@ try {
     // POST {"accion":"bloqueo","ejercicio":"UT1_E1","ciclo":"…","bloqueado":true|false}
     if ($accion === 'bloqueo' && $metodo === 'POST') {
         $ejercicio = (string) ($in['ejercicio'] ?? ''); $ciclo = (string) ($in['ciclo'] ?? '');
-        if (!preg_match('/^UT\d{1,2}_E\d{1,2}$/', $ejercicio) || !in_array($ciclo, CICLOS, true)) salir(400, ['ok' => false]);
+        if (!preg_match('/^UT\d{1,2}_(E\d{1,2}|SP)$/', $ejercicio) || !in_array($ciclo, CICLOS, true)) salir(400, ['ok' => false]);
         if (!empty($in['bloqueado'])) $db->prepare('INSERT OR IGNORE INTO bloqueos (ejercicio, ciclo, desde) VALUES (?, ?, ?)')->execute([$ejercicio, $ciclo, time()]);
         else $db->prepare('DELETE FROM bloqueos WHERE ejercicio = ? AND ciclo = ?')->execute([$ejercicio, $ciclo]);
         salir(200, ['ok' => true]);

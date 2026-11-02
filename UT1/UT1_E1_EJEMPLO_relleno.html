@@ -852,7 +852,8 @@ CICLOS.is_sp = Object.assign(structuredClone(CICLOS.is), { nombre: 'Integración
 CICLOS.mc_sp = { nombre: 'Mediación Comunicativa Semipresencial', semipresencial: true,
   centro: 'Céntrate en un servicio de mediación comunicativa de Canarias (servicio de intérpretes y mediadores de lengua de signos, asociación de personas sordas o sordociegas, o centro educativo con alumnado con dificultades de comunicación).',
   pistas: 'citas y avisos a las personas usuarias, interpretación y videointerpretación en lengua de signos, subtitulado, sistemas aumentativos y alternativos de comunicación, coordinación con familias y servicios.' };
-const ORDEN = ['af','as','ei','hb','is','ei_sp','is_sp','mc_sp'];
+// Los semipresenciales hacen el remix UT1_SP; siguen en CICLOS para poder abrir borradores antiguos
+const ORDEN = ['af','as','ei','hb','is'];
 
 function introHTML(C){
   return `<h2 style="margin-top:0;font-size:1.1rem">Objetivo</h2><p>${esc(COMUN.objetivo)}</p>`;
@@ -1681,7 +1682,7 @@ function pintarRA(){
 pintarRA();
 pintarCiclos();
 if (EJEMPLO){
-  abrirEditor('ei', 'Nombre', 'Apellido1 Apellido2', null);
+  abrirEditor(CICLOS.ei ? 'ei' : ORDEN[0], 'Nombre', 'Apellido1 Apellido2', null);   // el remix semipresencial no tiene «ei»
   document.querySelectorAll('.ed').forEach(ed => { const h = ejemploRespuesta(ed.dataset.id); if (h) ed.innerHTML = h; });
   actualizarProgreso();
 } else { pintarBorradores(); cargarBloqueos(); if (enServidor()) $('#recuperar').classList.remove('hidden'); }
