@@ -21,17 +21,20 @@ html,body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 system-u
 .hero p{margin:0;color:var(--muted)}
 .ut{background:var(--card);border:1px solid var(--line);border-radius:var(--r);margin:1rem 0;overflow:hidden}
 .ut>h2{margin:0;padding:.75rem 1.1rem;font-size:1.1rem}
-.ut:nth-of-type(1)>h2{background:var(--mint)} .ut:nth-of-type(2)>h2{background:var(--sky)} .ut:nth-of-type(3)>h2{background:var(--peach)} .ut:nth-of-type(4)>h2{background:var(--lav)} .ut:nth-of-type(5)>h2{background:var(--mint)}
+/* Color de cada unidad (el mismo que en sus ejercicios) */
+.ut{--u:#e9e2fb;--u2:#c9b8f0;--u3:#6a54b8;border-left:6px solid var(--u2)}
+.ut>h2{background:var(--u);color:var(--u3)}
+.u2{--u:#dff3ea;--u2:#9fd8bd;--u3:#2f7d5c} .u3{--u:#ffe9dc;--u2:#f6bf9e;--u3:#a3532a} .u4{--u:#e2eefc;--u2:#a9c8ef;--u3:#2f5f98} .u5{--u:#fde4ea;--u2:#f1b3c3;--u3:#a33c58}
 .ut ul{list-style:none;margin:0;padding:.4rem 1.1rem .8rem}
 .ut li{display:flex;flex-wrap:wrap;gap:.4rem .8rem;align-items:center;justify-content:space-between;padding:.6rem 0;border-top:1px dashed var(--line)}
 .ut li:first-child{border-top:0}
 .ut li b{display:block}
 .ut li small{color:var(--muted)}
 .acc{display:flex;gap:.4rem;flex-wrap:wrap}
-a.btn{display:inline-block;text-decoration:none;font-weight:600;border-radius:10px;padding:.45rem .85rem;background:var(--lav3);color:#fff}
-a.btn:hover{background:#5a45a4}
-a.btn.sec{background:#fff;color:var(--lav3);border:1px solid var(--lav3)}
-a.btn.sec:hover{background:var(--lav)}
+a.btn{display:inline-flex;align-items:center;min-height:44px;text-decoration:none;font-weight:600;border-radius:10px;padding:.45rem .85rem;background:var(--u3,var(--lav3));color:#fff}
+a.btn:hover{filter:brightness(.9)}
+a.btn.sec{background:#fff;color:var(--u3,var(--lav3));border:1px solid var(--u3,var(--lav3))}
+a.btn.sec:hover{background:var(--u,var(--lav));filter:none}
 a:focus-visible{outline:3px solid #c9b8f0;outline-offset:2px}
 .vacio{color:var(--muted);font-style:italic;padding:.6rem 0}
 .info{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:1rem 1.1rem;margin:1.5rem 0;font-size:.94rem}
@@ -49,7 +52,7 @@ footer{color:var(--muted);font-size:.85rem;text-align:center;margin:2rem 0}
     <p>Elige tu ejercicio, rellénalo en el navegador y descárgalo en PDF para entregarlo en el aula virtual.</p>
   </header>
 
-  <section class="ut" aria-labelledby="ut1">
+  <section class="ut u1" aria-labelledby="ut1">
     <h2 id="ut1">UT1 · Digitalización de los sectores productivos</h2>
     <ul>
       <li><div><b>E1 · Revoluciones industriales canarias y quinta revolución industrial</b><small>RA1 · CE a, b</small></div>
@@ -61,7 +64,7 @@ footer{color:var(--muted);font-size:.85rem;text-align:center;margin:2rem 0}
     </ul>
   </section>
 
-  <section class="ut" aria-labelledby="ut2">
+  <section class="ut u2" aria-labelledby="ut2">
     <h2 id="ut2">UT2 · Tecnologías habilitadoras</h2>
     <ul>
       <li><div><b>E1 · Tecnologías habilitadoras</b><small>RA2 · CE a, c, d, e</small></div>
@@ -69,9 +72,9 @@ footer{color:var(--muted);font-size:.85rem;text-align:center;margin:2rem 0}
     </ul>
   </section>
 
-  <section class="ut" aria-labelledby="ut3"><h2 id="ut3">UT3</h2><ul><li class="vacio">Próximamente</li></ul></section>
-  <section class="ut" aria-labelledby="ut4"><h2 id="ut4">UT4</h2><ul><li class="vacio">Próximamente</li></ul></section>
-  <section class="ut" aria-labelledby="ut5"><h2 id="ut5">UT5</h2><ul><li class="vacio">Próximamente</li></ul></section>
+  <section class="ut u3" aria-labelledby="ut3"><h2 id="ut3">UT3</h2><ul><li class="vacio">Próximamente</li></ul></section>
+  <section class="ut u4" aria-labelledby="ut4"><h2 id="ut4">UT4</h2><ul><li class="vacio">Próximamente</li></ul></section>
+  <section class="ut u5" aria-labelledby="ut5"><h2 id="ut5">UT5</h2><ul><li class="vacio">Próximamente</li></ul></section>
 
   <section class="info" aria-labelledby="priv">
     <h2 id="priv">Privacidad y uso</h2>

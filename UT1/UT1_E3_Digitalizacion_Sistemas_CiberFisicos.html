@@ -25,7 +25,12 @@ button{font:inherit;cursor:pointer;border:1px solid var(--line);background:#fff;
 button:hover{background:var(--lav)}
 button:focus-visible,input:focus-visible,.ed:focus-visible{outline:3px solid var(--lav2);outline-offset:2px}
 .btn-main{background:var(--lav3);border-color:var(--lav3);color:#fff;font-weight:600}
-.btn-main:hover{background:#5a45a4}
+.btn-main:hover{background:var(--lav3);filter:brightness(.9)}
+/* Color de cada unidad: cambia el acento (--lav*). UT1 lavanda (por defecto) */
+body.ut2{--lav:#dff3ea;--lav2:#9fd8bd;--lav3:#2f7d5c}
+body.ut3{--lav:#ffe9dc;--lav2:#f6bf9e;--lav3:#a3532a}
+body.ut4{--lav:#e2eefc;--lav2:#a9c8ef;--lav3:#2f5f98}
+body.ut5{--lav:#fde4ea;--lav2:#f1b3c3;--lav3:#a33c58}
 .btn-mint{background:var(--mint);border-color:var(--mint2);color:#1f5a41;font-weight:600}
 .btn-mint:hover{background:#cdeedf}
 .btn-peach{background:var(--peach);border-color:var(--peach2);color:#7a3b1b;font-weight:600}
@@ -217,7 +222,7 @@ ul.checks li.ok i{background:var(--mint3);border-color:var(--mint3)}
 }
 </style>
 </head>
-<body>
+<body class="ut1">
 
 <!-- =============== INICIO =============== -->
 <main id="inicio" class="wrap">
@@ -1518,7 +1523,16 @@ async function descargarPDF(){
   const M = 18, PIE = 12, PT = 0.3528;
   let W = 210, H = 297, CW = W - 2 * M, y = M, orient = 'p';
   const medidas = () => { W = doc.internal.pageSize.getWidth(); H = doc.internal.pageSize.getHeight(); CW = W - 2 * M; };
-  const COL = { ink: [47,45,58], muted: [108,104,120], lav: [106,84,184], sky: [47,95,152], mint: [47,125,92], peach: [163,83,42] };
+  // Color de la unidad en el PDF (claro = fondos, medio = bordes, osc = textos de acento)
+  const TEMAS = {
+    UT1: { claro: [233,226,251], medio: [201,184,240], osc: [106,84,184] },
+    UT2: { claro: [223,243,234], medio: [159,216,189], osc: [47,125,92] },
+    UT3: { claro: [255,233,220], medio: [246,191,158], osc: [163,83,42] },
+    UT4: { claro: [226,238,252], medio: [169,200,239], osc: [47,95,152] },
+    UT5: { claro: [253,228,234], medio: [241,179,195], osc: [163,60,88] }
+  };
+  const TEMA = TEMAS[COMUN.codigo.split('_')[0]] || TEMAS.UT1;
+  const COL = { ink: [47,45,58], muted: [108,104,120], lav: TEMA.osc, sky: [47,95,152], mint: [47,125,92], peach: [163,83,42] };
   // Página nueva; 'l' = apaisada (para diapositivas), 'p' = vertical
   const nuevaPag = (o) => { if (o) orient = o; doc.addPage('a4', orient); medidas(); y = M; };
   const sitio = h => { if (y + h > H - M - PIE){ nuevaPag(); return true; } return false; };
@@ -1595,7 +1609,7 @@ async function descargarPDF(){
   }
 
   // Cabecera
-  doc.setFillColor(233,226,251); doc.roundedRect(M, y, CW, 31, 3, 3, 'F');
+  doc.setFillColor(...TEMA.claro); doc.roundedRect(M, y, CW, 31, 3, 3, 'F');
   y += 5; P(COMUN.asignatura.toUpperCase(), { size: 8.5, b: true, color: COL.lav, sang: 4, tras: 0.5 });
   P(COMUN.unidad, { size: 9.5, color: COL.muted, sang: 4, tras: 1 });
   P(COMUN.ejercicio, { size: 13.5, b: true, sang: 4, tras: 1 });
@@ -1611,8 +1625,8 @@ async function descargarPDF(){
   // Diapositiva: página apaisada con marco, título y el contenido de una caja
   async function diapositiva(num, titulo, id){
     nuevaPag('l');
-    doc.setDrawColor(201,184,240); doc.setLineWidth(0.6); doc.roundedRect(M - 6, M - 8, CW + 12, H - 2 * M - PIE + 14, 4, 4, 'S');
-    doc.setFillColor(233,226,251); doc.roundedRect(M - 6, M - 8, CW + 12, 16, 4, 4, 'F');
+    doc.setDrawColor(...TEMA.medio); doc.setLineWidth(0.6); doc.roundedRect(M - 6, M - 8, CW + 12, H - 2 * M - PIE + 14, 4, 4, 'S');
+    doc.setFillColor(...TEMA.claro); doc.roundedRect(M - 6, M - 8, CW + 12, 16, 4, 4, 'F');
     doc.setFontSize(9); fuente(true, false); doc.setTextColor(...COL.lav); doc.text(pdfTxt('Diapositiva ' + num), M, M - 3, { baseline: 'top' });
     y = M + 12;
     texto([{ t: titulo || ('Diapositiva ' + num), b: true }], { size: 26, color: COL.ink, tras: 6 });
@@ -1625,7 +1639,7 @@ async function descargarPDF(){
   if (orient !== 'p') nuevaPag('p');
 
   // Fuentes
-  banda('Fuentes y uso de IA', [233,226,251], COL.lav);
+  banda('Fuentes y uso de IA', TEMA.claro, COL.lav);
   await caja('fuentes', COMUN.numFuentes, 'Fuentes consultadas y declaración de uso de IA');
 
   // Marca de control (capa de texto invisible)

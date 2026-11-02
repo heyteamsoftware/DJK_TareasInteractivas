@@ -25,7 +25,12 @@ button{font:inherit;cursor:pointer;border:1px solid var(--line);background:#fff;
 button:hover{background:var(--lav)}
 button:focus-visible,input:focus-visible,.ed:focus-visible{outline:3px solid var(--lav2);outline-offset:2px}
 .btn-main{background:var(--lav3);border-color:var(--lav3);color:#fff;font-weight:600}
-.btn-main:hover{background:#5a45a4}
+.btn-main:hover{background:var(--lav3);filter:brightness(.9)}
+/* Color de cada unidad: cambia el acento (--lav*). UT1 lavanda (por defecto) */
+body.ut2{--lav:#dff3ea;--lav2:#9fd8bd;--lav3:#2f7d5c}
+body.ut3{--lav:#ffe9dc;--lav2:#f6bf9e;--lav3:#a3532a}
+body.ut4{--lav:#e2eefc;--lav2:#a9c8ef;--lav3:#2f5f98}
+body.ut5{--lav:#fde4ea;--lav2:#f1b3c3;--lav3:#a33c58}
 .btn-mint{background:var(--mint);border-color:var(--mint2);color:#1f5a41;font-weight:600}
 .btn-mint:hover{background:#cdeedf}
 .btn-peach{background:var(--peach);border-color:var(--peach2);color:#7a3b1b;font-weight:600}

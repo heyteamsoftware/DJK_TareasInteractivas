@@ -23,7 +23,8 @@ function imagenes(cod){
 
 const cabecera = leer('comun_head.html'), libPDF = leer('jspdf.html'), motor = leer('motor.js');
 for (const e of EJERCICIOS){
-  const html = cabecera.split('{{TITULO}}').join(e.titulo) + libPDF + '\n<script>\n' + imagenes(e.cod) + leer(e.cod + '.js') + '\n' + motor + '\n</script>\n</body>\n</html>\n';
+  const unidad = e.cod.split('_')[0].toLowerCase();   // ut1, ut2… → color de la unidad
+  const html = cabecera.split('{{TITULO}}').join(e.titulo).replace('<body>', `<body class="${unidad}">`) + libPDF + '\n<script>\n' + imagenes(e.cod) + leer(e.cod + '.js') + '\n' + motor + '\n</script>\n</body>\n</html>\n';
   const dir = path.join(RAIZ, e.dir); fs.mkdirSync(dir, { recursive: true });
   fs.writeFileSync(path.join(dir, e.archivo), html);
   fs.writeFileSync(path.join(dir, e.cod + '_EJEMPLO_relleno.html'), html.replace('</head>', '<script>window.EJEMPLO_FORZADO = true;</script>\n</head>'));
