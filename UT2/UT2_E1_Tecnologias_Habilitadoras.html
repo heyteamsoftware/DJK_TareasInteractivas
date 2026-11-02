@@ -1,0 +1,1421 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>UT2_E1 · Tecnologías Habilitadoras</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<style>
+:root{
+  --bg:#faf8f5; --card:#fff; --ink:#1d1b20; --muted:#6c6672; --line:#e8e3ea; --soft:#f4f1f6;
+  --lav:#ebe6fd; --lav-ink:#5a4ab5;
+  --peach:#fde7da; --peach-ink:#a3542a;
+  --mint:#dcf2e6; --mint-ink:#2e7752;
+  --sky:#dcecfb; --sky-ink:#2b689e;
+  --rose:#fbe3ec; --rose-ink:#a23a63;
+  --butter:#fdf3d0; --butter-ink:#8a6a10;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font:15px/1.55 Inter,"Segoe UI",system-ui,-apple-system,Arial,sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+button{font:inherit;color:inherit;cursor:pointer}
+input{font:inherit;color:inherit}
+h1,h2,h3{line-height:1.2;margin:0}
+.wrap{max-width:1240px;margin:0 auto;padding:0 16px}
+
+/* Cabecera */
+.top{position:sticky;top:0;z-index:40;background:rgba(250,248,245,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.top .wrap{display:flex;align-items:center;gap:12px;min-height:58px;flex-wrap:wrap;padding-top:6px;padding-bottom:6px}
+.brand{display:flex;align-items:center;gap:10px;min-width:0}
+.logo{width:32px;height:32px;flex:none}
+.brand b{font-weight:800;letter-spacing:-.01em;white-space:nowrap}
+.brand small{display:block;color:var(--muted);font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:46vw}
+.brand small a{color:inherit}
+.spacer{flex:1}
+.status{font-size:12px;color:var(--muted);white-space:nowrap}
+.btn{border:1px solid var(--line);background:#fff;border-radius:10px;padding:8px 14px;font-weight:600;font-size:14px;display:inline-flex;align-items:center;gap:6px;transition:transform .1s,background .15s}
+.btn:hover{background:var(--soft)}
+.btn:active{transform:translateY(1px)}
+.btn.primary{background:var(--ink);color:#fff;border-color:var(--ink)}
+.btn.primary:hover{background:#3a3640}
+.btn.small{padding:5px 10px;font-size:13px;border-radius:8px}
+
+/* Bloques */
+section.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:22px;margin:18px 0}
+.kicker{font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.sec-title{font-size:22px;font-weight:800;letter-spacing:-.02em;margin-bottom:6px}
+.lead{color:var(--muted);margin:0 0 14px}
+.hero{padding:28px 0 4px}
+.hero h1{font-size:clamp(26px,4.4vw,40px);font-weight:800;letter-spacing:-.03em}
+.hero h1 span{background:linear-gradient(transparent 62%,var(--lav) 62%)}
+.hero p{color:var(--muted);max-width:760px;margin:10px 0 0}
+
+/* Enunciado */
+.brief{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+@media (max-width:1100px){.brief{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:640px){.brief{grid-template-columns:1fr}}
+.brief .box{border-radius:14px;padding:16px;background:var(--soft)}
+.brief .box h3{font-size:15px;margin-bottom:8px}
+.brief .box p,.brief .box li{font-size:14px}
+.brief .box ol,.brief .box ul{margin:0;padding-left:20px}
+.enun-head{all:unset;box-sizing:border-box;width:100%;display:flex;align-items:center;gap:12px;cursor:pointer;border-radius:12px}
+.enun-head:focus-visible{outline:2px solid var(--lav-ink);outline-offset:4px}
+.enun-head .eh-txt{flex:1;min-width:0}
+.enun-head .kicker,.enun-head .sec-title{display:block}
+.enun-prog{font-size:13px;font-weight:700;border-radius:999px;padding:4px 12px;background:var(--butter);color:var(--butter-ink);white-space:nowrap}
+.enun-prog.done{background:var(--mint);color:var(--mint-ink)}
+.enun-head .chev{width:10px;height:10px;border-right:2px solid var(--ink);border-bottom:2px solid var(--ink);transform:rotate(-135deg);margin:4px 6px 0;transition:transform .25s;flex:none}
+#enunciado.collapsed .enun-head .chev{transform:rotate(45deg);margin-top:-4px}
+#enunBody{overflow:hidden;transition:max-height .45s ease,opacity .3s}
+#enunciado.collapsed #enunBody{max-height:0!important;opacity:0}
+#enunciado.collapsed{padding-top:16px;padding-bottom:16px}
+.enun-lead{margin:10px 0 14px}
+.brief .box.resumen{grid-column:1/-1;background:var(--ink);color:#fff}
+.brief .box.resumen h3{font-size:17px;margin-bottom:12px}
+ol.pasos3{list-style:none;padding:0!important;margin:0;display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+@media (max-width:760px){ol.pasos3{grid-template-columns:1fr}}
+ol.pasos3 li{display:flex;gap:12px;align-items:flex-start;background:rgba(255,255,255,.08);border-radius:12px;padding:12px;margin:0!important}
+ol.pasos3 .n{width:32px;height:32px;border-radius:50%;background:#fff;color:var(--ink);font-weight:800;display:grid;place-items:center;flex:none}
+ol.pasos3 b{font-size:15px}
+ol.pasos3 p{margin:3px 0 0;font-size:13.5px;color:rgba(255,255,255,.78)}
+.lockmsg{display:flex;align-items:center;gap:12px;background:var(--butter);color:var(--butter-ink);border-radius:16px;padding:14px 16px;margin:18px 0;font-size:14px;flex-wrap:wrap}
+.lockmsg[hidden]{display:none}
+.lockmsg > div{flex:1;min-width:200px;color:var(--ink)}
+.lockmsg .lk{width:40px;height:40px;border-radius:12px;background:#fff;display:grid;place-items:center;flex:none}
+section.locked{opacity:.3;pointer-events:none;user-select:none;-webkit-user-select:none}
+ul.ticks{list-style:none;padding:0!important;margin:0;display:grid;gap:6px}
+ul.ticks li{margin:0!important}
+.tk{all:unset;box-sizing:border-box;width:100%;display:flex;gap:10px;align-items:flex-start;cursor:pointer;border-radius:10px;padding:6px 8px;font-size:14px;line-height:1.45;background:rgba(255,255,255,.55);transition:background .15s}
+.tk:hover{background:rgba(255,255,255,.9)}
+.tk:focus-visible{outline:2px solid var(--ink)}
+.tk i{width:22px;height:22px;border-radius:7px;border:2px solid var(--ink);background:#fff;flex:none;display:grid;place-items:center;font-style:normal;font-size:12px;font-weight:800;margin-top:1px;transition:background .15s}
+.tk.on{background:rgba(255,255,255,.25)}
+.tk.on i{background:var(--ink);color:#fff}
+.tk.on span{color:var(--muted)}
+.brief .box li{margin:3px 0}
+.b-lav{background:var(--lav)!important}.b-mint{background:var(--mint)!important}.b-peach{background:var(--peach)!important}.b-sky{background:var(--sky)!important}
+.brief .box.ra{grid-column:1/-1;background:#fff;border:1px solid var(--line)}
+.ra-txt{margin:12px 0 10px}
+.box.ra summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.box.ra summary::-webkit-details-marker{display:none}
+.box.ra summary h3{margin:0!important;flex:1;min-width:180px}
+.box.ra summary::after{content:'';width:9px;height:9px;border-right:2px solid var(--ink);border-bottom:2px solid var(--ink);transform:rotate(45deg);margin:0 4px 4px;transition:transform .2s}
+.box.ra[open] summary::after{transform:rotate(-135deg);margin-bottom:-2px}
+.ra-sum{font-size:12px;font-weight:700;background:var(--butter);color:var(--butter-ink);border-radius:999px;padding:3px 10px}
+ul.ce{list-style:none;padding:0!important;margin:0;display:grid;gap:6px}
+ul.ce li{display:flex;gap:10px;align-items:flex-start;border-radius:10px;padding:7px 10px;color:#a19aa6;margin:0!important}
+ul.ce li .l{width:22px;height:22px;border-radius:50%;border:1.5px solid #d5cfd9;display:grid;place-items:center;font-size:12px;font-weight:800;flex:none}
+ul.ce li .t{flex:1}
+ul.ce li.on{background:var(--butter);color:var(--ink);font-weight:500}
+ul.ce li.on .l{background:var(--ink);border-color:var(--ink);color:#fff}
+ul.ce li .tag{font-size:11px;font-weight:700;background:var(--ink);color:#fff;border-radius:999px;padding:2px 8px;white-space:nowrap;flex:none}
+@media (max-width:520px){ul.ce li{flex-wrap:wrap}ul.ce li .tag{margin-left:32px}}
+.ra-note{margin:10px 0 0;font-size:13px}
+table.crit{width:100%;border-collapse:collapse;font-size:14px}
+table.crit td{padding:5px 0;border-bottom:1px dashed rgba(0,0,0,.12);vertical-align:top}
+table.crit td:last-child{text-align:right;font-weight:700;white-space:nowrap;padding-left:8px}
+
+/* Zona de trabajo */
+.work{display:grid;grid-template-columns:minmax(290px,370px) 1fr;gap:18px;align-items:start}
+.mapcol{position:sticky;top:72px}
+@media (max-width:940px){.work{grid-template-columns:1fr}.mapcol{position:static}}
+.panel h3{font-size:15px;font-weight:700;display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.count{font-size:12px;font-weight:700;background:var(--ink);color:#fff;border-radius:999px;padding:2px 8px}
+.search{width:100%;border:1px solid var(--line);border-radius:10px;padding:8px 12px;margin-bottom:10px;background:#fff}
+.search:focus{outline:2px solid var(--lav);border-color:var(--lav-ink)}
+.bank{display:flex;flex-wrap:wrap;gap:6px;max-height:300px;overflow:auto;padding:2px 2px 6px;touch-action:pan-y}
+.chip{border:1px solid #dcd6df;background:#fff;border-radius:999px;padding:5px 11px;font-size:13px;font-weight:500;display:inline-flex;align-items:center;gap:6px;user-select:none;-webkit-user-select:none;transition:background .15s,border-color .15s,opacity .15s}
+.chip:hover{border-color:var(--ink)}
+.chip.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.chip.on .n{background:#fff;color:var(--ink)}
+.chip .n{font-size:11px;font-weight:800;border-radius:999px;min-width:18px;height:18px;display:inline-grid;place-items:center;padding:0 4px}
+.chip.off{opacity:.4;cursor:not-allowed}
+.chip[hidden]{display:none}
+.tray{list-style:none;margin:0;padding:0;display:grid;gap:6px}
+.tray li{display:flex;align-items:center;gap:8px;border:1px solid var(--line);border-radius:12px;padding:7px 8px;background:#fff;cursor:grab;user-select:none;-webkit-user-select:none;touch-action:none}
+.tray li.armed{outline:2px solid var(--lav-ink);background:var(--lav)}
+.tray li .num{width:24px;height:24px;border-radius:50%;background:var(--ink);color:#fff;font-size:12px;font-weight:800;display:grid;place-items:center;flex:none}
+.tray li .nm{flex:1;font-size:13px;font-weight:600;line-height:1.25;min-width:0}
+.tray li .nm small{display:block;font-weight:400;font-size:11.5px;color:var(--muted);margin-top:2px}
+.tray li .x{border:none;background:none;width:26px;height:26px;border-radius:8px;color:var(--muted);flex:none}
+.tray li .x:hover{background:var(--soft);color:var(--ink)}
+.tray .empty{font-size:13px;color:var(--muted);border:1px dashed var(--line);border-radius:12px;padding:14px;text-align:center;cursor:default;background:none;touch-action:auto}
+.zt{font-size:11px;font-weight:700;border-radius:999px;padding:2px 8px;white-space:nowrap}
+.zt.aula{background:var(--lav);color:var(--lav-ink)}
+.zt.despacho{background:var(--peach);color:var(--peach-ink)}
+.zt.patio{background:var(--mint);color:var(--mint-ink)}
+.zt.cancha{background:var(--sky);color:var(--sky-ink)}
+.zt.none{background:var(--butter);color:var(--butter-ink)}
+.hint{font-size:12px;color:var(--muted);margin:8px 0 0}
+
+/* Mapa */
+.mapbox{position:relative;background:#fff;border:1px solid var(--line);border-radius:18px;overflow:hidden}
+.mapbox svg{display:block;width:100%;height:auto;user-select:none;-webkit-user-select:none}
+.mapbox svg .zone{transition:fill .18s}
+.mapbox svg .zone.hl[data-zone=aula]{fill:#efeafe}
+.mapbox svg .zone.hl[data-zone=despacho]{fill:#feeee4}
+.mapbox svg .zone.hl[data-zone=patio]{fill:#e6f6ed}
+.mapbox svg .zone.hl[data-zone=cancha]{fill:#e6f1fc}
+.mapbox svg.placing{cursor:crosshair}
+.mapbox .scene{pointer-events:none}
+.pin{cursor:grab;touch-action:none}
+.pin .plabel{display:none}
+.pin:hover .plabel,.pin.act .plabel{display:inline}
+.pin.act circle.head{fill:#5a4ab5}
+.banner{position:absolute;left:12px;right:12px;top:12px;background:var(--ink);color:#fff;border-radius:12px;padding:8px 12px;font-size:13px;display:flex;align-items:center;gap:10px}
+.banner[hidden]{display:none}
+.banner button{margin-left:auto;background:#fff;color:var(--ink);border:none;border-radius:8px;padding:4px 10px;font-weight:700;font-size:12px}
+.legend{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.legend .lg{display:flex;align-items:center;gap:8px;border-radius:12px;padding:6px 10px;font-size:13px;font-weight:600}
+.legend .lg.low{outline:2px dashed currentColor;outline-offset:-2px}
+.legend .lg em{font-style:normal;font-size:11px;font-weight:800;background:#fff;border-radius:999px;padding:1px 7px}
+.legend .lg b{min-width:30px!important;background:#fff;border-radius:999px;min-width:22px;height:22px;display:grid;place-items:center;font-size:12px}
+.checks{list-style:none;padding:0;margin:14px 0 0;display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:6px}
+.checks li{font-size:13px;display:flex;gap:8px;align-items:center;color:var(--muted)}
+.checks li i{width:18px;height:18px;border-radius:50%;border:1.5px solid #c9c2cd;flex:none;display:grid;place-items:center;font-style:normal;font-size:11px;color:#fff}
+.checks li.ok{color:var(--ink)}
+.checks li.ok i{background:var(--mint-ink);border-color:var(--mint-ink)}
+.ghost{position:fixed;z-index:100;pointer-events:none;background:var(--ink);color:#fff;border-radius:999px;padding:6px 12px;font-size:13px;font-weight:600;transform:translate(-50%,-130%);box-shadow:0 8px 24px rgba(0,0,0,.18);white-space:nowrap}
+
+/* Fichas y editor */
+.toolbar{position:sticky;top:64px;z-index:30;display:flex;flex-wrap:wrap;gap:4px;align-items:center;background:#fff;border:1px solid var(--line);border-radius:14px;padding:6px;margin:0 0 14px;box-shadow:0 6px 18px rgba(30,20,40,.06)}
+.toolbar button{border:none;background:none;min-width:34px;height:34px;border-radius:8px;font-size:14px;font-weight:600;padding:0 8px}
+.toolbar button:hover{background:var(--soft)}
+.toolbar .sep{width:1px;height:22px;background:var(--line);margin:0 4px}
+.toolbar .tip{font-size:12px;color:var(--muted);margin-left:auto;padding-right:6px}
+@media (max-width:600px){.toolbar .tip{display:none}.toolbar{top:96px}}
+.fichas{display:grid;gap:16px}
+.ficha{border:1px solid var(--line);border-radius:16px;overflow:hidden;background:#fff}
+.ficha header{display:flex;align-items:center;gap:10px;padding:12px 16px;flex-wrap:wrap}
+.ficha header .num{width:30px;height:30px;border-radius:50%;background:var(--ink);color:#fff;font-weight:800;display:grid;place-items:center;flex:none}
+.ficha header h3{font-size:17px;font-weight:700;flex:1;min-width:150px}
+.ficha.z-aula header{background:var(--lav)}.ficha.z-despacho header{background:var(--peach)}.ficha.z-patio header{background:var(--mint)}.ficha.z-cancha header{background:var(--sky)}.ficha.z-none header{background:var(--soft)}
+.ficha .body{padding:14px 16px 16px;display:grid;gap:12px}
+.purpose{background:var(--soft);border-left:4px solid var(--ink);border-radius:8px;padding:10px 12px;font-size:14px}
+.field label{display:block;font-size:13px;font-weight:700;margin-bottom:5px}
+.field label span{font-weight:500;color:var(--muted)}
+.ed{min-height:84px;border:1px solid var(--line);border-radius:12px;padding:10px 12px;background:#fff;outline:none;overflow-wrap:anywhere;transition:border-color .15s,box-shadow .15s}
+.ed:focus{border-color:var(--lav-ink);box-shadow:0 0 0 3px var(--lav)}
+.ed.empty::before{content:attr(data-ph);color:#a19aa6;pointer-events:none;display:block;height:0}
+.ed p{margin:0 0 6px}
+.ed h1{font-size:20px;margin:4px 0 6px}.ed h2{font-size:17px;margin:4px 0 6px}.ed h3{font-size:15px;margin:4px 0 6px}
+.ed ul,.ed ol{margin:4px 0 6px;padding-left:22px}
+.ed a{color:var(--lav-ink)}
+.ed .img{display:inline-block;position:relative;max-width:100%;vertical-align:bottom;margin:4px 0;line-height:0}
+.ed .img img{width:100%;height:auto;display:block;border-radius:8px}
+.ed .img.sel{outline:2px solid var(--lav-ink);outline-offset:2px;border-radius:8px}
+.ed .img .handle{display:none;position:absolute;right:-7px;bottom:-7px;width:16px;height:16px;background:#fff;border:2px solid var(--lav-ink);border-radius:4px;cursor:nwse-resize;touch-action:none}
+.ed .img.sel .handle{display:block}
+.ed.drop{border-color:var(--mint-ink);box-shadow:0 0 0 3px var(--mint)}
+.imgbar{position:absolute;z-index:60;display:flex;gap:4px;background:var(--ink);border-radius:10px;padding:4px;box-shadow:0 8px 20px rgba(0,0,0,.2)}
+.imgbar[hidden]{display:none}
+.imgbar button{border:none;background:none;color:#fff;font-size:12px;font-weight:700;border-radius:6px;padding:5px 8px}
+.imgbar button:hover{background:rgba(255,255,255,.15)}
+.imgbar button.rm{color:#ffb3c7}
+.nofichas{border:1px dashed var(--line);border-radius:16px;padding:26px;text-align:center;color:var(--muted)}
+
+/* Pantalla de inicio */
+.start{position:fixed;inset:0;z-index:80;background:var(--bg);overflow:auto;display:flex;align-items:flex-start;justify-content:center;padding:24px 16px}
+.start[hidden]{display:none}
+.start .in{width:100%;max-width:520px;margin:auto 0}
+.start .card{background:#fff;border:1px solid var(--line);border-radius:22px;padding:26px}
+.start h1{font-size:28px;font-weight:800;letter-spacing:-.02em;margin:12px 0 6px}
+.start .sub{color:var(--muted);margin:0 0 18px}
+.start label{display:block;font-size:13px;font-weight:700;margin:12px 0 5px}
+.start input{width:100%;border:1px solid var(--line);border-radius:10px;padding:10px 12px;background:#fff}
+.start input:focus{outline:2px solid var(--lav);border-color:var(--lav-ink)}
+.start .row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media (max-width:420px){.start .row{grid-template-columns:1fr}}
+.draft{background:var(--butter);border-radius:14px;padding:12px 14px;margin-bottom:6px;font-size:14px}
+.draft[hidden]{display:none}
+.draft .acts{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap}
+.start .go{width:100%;justify-content:center;margin-top:18px;padding:12px}
+.start-art{display:block;width:100%;height:auto}
+
+.modal{position:fixed;inset:0;z-index:110;background:rgba(29,27,32,.45);display:flex;align-items:center;justify-content:center;padding:16px}
+.modal[hidden]{display:none}
+.modal-card{background:#fff;border-radius:20px;padding:24px;max-width:520px;width:100%;max-height:calc(100vh - 32px);overflow:auto;box-shadow:0 20px 60px rgba(0,0,0,.25)}
+.modal-ico{width:40px;height:40px;border-radius:12px;background:var(--butter);color:var(--butter-ink);display:grid;place-items:center;font-weight:800;font-size:20px;margin-bottom:10px}
+.modal-card h2{font-size:20px;font-weight:800;letter-spacing:-.01em}
+.modal-sub{color:var(--muted);margin:6px 0 12px;font-size:14px}
+ul.pend{list-style:none;padding:0;margin:0 0 18px;display:grid;gap:6px}
+ul.pend li{background:var(--soft);border-radius:10px;padding:8px 12px;font-size:14px;display:flex;gap:10px;align-items:flex-start}
+ul.pend li::before{content:'';width:8px;height:8px;border-radius:50%;background:var(--butter-ink);margin-top:7px;flex:none}
+ul.pend li small{display:block;color:var(--muted);font-size:12.5px;margin-top:2px}
+.modal-acts{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+.toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%) translateY(20px);opacity:0;z-index:120;background:var(--ink);color:#fff;border-radius:12px;padding:10px 16px;font-size:14px;font-weight:500;transition:all .25s;max-width:calc(100% - 32px);text-align:center;pointer-events:none}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+footer.foot{color:var(--muted);font-size:12px;text-align:center;padding:10px 0 40px}
+</style>
+</head>
+<body>
+
+<!-- ============ PANTALLA DE INICIO ============ -->
+<div class="start" id="start">
+  <div class="in">
+    <div class="card">
+      <svg class="start-art" viewBox="0 0 460 130" aria-hidden="true">
+        <g stroke="#111" stroke-width="1.4" stroke-linejoin="round">
+          <polygon points="230,40 390,95 230,150 70,95" fill="#fff"/>
+          <polygon points="110,82 230,40 230,8 110,50" fill="#f7f7f7"/>
+          <polygon points="230,40 350,82 350,50 230,8" fill="#ececec"/>
+          <polygon points="110,50 230,8 230,4 110,46" fill="#111"/>
+          <polygon points="230,8 350,50 350,46 230,4" fill="#111"/>
+        </g>
+        <g transform="translate(300,104)"><ellipse rx="7" ry="3.5" fill="#000" fill-opacity=".18"/><line y2="-26" stroke="#111" stroke-width="1.6"/><circle cy="-35" r="10" fill="#111" stroke="#fff" stroke-width="2"/><text y="-31" font-size="11" font-weight="800" fill="#fff" text-anchor="middle" font-family="Inter,Arial">1</text></g>
+        <g transform="translate(170,112)"><ellipse rx="7" ry="3.5" fill="#000" fill-opacity=".18"/><line y2="-26" stroke="#111" stroke-width="1.6"/><circle cy="-35" r="10" fill="#111" stroke="#fff" stroke-width="2"/><text y="-31" font-size="11" font-weight="800" fill="#fff" text-anchor="middle" font-family="Inter,Arial">2</text></g>
+      </svg>
+      <div class="kicker" style="margin-top:6px">UT2 · Ejercicio 1</div>
+      <h1>Tecnologías Habilitadoras</h1>
+      <p class="sub">Elige 10 tecnologías del día a día, instálalas en el plano del centro y explica por qué las has puesto ahí.</p>
+      <div class="draft" id="draftBox" hidden>
+        <b>Hay un borrador guardado</b> <span id="draftInfo"></span>
+        <div class="acts">
+          <button class="btn primary small" id="draftLoad" type="button">Cargar borrador</button>
+          <button class="btn small" id="draftDiscard" type="button">Descartar y empezar de cero</button>
+        </div>
+      </div>
+      <form id="startForm" autocomplete="off">
+        <div class="row">
+          <div><label for="fNombre">Nombre</label><input id="fNombre" required maxlength="60"></div>
+          <div><label for="fApellidos">Apellidos</label><input id="fApellidos" required maxlength="80"></div>
+        </div>
+        <label for="fCiclo">Ciclo formativo</label>
+        <input id="fCiclo" required maxlength="90" autocomplete="off" placeholder="Escribe el nombre completo de tu ciclo">
+        <button class="btn primary go" type="submit" id="startGo">Empezar</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- ============ CABECERA ============ -->
+<div class="top">
+  <div class="wrap">
+    <div class="brand">
+      <svg class="logo" viewBox="0 0 32 32" aria-hidden="true"><g stroke="#111" stroke-width="1.5" stroke-linejoin="round"><polygon points="16,4 28,10 16,16 4,10" fill="#fff"/><polygon points="4,10 16,16 16,28 4,22" fill="#f4f4f4"/><polygon points="16,16 28,10 28,22 16,28" fill="#e6e6e6"/></g></svg>
+      <div><b>UT2_E1 · Tecnologías Habilitadoras</b><small id="who"></small></div>
+    </div>
+    <div class="spacer"></div>
+    <span class="status" id="saveStatus">Sin cambios</span>
+    <button class="btn" id="btnSave" type="button">Guardar</button>
+    <button class="btn primary" id="btnPdf" type="button">Descargar PDF</button>
+  </div>
+</div>
+
+<main class="wrap" id="app">
+  <div class="hero">
+    <div class="kicker">Digitalización · UT2 · Ejercicio 1</div>
+    <h1>Otras tecnologías <span>habilitadoras</span></h1>
+    <p>Imagina que te encargan modernizar un centro con tecnologías habilitadoras del día a día. Vas a decidir <b>qué tecnologías instalas</b>, <b>dónde las pones</b> y <b>por qué</b>.</p>
+  </div>
+
+  <!-- 1. Enunciado -->
+  <section class="card" id="enunciado">
+    <button type="button" class="enun-head" id="enunHead" aria-expanded="true" aria-controls="enunBody">
+      <span class="eh-txt"><span class="kicker">1 · Enunciado</span><span class="sec-title">Qué tienes que hacer</span></span>
+      <span class="enun-prog" id="enunProg">0/0</span><span class="chev" aria-hidden="true"></span>
+    </button>
+    <div id="enunBody">
+      <p class="lead enun-lead">Marca con un tick cada paso y cada norma cuando los hayas leído y entendido. Cuando los marques todos, esta sección se recogerá para dejarte más espacio.</p>
+      <div class="brief" id="brief"></div>
+    </div>
+  </section>
+
+  <!-- 2. Plano -->
+  <div class="lockmsg" id="lockMsg" role="status">
+    <span class="lk" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg></span>
+    <div><b>Primero lee el enunciado.</b> Marca con un tick todos los puntos de «Pasos» y «Normas» (te faltan <b id="lockN">10</b>). Cuando estén todos, se desbloquea el resto del ejercicio.</div>
+    <button type="button" class="btn small" id="lockGo">Ir al enunciado</button>
+  </div>
+
+  <section class="card" id="plano">
+    <div class="kicker">2 · Elige y coloca</div>
+    <div class="sec-title">Tu plano del centro</div>
+    <p class="lead">Elige 10 tecnologías de la lista e instálalas en el plano arrastrándolas. En el móvil o la tableta: toca una tecnología de «Mis 10» y después toca el sitio del plano. Puedes mover los pines cuando quieras.</p>
+    <div class="work">
+      <div class="panel">
+        <h3>Banco de tecnologías <span class="count" id="bankCount">50</span></h3>
+        <input class="search" id="search" type="search" placeholder="Buscar en la lista…" aria-label="Buscar tecnología">
+        <div class="bank" id="bank"></div>
+        <p class="hint">Pasa el ratón por encima (o elige una) para ver para qué sirve.</p>
+        <h3 style="margin-top:18px">Mis 10 <span class="count" id="selCount">0/10</span></h3>
+        <ul class="tray" id="tray"></ul>
+      </div>
+      <div class="mapcol">
+        <div class="mapbox" id="mapbox">
+          <div class="banner" id="banner" hidden><span id="bannerTxt"></span><button type="button" id="bannerCancel">Cancelar</button></div>
+          <div id="mapHolder"></div>
+        </div>
+        <div class="legend" id="legend"></div>
+        <ul class="checks" id="checks"></ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. Fichas -->
+  <section class="card" id="fichasSec">
+    <div class="kicker">3 · Justifica</div>
+    <div class="sec-title">¿Por qué la has instalado ahí?</div>
+    <p class="lead">En cada ficha te decimos para qué sirve la tecnología. Tú explica por qué la has instalado en ese espacio y quién la usaría. Pegar texto está desactivado; sí puedes pegar, arrastrar o subir imágenes.</p>
+    <div class="toolbar" id="toolbar">
+      <button type="button" data-cmd="bold" title="Negrita (Ctrl+B)"><b>B</b></button>
+      <button type="button" data-cmd="italic" title="Cursiva (Ctrl+I)"><i>I</i></button>
+      <button type="button" data-cmd="underline" title="Subrayado (Ctrl+U)"><u>U</u></button>
+      <span class="sep"></span>
+      <button type="button" data-block="H1" title="Título 1">H1</button>
+      <button type="button" data-block="H2" title="Título 2">H2</button>
+      <button type="button" data-block="H3" title="Título 3">H3</button>
+      <button type="button" data-block="P" title="Párrafo normal">¶</button>
+      <span class="sep"></span>
+      <button type="button" data-cmd="insertUnorderedList" title="Lista con viñetas">• Lista</button>
+      <button type="button" data-cmd="insertOrderedList" title="Lista numerada">1. Lista</button>
+      <span class="sep"></span>
+      <button type="button" id="tbLink" title="Insertar enlace">🔗 Enlace</button>
+      <button type="button" id="tbImg" title="Insertar imagen">🖼 Imagen</button>
+      <input type="file" id="imgFile" accept="image/*" hidden>
+      <span class="tip">Se aplica donde tengas el cursor</span>
+    </div>
+    <div class="fichas" id="fichas"></div>
+  </section>
+
+  <!-- 4. Reflexión -->
+  <section class="card" id="reflexion">
+    <div class="kicker">4 · Cierra</div>
+    <div class="sec-title">Reflexión final</div>
+    <div class="field">
+      <label>¿Qué espacio del centro queda más transformado con tus tecnologías? ¿Cuál de ellas crees que tendrá más impacto en tu sector profesional y por qué?</label>
+      <div class="ed" id="edConclusion" data-key="conclusion" data-ph="Relaciónalo con tu ciclo formativo: piensa en tu futuro puesto de trabajo…"></div>
+    </div>
+  </section>
+
+  <footer class="foot">Guarda a menudo (también se guarda solo). Cuando termines, pulsa «Descargar PDF» y entrega ese archivo.</footer>
+</main>
+
+<div class="imgbar" id="imgbar" hidden>
+  <button type="button" data-w="25">25 %</button><button type="button" data-w="50">50 %</button>
+  <button type="button" data-w="75">75 %</button><button type="button" data-w="100">100 %</button>
+  <button type="button" class="rm" id="imgRemove">Quitar</button>
+</div>
+<div class="toast" id="toast"></div>
+<div class="modal" id="pendModal" hidden role="dialog" aria-modal="true" aria-labelledby="pendTitle">
+  <div class="modal-card">
+    <div class="modal-ico" aria-hidden="true">!</div>
+    <h2 id="pendTitle">Tu ejercicio aún no está completo</h2>
+    <p class="modal-sub">Puedes descargar el PDF igualmente, pero esto es lo que te falta:</p>
+    <ul class="pend" id="pendList"></ul>
+    <div class="modal-acts">
+      <button type="button" class="btn primary" id="pendBack">Seguir trabajando</button>
+      <button type="button" class="btn" id="pendGo">Descargar igualmente</button>
+    </div>
+  </div>
+</div>
+
+<script>
+'use strict';
+/* =========================================================
+   DATOS
+   ========================================================= */
+const EJERCICIO = 'UT2_E1_Tecnologias_Habilitadoras';
+const MAX = 10;
+const MIN_ZONA = 2; // mínimo de tecnologías en cada espacio
+
+// 50 tecnologías habilitadoras del día a día, distintas de las 8 de los apuntes.
+// Se da el nombre y para qué sirve; el alumno explica por qué la instala en cada espacio.
+const TECH_DATA = [
+  ['Impresión 3D','Fabricar objetos físicos capa a capa a partir de un diseño hecho en el ordenador.'],
+  ['Códigos QR','Llevar al instante a una web, un documento o un vídeo al escanearlos con la cámara del móvil.'],
+  ['Pago con el móvil','Pagar acercando el teléfono o el reloj al datáfono, sin efectivo ni tarjeta física.'],
+  ['Datáfono (TPV)','Cobrar con tarjeta o móvil y dejar registrada cada venta.'],
+  ['Wi-Fi','Conectar ordenadores, tablets y móviles a internet sin cables dentro de un edificio.'],
+  ['Fibra óptica','Llevar internet de alta velocidad y muy estable hasta el edificio.'],
+  ['Bluetooth','Conectar sin cables dispositivos cercanos: altavoces, auriculares, teclados o ratones.'],
+  ['Pizarra digital interactiva','Proyectar contenidos y escribir o tocar sobre ellos como en una pizarra.'],
+  ['Tablets','Consultar, crear y presentar contenidos con una pantalla táctil que se lleva a cualquier sitio.'],
+  ['Ordenadores portátiles','Trabajar con programas completos desde cualquier lugar, sin estar en un puesto fijo.'],
+  ['Videoconferencia','Hacer reuniones, tutorías o clases a distancia con imagen y sonido.'],
+  ['Aula virtual','Compartir materiales, entregar tareas y comunicarse por internet.'],
+  ['Documentos compartidos en línea','Que varias personas escriban y editen a la vez el mismo documento.'],
+  ['Calendario compartido','Organizar citas, reservas y eventos que todo el equipo puede ver.'],
+  ['Mensajería instantánea de grupo','Enviar avisos rápidos a muchas personas a la vez.'],
+  ['Firma electrónica','Firmar documentos desde el ordenador o el móvil con validez legal.'],
+  ['Certificado digital','Identificarse de forma segura para hacer trámites por internet.'],
+  ['Lector de huella dactilar','Reconocer a una persona por su huella para darle acceso o registrarla.'],
+  ['Tarjeta de acceso','Abrir puertas o fichar acercando una tarjeta a un lector.'],
+  ['Control horario digital','Registrar la hora de entrada y salida de cada trabajador.'],
+  ['Cerradura electrónica','Abrir y cerrar puertas con un código, una tarjeta o el móvil, sin llaves.'],
+  ['Videoportero','Ver y hablar con quien llama antes de abrirle la puerta.'],
+  ['Cámaras de videovigilancia','Grabar y vigilar un espacio para mejorar la seguridad.'],
+  ['Alarma antirrobo','Avisar con una sirena si alguien entra cuando el espacio está cerrado.'],
+  ['Detector de humo','Avisar con un pitido en cuanto detecta humo de un posible incendio.'],
+  ['Desfibrilador (DEA)','Analizar el corazón en una parada cardíaca y dar una descarga, guiando paso a paso con la voz.'],
+  ['Sensor de presencia','Encender luces o aparatos solo cuando detecta que hay alguien.'],
+  ['Iluminación LED','Iluminar gastando mucha menos electricidad que las bombillas tradicionales.'],
+  ['Termostato programable','Encender y apagar la calefacción o el aire acondicionado a las horas elegidas.'],
+  ['Medidor de CO2','Medir la calidad del aire y avisar cuando hay que ventilar.'],
+  ['Placas solares','Producir electricidad a partir de la luz del sol.'],
+  ['Enchufe programable','Encender o apagar un aparato a una hora fija o desde el móvil.'],
+  ['Persianas motorizadas','Subir y bajar las persianas con un botón o de forma automática.'],
+  ['Riego automático','Regar plantas o césped a la hora y con la cantidad de agua programadas.'],
+  ['Punto de carga eléctrica','Recargar coches, bicicletas o patinetes eléctricos.'],
+  ['Lector de código de barras','Identificar productos o materiales al instante para controlar el inventario.'],
+  ['Etiquetas antirrobo','Hacer sonar una alarma si un objeto sale del recinto sin permiso.'],
+  ['Impresora multifunción','Imprimir, escanear, fotocopiar y enviar documentos con un solo aparato.'],
+  ['Escáner de documentos','Pasar papeles a formato digital para guardarlos y compartirlos.'],
+  ['Copias de seguridad','Guardar un duplicado de la información para recuperarla si se pierde o se estropea.'],
+  ['Antivirus','Detectar y bloquear programas maliciosos en ordenadores y móviles.'],
+  ['Verificación en dos pasos','Pedir un segundo código al iniciar sesión para que nadie más entre en tu cuenta.'],
+  ['Gestor de contraseñas','Crear y guardar contraseñas seguras sin tener que recordarlas todas.'],
+  ['Pantalla de avisos digital','Mostrar avisos, horarios o menús que se cambian desde el ordenador.'],
+  ['Megafonía','Dar avisos por altavoz a todo un espacio a la vez.'],
+  ['Marcador electrónico','Mostrar el resultado y el tiempo de un partido a la vista de todos.'],
+  ['Cámara deportiva','Grabar en vídeo la actividad física desde cualquier ángulo, incluso en movimiento.'],
+  ['Reloj inteligente','Medir pasos, pulso y actividad física, y mostrar avisos del móvil en la muñeca.'],
+  ['Drones','Tomar fotos y vídeos desde el aire y revisar zonas difíciles de alcanzar.'],
+  ['Microscopio digital','Ver objetos muy aumentados en una pantalla y guardar fotos de lo que se observa.']
+];
+const TECHS = TECH_DATA.map(t=>t[0]);
+const PARA = TECH_DATA.map(t=>t[1]);
+
+const ZONES = {
+  aula:     {name:'Aula grande',      x0:0.4,  x1:17.8, y0:0.4, y1:12.6, rgb:[235,230,253], ink:[90,74,181]},
+  despacho: {name:'Despacho',         x0:18.2, x1:26.6, y0:0.4, y1:12.6, rgb:[253,231,218], ink:[163,84,42]},
+  patio:    {name:'Patio de juegos',  x0:0,    x1:27,   y0:16,  y1:30,   rgb:[220,242,230], ink:[46,119,82]},
+  cancha:   {name:'Cancha de fútbol', x0:30,   x1:46,   y0:0,   y1:30,   rgb:[220,236,251], ink:[43,104,158]}
+};
+const ZONE_ORDER = ['aula','despacho','patio','cancha'];
+
+const PREGUNTAS = [
+  {k:'porque', t:'¿Por qué la has instalado en este espacio?', s:'Justifica tu elección', ph:'Explica qué necesidad o problema tiene este espacio y por qué esta tecnología es una buena solución…'},
+  {k:'uso', t:'¿Quién la usaría y en qué momento?', s:'Pon un ejemplo concreto', ph:'Describe una situación real: quién la usa, cuándo y qué cambia respecto a cómo se hace ahora…'}
+];
+
+// Resultado de aprendizaje de la UT2 (programación DJK 2026-2027). El E1 evalúa los CE a, c, d y e.
+const RA = {
+  codigo:'RA2',
+  texto:'Caracteriza las tecnologías habilitadoras digitales necesarias para la adecuación/transformación de las empresas a entornos digitales describiendo sus características y aplicaciones.',
+  peso:'15 % de la UT2',
+  ce:[
+    ['a','Se han identificado las principales tecnologías habilitadoras digitales.',true],
+    ['b','Se han relacionado las THD con el desarrollo de productos y servicios.',false],
+    ['c','Se ha relacionado la importancia de las THD con la economía sostenible y eficiente.',true],
+    ['d','Se han identificado nuevos mercados generados por las THD.',true],
+    ['e','Se ha analizado la implicación de THD tanto en la parte de negocio como en la parte de planta.',true],
+    ['f','Se han identificado las mejoras producidas debido a la implantación de las tecnologías habilitadoras en relación con los entornos IT y OT.',false],
+    ['g','Se ha elaborado un informe que relacione las tecnologías con sus características y áreas de aplicación.',false]
+  ]
+};
+
+// Instrucciones comunes de la tarea
+const COMUN = {
+  contexto: 'Las tecnologías habilitadoras son muchas y muy variadas. Además de las que aparecen en los apuntes de la UT2, hay otras que usamos a diario y que también se podrían estudiar en clase. En este ejercicio tienes 50 de ellas.',
+  objetivo: 'Elegir tecnologías habilitadoras del día a día, decidir dónde instalarlas y justificar por qué mejoran ese espacio.',
+  pasos: [
+    'Revisa el banco de 50 tecnologías. Pasa el ratón por encima para ver para qué sirve cada una.',
+    'Elige <b>10</b>.',
+    'Instálalas en el plano. Es obligatorio poner <b>al menos 2 en cada uno de los 4 espacios</b>.',
+    'En cada ficha te decimos para qué sirve. Tú explica <b>por qué la has instalado ahí</b> y quién la usaría.',
+    'Escribe la reflexión final relacionándola con tu ciclo.',
+    'Guarda y pulsa <b>Descargar PDF</b> (puedes hacerlo cuando quieras; si falta algo, te avisará). Entrega ese PDF en el aula virtual.'
+  ],
+  normas: [
+    'Escribe con tus palabras: pegar texto está desactivado.',
+    'Piensa en cada espacio: no vale la misma explicación para todas.',
+    'Puedes pegar, arrastrar o subir imágenes y cambiar su tamaño.',
+    'El trabajo se guarda solo en este navegador. Si cambias de ordenador, no estará.'
+  ],
+  criterios: [
+    ['Selección y colocación coherente de las 10 tecnologías en los 4 espacios', 3],
+    ['Justificación: explica por qué has instalado cada tecnología en ese espacio', 4],
+    ['Ejemplo de uso concreto y realista: quién y cuándo', 2],
+    ['Reflexión final relacionada con tu ciclo', 1]
+  ],
+  entrega: 'Archivo PDF con el nombre UT2_E1_Apellidos_Nombre.pdf'
+};
+
+/* =========================================================
+   UTILIDADES
+   ========================================================= */
+const $ = s => document.querySelector(s);
+const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+let toastT;
+function toast(msg, ms=2600){ const t=$('#toast'); t.textContent=msg; t.classList.add('show'); clearTimeout(toastT); toastT=setTimeout(()=>t.classList.remove('show'), ms); }
+function shuffle(a){ a=a.slice(); for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]];} return a; }
+const DEMO = new URLSearchParams(location.search).has('ejemplo');
+
+/* =========================================================
+   ESTADO Y GUARDADO (IndexedDB + respaldo localStorage)
+   ========================================================= */
+function newState(alumno){ return {v:1, alumno, orden:shuffle(TECHS.map((_,i)=>i)), sel:[], textos:{}, updated:null}; }
+let state = null;
+
+const DB_NAME='DJK_'+EJERCICIO+'_v2', STORE='borradores', KEY='actual', LS_KEY='DJK_'+EJERCICIO+'_v2_borrador';
+function idb(){ return new Promise((res,rej)=>{ if(!('indexedDB' in window)) return rej('no idb'); const r=indexedDB.open(DB_NAME,1); r.onupgradeneeded=()=>r.result.createObjectStore(STORE); r.onsuccess=()=>res(r.result); r.onerror=()=>rej(r.error); }); }
+async function dbGet(){
+  try{ const db=await idb(); const v=await new Promise((res,rej)=>{const t=db.transaction(STORE).objectStore(STORE).get(KEY); t.onsuccess=()=>res(t.result); t.onerror=()=>rej(t.error);}); if(v) return v; }catch(e){}
+  try{ const s=localStorage.getItem(LS_KEY); return s?JSON.parse(s):null; }catch(e){ return null; }
+}
+async function dbSet(v){
+  let ok=false;
+  try{ const db=await idb(); await new Promise((res,rej)=>{const t=db.transaction(STORE,'readwrite'); t.objectStore(STORE).put(v,KEY); t.oncomplete=res; t.onerror=()=>rej(t.error);}); ok=true; }catch(e){}
+  try{ localStorage.setItem(LS_KEY, JSON.stringify(v)); ok=true; }catch(e){ /* localStorage lleno (imágenes): IndexedDB basta */ }
+  return ok;
+}
+async function dbDel(){
+  try{ const db=await idb(); await new Promise(res=>{const t=db.transaction(STORE,'readwrite'); t.objectStore(STORE).delete(KEY); t.oncomplete=res; t.onerror=res;}); }catch(e){}
+  try{ localStorage.removeItem(LS_KEY); }catch(e){}
+}
+let saveT=null;
+function dirty(){ $('#saveStatus').textContent='Cambios sin guardar…'; clearTimeout(saveT); saveT=setTimeout(saveNow, 900); }
+async function saveNow(manual){
+  clearTimeout(saveT);
+  if(!state) return;
+  if(DEMO){ $('#saveStatus').textContent='Ejemplo (no se guarda)'; if(manual) toast('Esto es un ejemplo: no se guarda.'); return; }
+  state.updated = new Date().toISOString();
+  const ok = await dbSet(JSON.parse(JSON.stringify(state)));
+  const h = new Date().toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit'});
+  $('#saveStatus').textContent = ok ? 'Guardado '+h : 'No se ha podido guardar';
+  if(manual) toast(ok ? 'Guardado en este navegador' : 'No se ha podido guardar');
+}
+
+/* =========================================================
+   PLANO ISOMÉTRICO
+   ========================================================= */
+const S=15, C=Math.cos(Math.PI/6);
+let BB={x0:1e9,y0:1e9,x1:-1e9,y1:-1e9};
+function P(x,y,z=0){ const sx=(x-y)*C*S, sy=(x+y)*0.5*S - z*S; if(sx<BB.x0)BB.x0=sx; if(sx>BB.x1)BB.x1=sx; if(sy<BB.y0)BB.y0=sy; if(sy>BB.y1)BB.y1=sy; return [sx,sy]; }
+const f1 = n => Math.round(n*10)/10;
+const ptsStr = arr => arr.map(p=>{const q=P(...p); return f1(q[0])+','+f1(q[1]);}).join(' ');
+const INK='#111';
+function poly(arr, fill='#fff', sw=1.2, stroke=INK, extra=''){ return `<polygon points="${ptsStr(arr)}" fill="${fill}" stroke="${stroke}" stroke-width="${sw}" stroke-linejoin="round" ${extra}/>`; }
+function line(a,b,sw=1.2,stroke=INK,extra=''){ const p=P(...a), q=P(...b); return `<line x1="${f1(p[0])}" y1="${f1(p[1])}" x2="${f1(q[0])}" y2="${f1(q[1])}" stroke="${stroke}" stroke-width="${sw}" stroke-linecap="round" ${extra}/>`; }
+function pline(arr,sw=1.2,stroke=INK,extra=''){ return `<polyline points="${ptsStr(arr)}" fill="none" stroke="${stroke}" stroke-width="${sw}" stroke-linecap="round" stroke-linejoin="round" ${extra}/>`; }
+function box(x0,y0,z0,x1,y1,z1,o={}){
+  const top=o.top||'#fff', fx=o.fx||'#ececec', fy=o.fy||'#f7f7f7', sw=o.sw||1.2;
+  return poly([[x1,y0,z0],[x1,y1,z0],[x1,y1,z1],[x1,y0,z1]],fx,sw)
+       + poly([[x0,y1,z0],[x1,y1,z0],[x1,y1,z1],[x0,y1,z1]],fy,sw)
+       + poly([[x0,y0,z1],[x1,y0,z1],[x1,y1,z1],[x0,y1,z1]],top,sw);
+}
+function ring(cx,cy,r,z=0,n=40){ const a=[]; for(let i=0;i<n;i++){const t=i/n*Math.PI*2; a.push([cx+r*Math.cos(t), cy+r*Math.sin(t), z]);} return a; }
+function ringY(cx,y,cz,r,n=28){ const a=[]; for(let i=0;i<n;i++){const t=i/n*Math.PI*2; a.push([cx+r*Math.cos(t), y, cz+r*Math.sin(t)]);} return a; }
+function floorText(txt,x,y,size=15,alongY=false){
+  const p=P(x,y,0.02);
+  const m = alongY ? `matrix(${-C},0.5,${-C},-0.5,${f1(p[0])},${f1(p[1])})` : `matrix(${C},0.5,${-C},0.5,${f1(p[0])},${f1(p[1])})`;
+  return `<text transform="${m}" font-size="${size}" font-weight="700" letter-spacing="3" fill="${INK}">${esc(txt)}</text>`;
+}
+function tree(x,y,h=1){
+  const sh=poly(ring(x,y,1.4*h,0.01,24),'#000',0,'none','fill-opacity="0.07"');
+  const trunk=box(x-.14,y-.14,0,x+.14,y+.14,1.9*h,{sw:1});
+  const c=[[x,y,3.0*h,1.25*h],[x-.55,y+.35,2.55*h,0.95*h],[x+.5,y-.45,3.45*h,0.85*h]].map(([a,b,z,r])=>{const p=P(a,b,z); return [p[0],p[1],r*S];});
+  const strokes=c.map(([a,b,r])=>`<circle cx="${f1(a)}" cy="${f1(b)}" r="${f1(r)}" fill="#fff" stroke="${INK}" stroke-width="2.4"/>`).join('');
+  const fills=c.map(([a,b,r])=>`<circle cx="${f1(a)}" cy="${f1(b)}" r="${f1(r-1.2)}" fill="#fff"/>`).join('');
+  return sh+trunk+strokes+fills;
+}
+function chairFacingMinusY(x,y){ return box(x,y,0,x+.8,y+.65,.55,{sw:1})+box(x,y+.65,0,x+.8,y+.82,1.35,{sw:1}); }
+
+function buildMap(){
+  BB={x0:1e9,y0:1e9,x1:-1e9,y1:-1e9};
+  const out=[];
+  const objs=[]; const add=(k,s)=>objs.push({k,s});
+  const H=5, h=1.3;
+
+  // Base
+  out.push(box(-2,-2,-0.9,48,32,0,{fx:'#e9e9e9',fy:'#f5f5f5',sw:1.4}));
+  // Suelos de los espacios (zonas interactivas)
+  const zp = z => [[z.x0,z.y0,0.01],[z.x1,z.y0,0.01],[z.x1,z.y1,0.01],[z.x0,z.y1,0.01]];
+  out.push(`<polygon class="zone" data-zone="aula" points="${ptsStr(zp({x0:0,y0:0,x1:18,y1:13}))}" fill="#fff" stroke="none"/>`);
+  out.push(`<polygon class="zone" data-zone="despacho" points="${ptsStr(zp({x0:18,y0:0,x1:27,y1:13}))}" fill="#fff" stroke="none"/>`);
+  out.push(`<polygon class="zone" data-zone="patio" points="${ptsStr(zp(ZONES.patio))}" fill="#fff" stroke="${INK}" stroke-width="1.2" stroke-dasharray="1 5" stroke-linecap="round"/>`);
+  out.push(`<polygon class="zone" data-zone="cancha" points="${ptsStr(zp(ZONES.cancha))}" fill="#fff" stroke="none"/>`);
+
+  // Baldosas del edificio
+  let g='';
+  for(let x=1.5;x<27;x+=1.5) g+=line([x,0.4,0.02],[x,12.6,0.02],0.6,'#dedede');
+  for(let y=1.9;y<12.6;y+=1.5) g+=line([0.4,y,0.02],[26.6,y,0.02],0.6,'#dedede');
+  out.push(g);
+
+  // Cancha: franjas de césped y líneas
+  for(let i=0;i<8;i+=2){ const y0=1+i*3.5, y1=y0+3.5; out.push(poly([[31,y0,.015],[45,y0,.015],[45,y1,.015],[31,y1,.015]],'#f3f3f3',0,'none')); }
+  let fl='';
+  fl+=poly([[31,1,.02],[45,1,.02],[45,29,.02],[31,29,.02]],'none',1.4);
+  fl+=line([31,15,.02],[45,15,.02],1.4);
+  fl+=poly(ring(38,15,2.6,.02),'none',1.4);
+  fl+=poly([[34,1,.02],[42,1,.02],[42,5.2,.02],[34,5.2,.02]],'none',1.4);
+  fl+=poly([[34,24.8,.02],[42,24.8,.02],[42,29,.02],[34,29,.02]],'none',1.4);
+  fl+=poly([[36.2,1,.02],[39.8,1,.02],[39.8,2.6,.02],[36.2,2.6,.02]],'none',1.4);
+  fl+=poly([[36.2,27.4,.02],[39.8,27.4,.02],[39.8,29,.02],[36.2,29,.02]],'none',1.4);
+  [[38,15],[38,3.9],[38,26.1]].forEach(([x,y])=>fl+=poly(ring(x,y,.18,.02,12),INK,0,'none'));
+  out.push(fl);
+
+  // Patio: suelo de caucho bajo columpios y arenero
+  out.push(poly([[1.5,18,.02],[11.5,18,.02],[11.5,25,.02],[1.5,25,.02]],'url(#dots)',1.1));
+
+  // Rótulos en el suelo
+  out.push(floorText('AULA GRANDE',1.2,15.3));
+  out.push(floorText('DESPACHO',18.6,15.3));
+  out.push(floorText('PATIO DE JUEGOS',1.2,31.5));
+  out.push(floorText('CANCHA DE FÚTBOL',31,31.5));
+
+  // ===== Edificio =====
+  let b='';
+  b+=box(0,0,0,27,0.4,H,{top:INK});            // muro del fondo
+  b+=box(0,0.4,0,0.4,13,H,{top:INK});          // muro izquierdo
+  // ventanas muro izquierdo
+  [[2,5.5],[7,10.5]].forEach(([a,c])=>{ b+=poly([[0.4,a,1.4],[0.4,c,1.4],[0.4,c,3.8],[0.4,a,3.8]],'#fff',1.1); b+=line([0.4,(a+c)/2,1.4],[0.4,(a+c)/2,3.8],1); b+=line([0.4,a,2.6],[0.4,c,2.6],1); });
+  // pizarra
+  b+=poly([[3,0.4,1.5],[11,0.4,1.5],[11,0.4,3.9],[3,0.4,3.9]],'#fff',1.4);
+  b+=poly([[3.4,0.4,1.8],[10.6,0.4,1.8],[10.6,0.4,3.6],[3.4,0.4,3.6]],'#fafafa',.6,'#999');
+  b+=box(3,0.4,1.35,11,0.65,1.5,{sw:1});
+  // reloj
+  b+=poly(ringY(13.8,0.4,4.25,0.42),'#fff',1.2); b+=line([13.8,0.4,4.25],[13.8,0.4,4.5],1); b+=line([13.8,0.4,4.25],[14,0.4,4.25],1);
+  // ventana despacho
+  b+=poly([[19.2,0.4,1.6],[22.8,0.4,1.6],[22.8,0.4,3.8],[19.2,0.4,3.8]],'#fff',1.1); b+=line([21,0.4,1.6],[21,0.4,3.8],1);
+  out.push(b);
+
+  // Mobiliario del aula (ordenado por profundidad)
+  [2.5,6.6,10.7].forEach(x=>[4.8,7.6,10.4].forEach(y=>{
+    add(x+1.2+y+.55, box(x,y,0,x+2.4,y+1.1,.95,{sw:1.1}));
+    add(x+.4+.4+y+1.9, chairFacingMinusY(x+.4,y+1.45)); add(x+1.4+.4+y+1.9, chairFacingMinusY(x+1.4,y+1.45));
+  }));
+  add(14+2.8, box(12.5,2.2,0,15.5,3.4,1.05));
+  add(14+2.8+.1, box(13.2,2.35,1.05,14.2,3.0,1.12,{sw:.9})); // portátil
+  add(14+1.4, box(13.6,1.15,0,14.4,1.8,.55,{sw:1})+box(13.6,1.0,0,14.4,1.15,1.35,{sw:1}));
+  { let s=box(15.8,0.4,0,17.6,1.2,3.4); [1.1,2.2,3.0].forEach(z=>s+=line([15.8,1.2,z],[17.6,1.2,z],1)); add(16.7+.8, s); }
+  add(1.2+12, box(0.8,11.6,0,1.6,12.4,.8)+(()=>{const p=P(1.2,12,1.7);return `<circle cx="${f1(p[0])}" cy="${f1(p[1])}" r="${f1(.85*S)}" fill="#fff" stroke="${INK}" stroke-width="1.2"/>`;})());
+
+  // Tabique aula/despacho (bajo, con puerta)
+  add(18+4.95, box(17.8,0.4,0,18.2,9.4,h,{top:INK}));
+  add(18+12.25, box(17.8,11.4,0,18.2,12.6,h,{top:INK}));
+
+  // Mobiliario del despacho
+  add(21.6+3.9, box(19.6,3.2,0,23.6,4.6,1.05)+box(21.0,3.4,1.05,22.6,3.55,2.0,{sw:1})+box(21.6,3.55,1.05,22.0,3.9,1.12,{sw:.8}));
+  add(21.6+5.6, chairFacingMinusY(21.2,5.0));
+  { let s=box(24,0.4,0,26.4,1.2,3.6); [1.2,2.4].forEach(z=>s+=line([24,1.2,z],[26.4,1.2,z],1)); add(25.2+.8, s); }
+  add(25.6+3.6, box(25,3,0,26.4,4.2,1.4)+line([25,3.6,.7],[25,3.6,.7],1));
+  add(21.3+9.1, box(20.2,8.6,0,22.4,9.6,.5));
+  add(21.3+11.4, box(19.4,10.6,0,23.2,12.2,.6)+box(19.4,11.8,.6,23.2,12.2,1.35)+box(19.4,10.6,.6,19.8,11.8,1.0)+box(22.8,10.6,.6,23.2,11.8,1.0));
+  add(25.9+11.9, box(25.5,11.5,0,26.3,12.3,.8)+(()=>{const p=P(25.9,11.9,1.7);return `<circle cx="${f1(p[0])}" cy="${f1(p[1])}" r="${f1(.8*S)}" fill="#fff" stroke="${INK}" stroke-width="1.2"/>`;})());
+
+  objs.sort((a,b)=>a.k-b.k); out.push(objs.map(o=>o.s).join('')); objs.length=0;
+
+  // Muros delanteros bajos (corte)
+  out.push(box(0.4,12.6,0,7.4,13,h,{top:INK})+box(9.6,12.6,0,17.8,13,h,{top:INK})+box(17.8,12.6,0,20,13,h,{top:INK})+box(21.8,12.6,0,26.6,13,h,{top:INK})+box(26.6,0.4,0,27,13,h,{top:INK}));
+
+  // ===== Cancha =====
+  let c='';
+  // portería del fondo
+  c+=poly([[36.4,0.2,0],[39.6,0.2,0],[39.6,0.2,2.2],[36.4,0.2,2.2]],'#fff',.7,'#777','fill-opacity=".85"');
+  c+=poly([[36.4,0.2,2.2],[39.6,0.2,2.2],[39.6,1,2.2],[36.4,1,2.2]],'#fff',.7,'#777','fill-opacity=".85"');
+  for(let x=36.8;x<39.6;x+=0.4) c+=line([x,0.2,0],[x,0.2,2.2],.5,'#999');
+  c+=pline([[36.4,1,0],[36.4,1,2.2],[39.6,1,2.2],[39.6,1,0]],2.4);
+  // banderines
+  [[31,1],[45,1]].forEach(([x,y])=>{ c+=line([x,y,0],[x,y,1.7],1.2); c+=poly([[x,y,1.7],[x+.6,y,1.45],[x,y,1.2]],INK,.8); });
+  // banquillo
+  c+=box(45.2,11.5,0,45.9,18.5,.55)+box(45.7,11.5,.55,45.9,18.5,1.3);
+  // balón
+  { const s=poly(ring(39,16.5,.45,.01,16),'#000',0,'none','fill-opacity=".1"'); const p=P(39,16.5,.38); c+=s+`<circle cx="${f1(p[0])}" cy="${f1(p[1])}" r="${f1(.38*S)}" fill="#fff" stroke="${INK}" stroke-width="1.2"/><circle cx="${f1(p[0])}" cy="${f1(p[1])}" r="${f1(.13*S)}" fill="${INK}"/>`; }
+  // portería delantera
+  c+=pline([[36.4,29,0],[36.4,29,2.2],[39.6,29,2.2],[39.6,29,0]],2.4);
+  [[31,29],[45,29]].forEach(([x,y])=>{ c+=line([x,y,0],[x,y,1.7],1.2); c+=poly([[x,y,1.7],[x+.6,y,1.45],[x,y,1.2]],INK,.8); });
+  c+=poly([[36.4,29,2.2],[39.6,29,2.2],[39.6,29.8,2.2],[36.4,29.8,2.2]],'#fff',.7,'#777','fill-opacity=".6"');
+  c+=poly([[39.6,29,0],[39.6,29.8,0],[39.6,29.8,2.2],[39.6,29,2.2]],'#fff',.7,'#777','fill-opacity=".6"');
+  c+=poly([[36.4,29.8,0],[39.6,29.8,0],[39.6,29.8,2.2],[36.4,29.8,2.2]],'#fff',.7,'#777','fill-opacity=".6"');
+  for(let x=36.8;x<39.6;x+=0.4) c+=line([x,29.8,0],[x,29.8,2.2],.5,'#aaa');
+  out.push(c);
+
+  // ===== Patio =====
+  // Columpios
+  { let s='';
+    const L=(x)=>pline([[x,20,0],[x,21.5,4.3],[x,23,0]],2);
+    s+=L(3);
+    [[4.6,5.8],[7.2,8.4]].forEach(([a,c2])=>{ s+=line([a+.1,21.5,4.3],[a+.1,21.5,1.05],.9); s+=line([c2-.1,21.5,4.3],[c2-.1,21.5,1.05],.9); s+=box(a,21.2,.9,c2,21.8,1.05,{sw:1}); });
+    s+=line([3,21.5,4.3],[10,21.5,4.3],2.6);
+    s+=L(10);
+    add(6.5+21.5, s);
+  }
+  // Tobogán
+  { let s=box(14,19.4,0,15.4,20.9,2.6);
+    s+=poly([[15.4,19.55,2.6],[15.4,20.75,2.6],[20,20.75,0.05],[20,19.55,0.05]],'#fff',1.2);
+    s+=pline([[15.4,19.55,2.95],[20,19.55,0.4]],1.1)+pline([[15.4,20.75,2.95],[20,20.75,0.4]],1.1);
+    s+=line([15.4,19.55,2.6],[15.4,19.55,2.95],1.1)+line([20,19.55,.05],[20,19.55,.4],1.1)+line([15.4,20.75,2.6],[15.4,20.75,2.95],1.1)+line([20,20.75,.05],[20,20.75,.4],1.1);
+    add(16.5+20.2, s); }
+  // Arenero
+  add(22+26.2, box(19,24,0,25,28.4,.45)+poly([[19.4,24.4,.46],[24.6,24.4,.46],[24.6,28,.46],[19.4,28,.46]],'url(#dots2)',1));
+  // Bancos
+  add(4+28.9, box(2,28.5,0,6,29.1,.5)+box(2,28.95,.5,6,29.1,1.1));
+  add(14+28.9, box(12,28.5,0,16,29.1,.5)+box(12,28.95,.5,16,29.1,1.1));
+  // Árboles
+  [[1.2,16.9,1],[26,22.3,.95],[17.8,29.3,1.05],[28.5,27.5,.9],[47,3,.95],[47,9.5,1.05],[47,24,1],[-1,22,1.05],[-1,28,.95]].forEach(([x,y,hh])=>add(x+y, tree(x,y,hh)));
+  objs.sort((a,b)=>a.k-b.k); out.push(objs.map(o=>o.s).join(''));
+
+  // Rosa de los vientos
+  { const p=P(46,-1.2,0.02); out.push(`<g transform="translate(${f1(p[0]+30)},${f1(p[1]-6)})"><circle r="13" fill="#fff" stroke="${INK}" stroke-width="1.2"/><path d="M0,-10 L4,4 L0,1 L-4,4 Z" fill="${INK}"/><text y="-17" font-size="10" font-weight="800" text-anchor="middle" fill="${INK}">N</text></g>`); }
+
+  const pad=24, top=70;
+  const vb=[Math.floor(BB.x0-pad), Math.floor(BB.y0-top), Math.ceil(BB.x1-BB.x0+pad*2), Math.ceil(BB.y1-BB.y0+top+pad)];
+  const title=`<text x="${vb[0]+22}" y="${vb[1]+34}" font-size="13" font-weight="800" letter-spacing="2.5" fill="${INK}">PLANO DEL CENTRO</text><text x="${vb[0]+22}" y="${vb[1]+52}" font-size="11" fill="#777" letter-spacing="1">UT2 · E1 · TECNOLOGÍAS HABILITADORAS</text>`;
+  return `<svg id="map" xmlns="http://www.w3.org/2000/svg" viewBox="${vb.join(' ')}" font-family="Inter, 'Segoe UI', Arial, sans-serif" role="img" aria-label="Plano isométrico: aula grande, despacho, patio de juegos con columpios y cancha de fútbol">
+<defs>
+<pattern id="dots" width="7" height="7" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="0.9" fill="#111"/></pattern>
+<pattern id="dots2" width="4" height="4" patternUnits="userSpaceOnUse"><rect width="4" height="4" fill="#fff"/><circle cx="1" cy="1" r="0.6" fill="#999"/><circle cx="3" cy="3" r="0.5" fill="#bbb"/></pattern>
+</defs>
+<rect x="${vb[0]}" y="${vb[1]}" width="${vb[2]}" height="${vb[3]}" fill="#fff"/>
+${title}
+<g class="zones">${out.slice(0,1).join('')}</g>
+${out.slice(1,5).join('')}
+<g class="scene">${out.slice(5).join('\n')}</g>
+<g id="pins"></g>
+</svg>`;
+}
+
+/* Coordenadas: pantalla ⇄ mundo */
+function svgPointFromClient(cx,cy){ const svg=$('#map'); const pt=svg.createSVGPoint(); pt.x=cx; pt.y=cy; return pt.matrixTransform(svg.getScreenCTM().inverse()); }
+function worldFromClient(cx,cy){ const p=svgPointFromClient(cx,cy); const A=p.x/(C*S), B=p.y/(0.5*S); return {x:(A+B)/2, y:(B-A)/2}; }
+function zoneAt(x,y){ for(const k of ZONE_ORDER){ const z=ZONES[k]; if(x>=z.x0&&x<=z.x1&&y>=z.y0&&y<=z.y1) return k; } return null; }
+function overMap(cx,cy){ const r=$('#map').getBoundingClientRect(); return cx>=r.left&&cx<=r.right&&cy>=r.top&&cy<=r.bottom; }
+function highlightZone(k){ document.querySelectorAll('#map .zone').forEach(z=>z.classList.toggle('hl', z.dataset.zone===k)); }
+
+function pinSVG(item, n, forExport=false){
+  const p=P(item.x,item.y,0); const name=TECHS[item.id];
+  const w=Math.min(260, name.length*6.6+22);
+  const label = forExport ? '' : `<g class="plabel"><rect x="16" y="-62" rx="8" width="${f1(w)}" height="24" fill="#111"/><text x="27" y="-45.5" font-size="12" font-weight="600" fill="#fff">${esc(name)}</text></g>`;
+  return `<g class="pin" data-id="${item.id}" transform="translate(${f1(p[0])},${f1(p[1])})">
+<ellipse rx="8" ry="4" fill="#000" fill-opacity=".18"/><line x1="0" y1="0" x2="0" y2="-31" stroke="#111" stroke-width="1.8"/>
+<circle class="head" cy="-42" r="12" fill="#111" stroke="#fff" stroke-width="2.5"/>
+<text y="-38" font-size="12" font-weight="800" text-anchor="middle" fill="#fff">${n}</text>${label}<title>${esc(n+'. '+name)}</title></g>`;
+}
+function renderPins(){
+  const items = state.sel.map((s,i)=>({...s,n:i+1})).filter(s=>s.placed).sort((a,b)=>(a.x+a.y)-(b.x+b.y));
+  $('#pins').innerHTML = items.map(s=>pinSVG(s,s.n)).join('');
+}
+
+/* =========================================================
+   BANCO, BANDEJA, LEYENDA
+   ========================================================= */
+function selIndex(id){ return state.sel.findIndex(s=>s.id===id); }
+function renderBank(){
+  const q=$('#search').value.trim().toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'');
+  const full = state.sel.length>=MAX;
+  $('#bank').innerHTML = state.orden.map(id=>{
+    const i=selIndex(id), on=i>=0;
+    const nm=TECHS[id]; const hit=!q || nm.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').includes(q);
+    return `<button type="button" class="chip${on?' on':''}${!on&&full?' off':''}" data-id="${id}" ${hit?'':'hidden'} aria-pressed="${on}" title="${esc(PARA[id])}">${on?`<span class="n">${i+1}</span>`:''}${esc(nm)}</button>`;
+  }).join('');
+  $('#bankCount').textContent = TECHS.length;
+}
+function renderTray(){
+  $('#selCount').textContent = state.sel.length+'/'+MAX;
+  if(!state.sel.length){ $('#tray').innerHTML='<li class="empty">Aún no has elegido ninguna. Toca una tecnología del banco.</li>'; return; }
+  $('#tray').innerHTML = state.sel.map((s,i)=>{
+    const z = s.placed ? zoneAt(s.x,s.y) : null;
+    return `<li data-id="${s.id}" class="${armed===s.id?'armed':''}" title="Arrastra al plano o toca y después toca el plano">
+      <span class="num">${i+1}</span><span class="nm">${esc(TECHS[s.id])}<small>${esc(PARA[s.id])}</small></span>
+      <span class="zt ${z||'none'}">${z?ZONES[z].name:'Sin colocar'}</span>
+      <button type="button" class="x" data-rm="${s.id}" aria-label="Quitar ${esc(TECHS[s.id])}">✕</button></li>`;
+  }).join('');
+}
+function zoneCounts(){ const cnt={aula:0,despacho:0,patio:0,cancha:0}; let placed=0;
+  state.sel.forEach(s=>{ if(s.placed){ const z=zoneAt(s.x,s.y); if(z){cnt[z]++; placed++;} } }); return {cnt,placed}; }
+function zonasCortas(){ const {cnt}=zoneCounts(); return ZONE_ORDER.filter(k=>cnt[k]<MIN_ZONA).map(k=>({k,n:cnt[k]})); }
+function renderLegend(){
+  const {cnt,placed}=zoneCounts();
+  $('#legend').innerHTML = ZONE_ORDER.map(k=>`<span class="lg zt ${k}${cnt[k]<MIN_ZONA?' low':''}" title="Mínimo ${MIN_ZONA}">${ZONES[k].name}<b>${cnt[k]}/${MIN_ZONA}</b>${cnt[k]<MIN_ZONA?`<em>falta${MIN_ZONA-cnt[k]>1?'n':''} ${MIN_ZONA-cnt[k]}</em>`:''}</span>`).join('');
+  const fichasOk = state.sel.filter(s=>PREGUNTAS.every(p=>hasContent(state.textos[s.id+'_'+p.k]))).length;
+  const checks=[
+    [state.sel.length===MAX, `10 tecnologías elegidas (${state.sel.length}/10)`],
+    [placed===MAX, `Todas colocadas en el plano (${placed}/10)`],
+    [ZONE_ORDER.every(k=>cnt[k]>=MIN_ZONA), 'Al menos 2 en cada espacio (obligatorio)'],
+    [fichasOk===MAX, `Fichas completas (${fichasOk}/10)`],
+    [hasContent(state.textos.conclusion), 'Reflexión final escrita']
+  ];
+  $('#checks').innerHTML = checks.map(([ok,t])=>`<li class="${ok?'ok':''}"><i>${ok?'✓':''}</i>${t}</li>`).join('');
+}
+function hasContent(html){ if(!html) return false; const d=document.createElement('div'); d.innerHTML=html; return d.textContent.replace(/\s+/g,' ').trim().length>=10 || !!d.querySelector('img'); }
+function refreshAll(){ renderBank(); renderTray(); renderPins(); renderLegend(); }
+
+function toggleTech(id){
+  const i=selIndex(id);
+  if(i>=0){
+    const has = PREGUNTAS.some(p=>hasContent(state.textos[id+'_'+p.k]));
+    if(has && !confirm('Ya has escrito en la ficha de «'+TECHS[id]+'». Si la quitas, la ficha desaparece del trabajo (el texto se conserva por si la vuelves a elegir). ¿Quitarla?')) return;
+    state.sel.splice(i,1); if(armed===id) disarm();
+  } else {
+    if(state.sel.length>=MAX){ toast('Ya tienes 10. Quita una para elegir otra.'); return; }
+    state.sel.push({id, placed:false, x:0, y:0});
+  }
+  refreshAll(); renderFichas(); dirty();
+}
+
+/* Colocar */
+let armed=null;
+function arm(id){ armed=id; $('#banner').hidden=false; $('#bannerTxt').textContent='Toca el plano para colocar: '+TECHS[id]; $('#map').classList.add('placing'); renderTray(); if(innerWidth<940) $('#mapbox').scrollIntoView({behavior:'smooth',block:'center'}); }
+function disarm(){ armed=null; $('#banner').hidden=true; $('#map')?.classList.remove('placing'); highlightZone(null); renderTray(); }
+function place(id,x,y){
+  const z=zoneAt(x,y);
+  if(!z){ toast('Colócala dentro de uno de los 4 espacios.'); return false; }
+  let i=selIndex(id);
+  if(i<0){ if(state.sel.length>=MAX){ toast('Ya tienes 10. Quita una para elegir otra.'); return false; } state.sel.push({id,placed:false,x:0,y:0}); i=state.sel.length-1; renderFichas(); }
+  Object.assign(state.sel[i],{placed:true,x:Math.round(x*100)/100,y:Math.round(y*100)/100});
+  refreshAll(); updateFichaZones(); dirty();
+  return true;
+}
+
+/* Arrastre unificado (ratón y táctil) desde banco y bandeja */
+let drag=null;
+function startDrag(e, id, fromTray){
+  if(e.button>0) return;
+  drag={id, fromTray, sx:e.clientX, sy:e.clientY, moving:false, el:e.currentTarget, pid:e.pointerId};
+}
+document.addEventListener('pointermove', e=>{
+  if(!drag || e.pointerId!==drag.pid) return;
+  if(!drag.moving && Math.hypot(e.clientX-drag.sx, e.clientY-drag.sy) > 7){
+    drag.moving=true; drag.ghost=document.createElement('div'); drag.ghost.className='ghost'; drag.ghost.textContent=TECHS[drag.id]; document.body.appendChild(drag.ghost);
+  }
+  if(drag.moving){
+    e.preventDefault();
+    drag.ghost.style.left=e.clientX+'px'; drag.ghost.style.top=e.clientY+'px';
+    if(overMap(e.clientX,e.clientY)){ const w=worldFromClient(e.clientX,e.clientY); highlightZone(zoneAt(w.x,w.y)); } else highlightZone(null);
+  }
+}, {passive:false});
+document.addEventListener('pointerup', e=>{
+  if(!drag || e.pointerId!==drag.pid) return;
+  const d=drag; drag=null;
+  if(d.moving){
+    d.ghost.remove(); highlightZone(null);
+    if(overMap(e.clientX,e.clientY)){ const w=worldFromClient(e.clientX,e.clientY); if(place(d.id,w.x,w.y)) disarm(); }
+  } else {
+    if(d.fromTray){ armed===d.id ? disarm() : arm(d.id); }
+    else toggleTech(d.id);
+  }
+});
+document.addEventListener('pointercancel', ()=>{ if(drag){ drag.ghost?.remove(); drag=null; highlightZone(null);} });
+
+/* =========================================================
+   FICHAS + EDITOR
+   ========================================================= */
+function renderFichas(){
+  const box=$('#fichas');
+  if(!state.sel.length){ box.innerHTML='<div class="nofichas">Cuando elijas tecnologías, aquí aparecerá una ficha para cada una.</div>'; return; }
+  // Conserva las fichas existentes para no perder el foco
+  const existing = {}; box.querySelectorAll('.ficha').forEach(f=>existing[f.dataset.id]=f);
+  box.querySelector('.nofichas')?.remove();
+  const keep=new Set();
+  state.sel.forEach((s,i)=>{
+    let f=existing[s.id];
+    if(!f){
+      f=document.createElement('article'); f.className='ficha'; f.dataset.id=s.id;
+      f.innerHTML=`<header><span class="num"></span><h3>${esc(TECHS[s.id])}</h3><span class="zt"></span><button type="button" class="btn small" data-locate="${s.id}">Ver en el plano</button></header>
+        <div class="body"><div class="purpose"><b>Para qué sirve:</b> ${esc(PARA[s.id])}</div>${PREGUNTAS.map(p=>`<div class="field"><label>${p.t} <span>· ${p.s}</span></label><div class="ed" data-key="${s.id}_${p.k}" data-ph="${esc(p.ph)}"></div></div>`).join('')}</div>`;
+      f.querySelectorAll('.ed').forEach(initEditor);
+    }
+    f.querySelector('.num').textContent=i+1;
+    box.appendChild(f); keep.add(String(s.id));
+  });
+  Object.keys(existing).forEach(k=>{ if(!keep.has(k)) existing[k].remove(); });
+  updateFichaZones();
+}
+function updateFichaZones(){
+  document.querySelectorAll('.ficha').forEach(f=>{
+    const s=state.sel.find(x=>String(x.id)===f.dataset.id); if(!s) return;
+    const z=s.placed?zoneAt(s.x,s.y):null;
+    f.className='ficha z-'+(z||'none');
+    const t=f.querySelector('.zt'); t.className='zt '+(z||'none'); t.textContent=z?ZONES[z].name:'Sin colocar en el plano';
+  });
+}
+
+let lastRange=null, lastEditor=null, selImg=null;
+function edOf(node){ while(node && node!==document){ if(node.nodeType===1 && node.classList.contains('ed')) return node; node=node.parentNode; } return null; }
+function updEmpty(ed){ const empty = !ed.textContent.trim() && !ed.querySelector('img,li'); ed.classList.toggle('empty', empty); }
+function cleanHTML(ed){ const c=ed.cloneNode(true); c.querySelectorAll('.img.sel').forEach(x=>x.classList.remove('sel')); return c.innerHTML; }
+function edChanged(ed){ updEmpty(ed); state.textos[ed.dataset.key]=cleanHTML(ed); renderLegend(); dirty(); }
+
+function initEditor(ed){
+  ed.contentEditable='true'; ed.spellcheck=true;
+  ed.innerHTML = state.textos[ed.dataset.key] || '';
+  ed.querySelectorAll('.img').forEach(w=>{ w.contentEditable='false'; if(!w.querySelector('.handle')) w.insertAdjacentHTML('beforeend','<span class="handle"></span>'); });
+  updEmpty(ed);
+  ed.addEventListener('input', ()=>edChanged(ed));
+  ed.addEventListener('focus', ()=>{ lastEditor=ed; });
+  ed.addEventListener('paste', e=>{
+    e.preventDefault();
+    const files=[...(e.clipboardData?.items||[])].filter(it=>it.kind==='file' && it.type.startsWith('image/')).map(it=>it.getAsFile()).filter(Boolean);
+    if(files.length){ const r=currentRangeIn(ed); files.forEach(f=>insertImage(f, ed, r)); }
+    else toast('Pegar texto está desactivado: escríbelo con tus palabras. ✍️');
+  });
+  ed.addEventListener('dragover', e=>{ e.preventDefault(); ed.classList.add('drop'); });
+  ed.addEventListener('dragleave', ()=>ed.classList.remove('drop'));
+  ed.addEventListener('drop', e=>{
+    e.preventDefault(); ed.classList.remove('drop');
+    const files=[...(e.dataTransfer?.files||[])].filter(f=>f.type.startsWith('image/'));
+    if(!files.length){ toast('Solo puedes soltar imágenes.'); return; }
+    let r=null;
+    if(document.caretRangeFromPoint) r=document.caretRangeFromPoint(e.clientX,e.clientY);
+    else if(document.caretPositionFromPoint){ const p=document.caretPositionFromPoint(e.clientX,e.clientY); if(p){ r=document.createRange(); r.setStart(p.offsetNode,p.offset); } }
+    if(!r || !ed.contains(r.startContainer)) r=null;
+    files.forEach(f=>insertImage(f, ed, r));
+  });
+  ed.addEventListener('click', e=>{
+    const w=e.target.closest('.img');
+    if(w && ed.contains(w)) selectImg(w); else selectImg(null);
+  });
+}
+document.addEventListener('selectionchange', ()=>{
+  const s=getSelection(); if(!s.rangeCount) return; const r=s.getRangeAt(0); const ed=edOf(r.commonAncestorContainer);
+  if(ed){ lastRange=r.cloneRange(); lastEditor=ed; }
+});
+function currentRangeIn(ed){ if(lastRange && lastEditor===ed && ed.contains(lastRange.startContainer)) return lastRange.cloneRange(); return null; }
+function restoreSel(){
+  if(!lastEditor || !document.contains(lastEditor)){ toast('Primero haz clic dentro de un cuadro de texto.'); return false; }
+  lastEditor.focus();
+  if(lastRange && lastEditor.contains(lastRange.startContainer)){ const s=getSelection(); s.removeAllRanges(); s.addRange(lastRange); }
+  return true;
+}
+
+// Barra de formato
+$('#toolbar').addEventListener('mousedown', e=>{ if(e.target.closest('button')) e.preventDefault(); });
+$('#toolbar').addEventListener('click', e=>{
+  const b=e.target.closest('button'); if(!b) return;
+  if(b.id==='tbLink'){ if(!restoreSel()) return; const keepR=lastRange?.cloneRange(); const url=prompt('Dirección del enlace (https://…):','https://'); if(!url||!/^https?:\/\/\S+\.\S+/.test(url.trim())){ if(url) toast('El enlace debe empezar por http:// o https://'); return; }
+    restoreSel(); if(keepR){const s=getSelection(); s.removeAllRanges(); s.addRange(keepR);}
+    const s=getSelection(); if(s.isCollapsed){ document.execCommand('insertHTML',false,`<a href="${esc(url.trim())}" target="_blank" rel="noopener">${esc(url.trim())}</a>&nbsp;`); } else document.execCommand('createLink',false,url.trim());
+    edChanged(lastEditor); return; }
+  if(b.id==='tbImg'){ if(!lastEditor||!document.contains(lastEditor)){ toast('Primero haz clic dentro de un cuadro de texto.'); return; } $('#imgFile').click(); return; }
+  if(!restoreSel()) return;
+  if(b.dataset.cmd) document.execCommand(b.dataset.cmd);
+  if(b.dataset.block) document.execCommand('formatBlock', false, b.dataset.block==='P'?'<p>':'<'+b.dataset.block.toLowerCase()+'>');
+  edChanged(lastEditor);
+});
+$('#imgFile').addEventListener('change', e=>{ const f=e.target.files[0]; e.target.value=''; if(f&&lastEditor) insertImage(f,lastEditor,currentRangeIn(lastEditor)); });
+
+// Imágenes
+function fileToDataURL(file){
+  return new Promise((res,rej)=>{
+    const url=URL.createObjectURL(file); const im=new Image();
+    im.onload=()=>{ const max=1400; let w=im.naturalWidth, h=im.naturalHeight; const k=Math.min(1,max/Math.max(w,h)); w=Math.round(w*k); h=Math.round(h*k);
+      const cv=document.createElement('canvas'); cv.width=w; cv.height=h; const cx=cv.getContext('2d'); cx.fillStyle='#fff'; cx.fillRect(0,0,w,h); cx.drawImage(im,0,0,w,h);
+      URL.revokeObjectURL(url); res(cv.toDataURL('image/jpeg',0.85)); };
+    im.onerror=()=>{ URL.revokeObjectURL(url); rej('img'); }; im.src=url;
+  });
+}
+async function insertImage(file, ed, range){
+  let src; try{ src=await fileToDataURL(file); }catch(e){ toast('No se ha podido leer la imagen.'); return; }
+  const w=document.createElement('span'); w.className='img'; w.contentEditable='false'; w.dataset.w='100'; w.style.width='100%';
+  w.innerHTML=`<img src="${src}" alt=""><span class="handle"></span>`;
+  ed.focus();
+  let r = (range && ed.contains(range.startContainer)) ? range : null;
+  if(!r){ r=document.createRange(); r.selectNodeContents(ed); r.collapse(false); }
+  r.deleteContents(); r.insertNode(w);
+  const after=document.createTextNode(' '); w.after(after);
+  const nr=document.createRange(); nr.setStart(after,1); nr.collapse(true); const s=getSelection(); s.removeAllRanges(); s.addRange(nr);
+  lastRange=nr.cloneRange(); lastEditor=ed;
+  edChanged(ed); toast('Imagen insertada. Haz clic en ella para cambiar su tamaño.');
+}
+function selectImg(w){
+  document.querySelectorAll('.ed .img.sel').forEach(x=>{ if(x!==w) x.classList.remove('sel'); });
+  selImg=w; const bar=$('#imgbar');
+  if(!w){ bar.hidden=true; return; }
+  w.classList.add('sel'); bar.hidden=false; placeImgbar();
+}
+function placeImgbar(){ if(!selImg) return; const r=selImg.getBoundingClientRect(); const bar=$('#imgbar'); const bw=bar.offsetWidth||260;
+  bar.style.top=(window.scrollY+r.top-44)+'px'; bar.style.left=Math.max(8, Math.min(window.scrollX+r.left, window.scrollX+document.documentElement.clientWidth-bw-8))+'px'; }
+window.addEventListener('scroll', placeImgbar, {passive:true}); window.addEventListener('resize', placeImgbar);
+document.addEventListener('mousedown', e=>{ if(selImg && !e.target.closest('.img') && !e.target.closest('#imgbar')) selectImg(null); });
+$('#imgbar').addEventListener('mousedown', e=>e.preventDefault());
+$('#imgbar').addEventListener('click', e=>{
+  const b=e.target.closest('button'); if(!b||!selImg) return; const ed=edOf(selImg);
+  if(b.id==='imgRemove'){ selImg.remove(); selectImg(null); edChanged(ed); return; }
+  setImgW(selImg, +b.dataset.w); placeImgbar(); edChanged(ed);
+});
+function setImgW(w,pct){ pct=Math.max(10,Math.min(100,Math.round(pct))); w.style.width=pct+'%'; w.dataset.w=pct; }
+document.addEventListener('pointerdown', e=>{
+  const hd=e.target.closest('.ed .img .handle'); if(!hd) return;
+  e.preventDefault(); const w=hd.parentNode, ed=edOf(w); const cs=getComputedStyle(ed);
+  const inner = ed.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
+  const sx=e.clientX, sw=w.offsetWidth; hd.setPointerCapture(e.pointerId);
+  const mv=ev=>{ setImgW(w, (sw+ev.clientX-sx)/inner*100); placeImgbar(); };
+  const up=()=>{ hd.removeEventListener('pointermove',mv); hd.removeEventListener('pointerup',up); edChanged(ed); };
+  hd.addEventListener('pointermove',mv); hd.addEventListener('pointerup',up);
+});
+
+/* =========================================================
+   PDF (jsPDF desde el DOM, sin html2canvas)
+   ========================================================= */
+function pdfSafe(t){
+  return String(t).replace(/[‘’‚]/g,"'").replace(/[“”„]/g,'"').replace(/[–—]/g,'-').replace(/…/g,'...')
+    .replace(/[ ​]/g,' ').replace(/[•]/g,'-').normalize('NFC').replace(/[^\x09\x0a\x0d\x20-\x7e\xa0-\xff]/g,'');
+}
+function parseEditor(html){
+  const root=document.createElement('div'); root.innerHTML=html||'';
+  const blocks=[]; let cur={type:'p',runs:[]};
+  const flush=()=>{ if(cur.runs.some(r=>r.br || r.t.trim())) blocks.push(cur); cur={type:'p',runs:[]}; };
+  const walk=(node,st)=>{
+    for(const n of node.childNodes){
+      if(n.nodeType===3){ if(n.nodeValue) cur.runs.push({t:n.nodeValue.replace(/\s+/g,' '),...st}); continue; }
+      if(n.nodeType!==1) continue;
+      const tag=n.tagName;
+      if(n.classList.contains('img')){ const im=n.querySelector('img'); flush(); if(im) blocks.push({type:'img',src:im.getAttribute('src'),pct:+n.dataset.w||100,nw:im.naturalWidth||800,nh:im.naturalHeight||600}); continue; }
+      if(tag==='BR'){ cur.runs.push({t:'',br:true}); continue; }
+      if(tag==='B'||tag==='STRONG'){ walk(n,{...st,b:true}); continue; }
+      if(tag==='I'||tag==='EM'){ walk(n,{...st,i:true}); continue; }
+      if(tag==='U'){ walk(n,{...st,u:true}); continue; }
+      if(tag==='A'){ walk(n,{...st,link:n.getAttribute('href')}); continue; }
+      if(tag==='UL'||tag==='OL'){ flush(); let k=1; for(const li of n.children){ if(li.tagName!=='LI') continue; cur={type:'li',marker:tag==='OL'?(k++)+'.':'•',runs:[]}; walk(li,st); flush(); } continue; }
+      if(/^(P|DIV|H1|H2|H3|H4|BLOCKQUOTE)$/.test(tag)){ flush(); cur={type:/^H[1-3]$/.test(tag)?tag.toLowerCase():'p',runs:[]}; walk(n,st); flush(); continue; }
+      walk(n,st);
+    }
+  };
+  walk(root,{}); flush();
+  // limpia saltos finales sobrantes
+  blocks.forEach(b=>{ if(b.runs){ while(b.runs.length && b.runs[b.runs.length-1].br) b.runs.pop(); } });
+  return blocks.filter(b=>b.type==='img'||b.runs.length);
+}
+function svgToPNG(svgStr, width){
+  return new Promise((res,rej)=>{
+    const im=new Image();
+    im.onload=()=>{ const vb=svgStr.match(/viewBox="([^"]+)"/)[1].split(' ').map(Number); const h=Math.round(width*vb[3]/vb[2]);
+      const cv=document.createElement('canvas'); cv.width=width; cv.height=h; const cx=cv.getContext('2d'); cx.fillStyle='#fff'; cx.fillRect(0,0,width,h); cx.drawImage(im,0,0,width,h); res({data:cv.toDataURL('image/png'),w:width,h}); };
+    im.onerror=rej;
+    im.src='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(svgStr);
+  });
+}
+function exportMapSVG(){
+  const svg=$('#map').cloneNode(true);
+  svg.querySelectorAll('.zone').forEach(z=>z.classList.remove('hl'));
+  const items=state.sel.map((s,i)=>({...s,n:i+1})).filter(s=>s.placed).sort((a,b)=>(a.x+a.y)-(b.x+b.y));
+  svg.querySelector('#pins').innerHTML=items.map(s=>pinSVG(s,s.n,true)).join('');
+  svg.removeAttribute('class');
+  return new XMLSerializer().serializeToString(svg);
+}
+const rgbOf = hex => [parseInt(hex.slice(1,3),16),parseInt(hex.slice(3,5),16),parseInt(hex.slice(5,7),16)];
+
+async function generarPDF(asBlob){
+  if(!window.jspdf){ toast('No se ha cargado el generador de PDF. Revisa tu conexión a internet y recarga la página.'); return null; }
+  selectImg(null);
+  const { jsPDF } = window.jspdf;
+  const doc=new jsPDF({unit:'mm',format:'a4'});
+  const PW=210, PH=297, M=16, CW=PW-2*M, BOTTOM=PH-16;
+  let y=M;
+  const pt2mm=0.3528;
+  const ensure=h=>{ if(y+h>BOTTOM){ doc.addPage(); y=M; } };
+  const setF=(st,size)=>{ doc.setFont('helvetica', st.b&&st.i?'bolditalic':st.b?'bold':st.i?'italic':'normal'); doc.setFontSize(size); };
+  const A=state.alumno;
+
+  // Cabecera
+  doc.setFillColor(...rgbOf('#ebe6fd')); doc.roundedRect(M,y,CW,30,4,4,'F');
+  doc.setTextColor(29,27,32); setF({b:true},17); doc.text(pdfSafe('UT2_E1 · Tecnologías Habilitadoras'),M+7,y+10);
+  setF({},10); doc.setTextColor(70,64,78);
+  doc.text(pdfSafe(`Alumno/a: ${A.nombre} ${A.apellidos}`),M+7,y+18);
+  doc.text(pdfSafe(`Ciclo: ${A.ciclo}${A.grupo?'  ·  Grupo: '+A.grupo:''}`),M+7,y+24);
+  doc.text(pdfSafe(new Date().toLocaleDateString('es-ES',{day:'numeric',month:'long',year:'numeric'})),PW-M-7,y+18,{align:'right'});
+  y+=34;
+  setF({b:true},9); doc.setTextColor(108,102,114); doc.text(pdfSafe(RA.codigo+' · Criterios de evaluación trabajados: '+RA.ce.filter(c=>c[2]).map(c=>c[0]).join(', ')+'  ·  '+RA.peso), M, y+2); y+=8;
+
+  const h2=(t)=>{ ensure(14); setF({b:true},13); doc.setTextColor(29,27,32); doc.text(pdfSafe(t),M,y+5); doc.setDrawColor(29,27,32); doc.setLineWidth(.5); doc.line(M,y+7.5,M+16,y+7.5); y+=13; };
+
+  // Plano
+  h2('1. Mi plano del centro');
+  try{
+    const img=await svgToPNG(exportMapSVG(), 2000);
+    let w=CW, h=w*img.h/img.w; if(h>130){ h=130; w=h*img.w/img.h; }
+    ensure(h); doc.setDrawColor(220,215,225); doc.setLineWidth(.3); doc.roundedRect(M+(CW-w)/2-1,y-1,w+2,h+2,3,3,'S');
+    doc.addImage(img.data,'PNG',M+(CW-w)/2,y,w,h,undefined,'FAST'); y+=h+8;
+  }catch(e){ setF({i:true},10); doc.text('(No se ha podido incluir el plano)',M,y+4); y+=10; }
+
+  // Resumen
+  const rowH=7.2;
+  ensure(14+rowH*(state.sel.length+1));
+  h2('2. Mis 10 tecnologías'); doc.setFillColor(244,241,246); doc.rect(M,y,CW,rowH,'F'); setF({b:true},9.5); doc.setTextColor(29,27,32);
+  doc.text('Nº',M+3,y+4.9); doc.text('Tecnología',M+14,y+4.9); doc.text('Espacio',M+CW-55,y+4.9); y+=rowH;
+  state.sel.forEach((s,i)=>{
+    ensure(rowH); const z=s.placed?zoneAt(s.x,s.y):null;
+    setF({},9.5); doc.setTextColor(29,27,32); doc.text(String(i+1),M+3,y+4.9); doc.text(pdfSafe(TECHS[s.id]),M+14,y+4.9);
+    if(z){ doc.setFillColor(...ZONES[z].rgb); doc.roundedRect(M+CW-56,y+1.2,48,4.9,2.4,2.4,'F'); doc.setTextColor(...ZONES[z].ink); setF({b:true},8.5); doc.text(pdfSafe(ZONES[z].name),M+CW-53,y+4.75); }
+    else { doc.setTextColor(138,106,16); setF({i:true},9); doc.text('Sin colocar',M+CW-55,y+4.9); }
+    doc.setDrawColor(232,227,234); doc.setLineWidth(.2); doc.line(M,y+rowH,M+CW,y+rowH); y+=rowH;
+  });
+  if(!state.sel.length){ setF({i:true},10); doc.setTextColor(120,114,126); doc.text('(No has elegido tecnologías)',M,y+5); y+=8; }
+  y+=6;
+
+  // Texto enriquecido
+  const SIZES={p:10.5,li:10.5,h1:15,h2:13,h3:11.5};
+  function rich(html){
+    const blocks=parseEditor(html);
+    if(!blocks.length){ ensure(6); setF({i:true},10); doc.setTextColor(150,144,156); doc.text('(sin respuesta)',M+2,y+4); y+=7; return; }
+    for(const bl of blocks){
+      if(bl.type==='img'){
+        let w=CW*bl.pct/100, h=w*bl.nh/bl.nw; const maxH=BOTTOM-M-10; if(h>maxH){ h=maxH; w=h*bl.nw/bl.nh; }
+        ensure(h+3); try{ doc.addImage(bl.src, /^data:image\/png/.test(bl.src)?'PNG':'JPEG', M, y, w, h); }catch(e){} y+=h+3; continue;
+      }
+      const size=SIZES[bl.type]||10.5, lh=size*pt2mm*1.45, isH=/^h/.test(bl.type);
+      const x0 = bl.type==='li' ? M+6 : M, maxW = M+CW-x0;
+      // tokens
+      const toks=[]; bl.runs.forEach(r=>{ if(r.br){ toks.push({br:true}); return; } pdfSafe(r.t).split(/(\s+)/).forEach(t=>{ if(t) toks.push({t, st:{b:r.b||isH, i:r.i, u:r.u, link:r.link}}); }); });
+      const lines=[]; let line=[], lw=0;
+      const pushLine=()=>{ while(line.length && /^\s+$/.test(line[line.length-1].t)) { lw-=line[line.length-1].w; line.pop(); } lines.push(line); line=[]; lw=0; };
+      for(const tk of toks){
+        if(tk.br){ pushLine(); continue; }
+        setF(tk.st,size); let w=doc.getTextWidth(tk.t);
+        if(/^\s+$/.test(tk.t)){ if(!line.length) continue; tk.t=' '; w=doc.getTextWidth(' '); }
+        if(lw+w>maxW && line.length){ pushLine(); if(/^\s+$/.test(tk.t)) continue; }
+        if(w>maxW){ // palabra muy larga
+          let s=tk.t; while(s.length){ let k=s.length; while(k>1 && doc.getTextWidth(s.slice(0,k))>maxW-lw) k--; line.push({t:s.slice(0,k),w:doc.getTextWidth(s.slice(0,k)),st:tk.st}); s=s.slice(k); if(s.length) pushLine(); else lw+=doc.getTextWidth(line[line.length-1].t); }
+          continue;
+        }
+        line.push({t:tk.t,w,st:tk.st}); lw+=w;
+      }
+      if(line.length) pushLine();
+      if(isH) y+=1.5;
+      lines.forEach((ln,li)=>{
+        ensure(lh);
+        if(bl.type==='li' && li===0){ setF({},size); doc.setTextColor(29,27,32); doc.text(bl.marker, M+1.5, y+lh*0.75); }
+        let x=x0;
+        ln.forEach(tk=>{
+          setF(tk.st,size);
+          if(tk.st.link) doc.setTextColor(90,74,181); else doc.setTextColor(29,27,32);
+          doc.text(tk.t, x, y+lh*0.75);
+          if(tk.st.u || tk.st.link){ doc.setDrawColor(...(tk.st.link?[90,74,181]:[29,27,32])); doc.setLineWidth(.2); doc.line(x, y+lh*0.75+0.7, x+tk.w, y+lh*0.75+0.7); }
+          if(tk.st.link && /^https?:/.test(tk.st.link)) doc.link(x, y+lh*0.1, tk.w, lh*0.8, {url:tk.st.link});
+          x+=tk.w;
+        });
+        y+=lh;
+      });
+      y+= isH?1.5:1.6;
+    }
+  }
+
+  // Fichas
+  h2('3. Fichas');
+  state.sel.forEach((s,i)=>{
+    const z=s.placed?zoneAt(s.x,s.y):null;
+    ensure(40);
+    const col = z?ZONES[z].rgb:[244,241,246];
+    doc.setFillColor(...col); doc.roundedRect(M,y,CW,11,3,3,'F');
+    doc.setFillColor(29,27,32); doc.circle(M+6.5,y+5.5,3.6,'F'); setF({b:true},9.5); doc.setTextColor(255,255,255); doc.text(String(i+1),M+6.5,y+6.9,{align:'center'});
+    setF({b:true},12); doc.setTextColor(29,27,32); doc.text(pdfSafe(TECHS[s.id]),M+13,y+7.2);
+    setF({b:true},9); doc.setTextColor(...(z?ZONES[z].ink:[138,106,16])); doc.text(pdfSafe(z?ZONES[z].name:'Sin colocar'),PW-M-4,y+7,{align:'right'});
+    y+=14;
+    { setF({},9.5); const lines=doc.splitTextToSize(pdfSafe('Para qué sirve: '+PARA[s.id]), CW-10); const hh=lines.length*4.6+5; ensure(hh); doc.setFillColor(244,241,246); doc.roundedRect(M,y,CW,hh,2,2,'F'); doc.setFillColor(29,27,32); doc.rect(M,y,1.2,hh,'F'); doc.setTextColor(29,27,32); lines.forEach((l,k)=>{ if(k===0){ setF({b:true},9.5); doc.text('Para qué sirve:',M+5,y+5.6); const w=doc.getTextWidth('Para qué sirve: '); setF({},9.5); doc.text(l.replace(/^Para qué sirve: /,''),M+5+w,y+5.6); } else doc.text(l,M+5,y+5.6+k*4.6); }); y+=hh+5; }
+    PREGUNTAS.forEach(p=>{ ensure(12); setF({b:true},10); doc.setTextColor(108,102,114); doc.text(pdfSafe(p.t),M,y+4); y+=6.5; rich(state.textos[s.id+'_'+p.k]); y+=2; });
+    y+=5;
+  });
+
+  // Reflexión
+  h2('4. Reflexión final');
+  rich(state.textos.conclusion);
+
+  // Pie de página
+  const n=doc.getNumberOfPages();
+  for(let i=1;i<=n;i++){ doc.setPage(i); setF({},8); doc.setTextColor(150,144,156);
+    doc.text(pdfSafe(`UT2_E1 · ${A.nombre} ${A.apellidos}`),M,PH-8); doc.text(`Página ${i} de ${n}`,PW-M,PH-8,{align:'right'}); }
+
+  const fname = ('UT2_E1_'+A.apellidos+'_'+A.nombre).normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^A-Za-z0-9_]+/g,'_').replace(/_+/g,'_')+'.pdf';
+  if(asBlob) return {blob:doc.output('blob'), name:fname, pages:n};
+  doc.save(fname);
+  return {name:fname,pages:n};
+}
+
+/* =========================================================
+   ENUNCIADO
+   ========================================================= */
+const TICK_KEYS = () => [...COMUN.pasos.map((_,i)=>'p'+i), ...COMUN.normas.map((_,i)=>'n'+i)];
+function tickItem(k, txt, num){
+  const on = !!(state && state.leidos && state.leidos[k]);
+  return `<li><button type="button" class="tk${on?' on':''}" data-tick="${k}" aria-pressed="${on}"><i>${on?'✓':num}</i><span>${txt}</span></button></li>`;
+}
+function enunProgress(){
+  const keys=TICK_KEYS(), n=keys.filter(k=>state && state.leidos && state.leidos[k]).length;
+  const p=$('#enunProg'); const all=n===keys.length;
+  p.textContent = all ? '✓ Todo leído' : n+'/'+keys.length+' marcados';
+  p.classList.toggle('done', all);
+  applyLock(all, keys.length-n);
+  return all;
+}
+function applyLock(unlocked, faltan){
+  ['plano','fichasSec','reflexion'].forEach(id=>{ const el=$('#'+id); el.classList.toggle('locked',!unlocked); el.inert=!unlocked; });
+  $('#lockMsg').hidden = unlocked;
+  if(!unlocked) $('#lockN').textContent = faltan;
+}
+$('#lockGo').addEventListener('click', ()=>{ setEnunCollapsed(false); $('#enunciado').scrollIntoView({behavior:'smooth'}); });
+function setEnunCollapsed(c){
+  const sec=$('#enunciado'), body=$('#enunBody');
+  if(!c) body.style.maxHeight = body.scrollHeight+'px';
+  sec.classList.toggle('collapsed', c);
+  $('#enunHead').setAttribute('aria-expanded', String(!c));
+  if(!c) setTimeout(()=>{ if(!sec.classList.contains('collapsed')) body.style.maxHeight='none'; }, 460);
+}
+function collapseEnun(){
+  const body=$('#enunBody'); body.style.maxHeight = body.scrollHeight+'px';
+  requestAnimationFrame(()=>requestAnimationFrame(()=>setEnunCollapsed(true)));
+}
+$('#enunHead').addEventListener('click', ()=>{ const c=$('#enunciado').classList.contains('collapsed'); c ? setEnunCollapsed(false) : collapseEnun(); });
+$('#brief').addEventListener('click', e=>{
+  const b=e.target.closest('[data-tick]'); if(!b || !state) return;
+  state.leidos = state.leidos || {};
+  const k=b.dataset.tick; state.leidos[k] = !state.leidos[k];
+  const on=state.leidos[k]; b.classList.toggle('on',on); b.setAttribute('aria-pressed',String(on));
+  b.querySelector('i').textContent = on ? '✓' : (k[0]==='p' ? (+k.slice(1)+1) : '');
+  dirty();
+  if(enunProgress() && on){ setTimeout(()=>{ collapseEnun(); toast('¡Desbloqueado! Ya puedes empezar. El enunciado sigue arriba si necesitas verlo.', 3500); setTimeout(()=>$('#plano').scrollIntoView({behavior:'smooth',block:'start'}), 500); }, 450); }
+});
+function renderBrief(){
+  $('#brief').innerHTML = `
+    <div class="box resumen"><h3>¿En qué consiste este ejercicio?</h3><ol class="pasos3">
+      <li><span class="n">1</span><div><b>Elige 10 tecnologías</b><p>Del banco de 50. Te decimos para qué sirve cada una.</p></div></li>
+      <li><span class="n">2</span><div><b>Instálalas en el plano</b><p>Arrástralas al aula, el despacho, el patio o la cancha. Mínimo 2 en cada espacio.</p></div></li>
+      <li><span class="n">3</span><div><b>Justifica cada una</b><p>Explica por qué la has puesto ahí y quién la usaría. Al final, descarga el PDF y entrégalo.</p></div></li>
+    </ol></div>
+    <div class="box b-lav"><h3>Contexto</h3><p>${COMUN.contexto}</p><p style="margin-top:8px"><b>Objetivo:</b> ${COMUN.objetivo}</p></div>
+    <div class="box b-mint"><h3>Pasos</h3><ul class="ticks">${COMUN.pasos.map((p,i)=>tickItem('p'+i,p,i+1)).join('')}</ul></div>
+    <div class="box b-peach"><h3>Normas</h3><ul class="ticks">${COMUN.normas.map((p,i)=>tickItem('n'+i,p,'')).join('')}</ul></div>
+    <div class="box b-sky"><h3>Criterios de evaluación (10 puntos)</h3><table class="crit">${COMUN.criterios.map(([t,p])=>`<tr><td>${t}</td><td>${p} pt</td></tr>`).join('')}</table><p style="margin-top:8px;font-size:13px"><b>Entrega:</b> ${COMUN.entrega}</p></div>
+    <details class="box ra"><summary><h3>Resultado de aprendizaje de la unidad</h3><span class="ra-sum">${RA.codigo} · criterios ${RA.ce.filter(c=>c[2]).map(c=>c[0]).join(", ")}</span></summary><p class="ra-txt"><b>${RA.codigo}.</b> ${RA.texto}</p><ul class="ce">${RA.ce.map(([l,t,on])=>`<li class="${on?'on':''}"><span class="l">${l}</span><span class="t">${t}</span>${on?'<span class="tag">Este ejercicio</span>':''}</li>`).join('')}</ul><p class="ra-note">Este ejercicio (E1) trabaja los criterios <b>${RA.ce.filter(c=>c[2]).map(c=>c[0]).join(', ')}</b> y supone el <b>${RA.peso}</b>.</p></details>`;
+}
+
+/* =========================================================
+   ARRANQUE
+   ========================================================= */
+function mountApp(){
+  renderBrief(); setEnunCollapsed(enunProgress());
+  $('#who').innerHTML = `${esc(state.alumno.nombre+' '+state.alumno.apellidos)} · ${esc(state.alumno.ciclo)}${state.alumno.grupo?' · '+esc(state.alumno.grupo):''} · <a href="#" id="editWho">cambiar datos</a>`;
+  $('#editWho').onclick = e=>{ e.preventDefault(); showStart(true); };
+  $('#mapHolder').innerHTML = buildMap();
+  const svg=$('#map');
+  svg.addEventListener('pointermove', e=>{ if(drag||pinDrag) return; const w=worldFromClient(e.clientX,e.clientY); highlightZone(armed!==null||e.pointerType==='mouse'?zoneAt(w.x,w.y):null); });
+  svg.addEventListener('pointerleave', ()=>{ if(!drag&&!pinDrag) highlightZone(null); });
+  svg.addEventListener('click', e=>{
+    if(armed===null || e.target.closest('.pin')) return;
+    const w=worldFromClient(e.clientX,e.clientY); if(place(armed,w.x,w.y)) disarm();
+  });
+  svg.addEventListener('pointerdown', onPinDown);
+  document.querySelectorAll('#edConclusion').forEach(ed=>{ if(!ed.dataset.init){ ed.dataset.init=1; initEditor(ed); } else { ed.innerHTML=state.textos.conclusion||''; updEmpty(ed); } });
+  $('#fichas').innerHTML=''; renderFichas(); refreshAll();
+  $('#saveStatus').textContent = DEMO ? 'Ejemplo (no se guarda)' : (state.updated ? 'Guardado' : 'Sin cambios');
+}
+
+let pinDrag=null;
+function onPinDown(e){
+  const g=e.target.closest('.pin'); if(!g) return;
+  e.preventDefault(); const id=+g.dataset.id; const s=state.sel[selIndex(id)];
+  const bp=P(s.x,s.y,0), sv=$("#map"), bpt=sv.createSVGPoint(); bpt.x=bp[0]; bpt.y=bp[1]; const bc=bpt.matrixTransform(sv.getScreenCTM());
+  pinDrag={id, g, sx:e.clientX, sy:e.clientY, offX:bc.x-e.clientX, offY:bc.y-e.clientY, moved:false};
+  g.setPointerCapture(e.pointerId);
+  const mv=ev=>{ if(Math.hypot(ev.clientX-pinDrag.sx,ev.clientY-pinDrag.sy)>4) pinDrag.moved=true; if(!pinDrag.moved) return;
+    const w=worldFromClient(ev.clientX+pinDrag.offX,ev.clientY+pinDrag.offY); const p=P(w.x,w.y,0); g.setAttribute('transform',`translate(${f1(p[0])},${f1(p[1])})`); highlightZone(zoneAt(w.x,w.y)); pinDrag.w=w; };
+  const up=()=>{ g.removeEventListener('pointermove',mv); g.removeEventListener('pointerup',up); g.removeEventListener('pointercancel',up);
+    const d=pinDrag; pinDrag=null; highlightZone(null);
+    if(!d.moved){ const f=document.querySelector(`.ficha[data-id="${id}"]`); if(f){ f.scrollIntoView({behavior:'smooth',block:'start'}); } return; }
+    if(d.w && zoneAt(d.w.x,d.w.y)) place(id,d.w.x,d.w.y); else { toast('Colócala dentro de uno de los 4 espacios.'); renderPins(); } };
+  g.addEventListener('pointermove',mv); g.addEventListener('pointerup',up); g.addEventListener('pointercancel',up);
+}
+
+// Eventos fijos
+$('#bank').addEventListener('pointerdown', e=>{ const c=e.target.closest('.chip'); if(!c) return; startDrag({button:e.button,clientX:e.clientX,clientY:e.clientY,pointerId:e.pointerId,currentTarget:c}, +c.dataset.id, false); });
+$('#bank').addEventListener('keydown', e=>{ const c=e.target.closest('.chip'); if(c && (e.key==='Enter'||e.key===' ')){ e.preventDefault(); toggleTech(+c.dataset.id); } });
+$('#tray').addEventListener('pointerdown', e=>{ if(e.target.closest('.x')) return; const li=e.target.closest('li[data-id]'); if(!li) return; startDrag({button:e.button,clientX:e.clientX,clientY:e.clientY,pointerId:e.pointerId,currentTarget:li}, +li.dataset.id, true); });
+$('#tray').addEventListener('click', e=>{ const x=e.target.closest('[data-rm]'); if(x) toggleTech(+x.dataset.rm); });
+$('#search').addEventListener('input', renderBank);
+$('#bannerCancel').addEventListener('click', disarm);
+$('#fichas').addEventListener('click', e=>{ const b=e.target.closest('[data-locate]'); if(!b) return; const id=+b.dataset.locate; const s=state.sel[selIndex(id)];
+  $('#plano').scrollIntoView({behavior:'smooth'});
+  if(!s.placed){ arm(id); return; }
+  setTimeout(()=>{ const g=document.querySelector(`#pins .pin[data-id="${id}"]`); if(g){ g.classList.add('act'); setTimeout(()=>g.classList.remove('act'),2200);} },400); });
+$('#btnSave').addEventListener('click', ()=>saveNow(true));
+function pendientes(){
+  const out=[]; if(!state) return out;
+  const ticks=TICK_KEYS().filter(k=>!(state.leidos&&state.leidos[k])).length;
+  if(ticks) out.push(['Enunciado sin leer del todo', 'Te faltan '+ticks+' puntos por marcar.']);
+  if(state.sel.length<MAX) out.push(['Has elegido '+state.sel.length+' de '+MAX+' tecnologías', 'Elige '+(MAX-state.sel.length)+' más en el banco.']);
+  const sin=state.sel.filter(s=>!s.placed);
+  if(sin.length) out.push(['Sin colocar en el plano: '+sin.length, sin.map(s=>TECHS[s.id]).join(', ')]);
+  const cortas=zonasCortas();
+  if(cortas.length) out.push(['Menos de '+MIN_ZONA+' tecnologías en algún espacio', cortas.map(c=>ZONES[c.k].name+' ('+c.n+'/'+MIN_ZONA+')').join(', ')]);
+  const inc=state.sel.map((s,i)=>({i,s})).filter(({s})=>PREGUNTAS.some(p=>!hasContent(state.textos[s.id+'_'+p.k])));
+  if(inc.length) out.push([inc.length===1?'1 ficha sin terminar':inc.length+' fichas sin terminar', inc.map(({i,s})=>(i+1)+'. '+TECHS[s.id]).join(' · ')]);
+  if(!hasContent(state.textos.conclusion)) out.push(['Reflexión final sin escribir', 'Está al final de la página.']);
+  return out;
+}
+async function descargarPDF(){
+  const b=$('#btnPdf'); b.disabled=true; b.textContent='Generando…';
+  try{ const r=await generarPDF(); if(r) toast('PDF descargado: '+r.name); }catch(e){ console.error(e); toast('Error al generar el PDF.'); }
+  b.disabled=false; b.textContent='Descargar PDF';
+}
+function cerrarPend(){ $('#pendModal').hidden=true; }
+$('#btnPdf').addEventListener('click', async ()=>{
+  await saveNow();
+  const p=pendientes();
+  if(!p.length){ descargarPDF(); return; }
+  $('#pendList').innerHTML=p.map(([t,d])=>`<li><div>${esc(t)}<small>${esc(d)}</small></div></li>`).join('');
+  $('#pendModal').hidden=false; $('#pendBack').focus();
+});
+$('#pendBack').addEventListener('click', cerrarPend);
+$('#pendGo').addEventListener('click', ()=>{ cerrarPend(); descargarPDF(); });
+$('#pendModal').addEventListener('click', e=>{ if(e.target.id==='pendModal') cerrarPend(); });
+document.addEventListener('keydown', e=>{ if(e.key==='Escape' && !$('#pendModal').hidden) cerrarPend(); });
+window.addEventListener('beforeunload', ()=>{ if(saveT) saveNow(); });
+document.addEventListener('keydown', e=>{ if(e.key==='Escape' && armed!==null) disarm(); if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='s'){ e.preventDefault(); saveNow(true); } });
+
+// Pantalla de inicio
+let draft=null, editing=false;
+function showStart(edit){
+  editing=!!edit; $('#start').hidden=false;
+  $('#draftBox').hidden = editing || !draft;
+  $('#startGo').textContent = editing ? 'Guardar datos' : (draft ? 'Empezar un trabajo nuevo' : 'Empezar');
+  const a = editing ? state.alumno : (draft?.alumno || {});
+  $('#fNombre').value=a.nombre||''; $('#fApellidos').value=a.apellidos||''; $('#fCiclo').value=a.ciclo||'';
+}
+$('#startForm').addEventListener('submit', async e=>{
+  e.preventDefault();
+  const alumno={nombre:$('#fNombre').value.trim(), apellidos:$('#fApellidos').value.trim(), ciclo:$('#fCiclo').value.trim(), grupo:''};
+  if(editing){ state.alumno=alumno; $('#start').hidden=true; mountWho(); dirty(); return; }
+  if(draft && !confirm('Ya hay un borrador guardado. Si empiezas uno nuevo, se perderá. ¿Continuar?')) return;
+  if(draft){ await dbDel(); draft=null; }
+  state=newState(alumno); $('#start').hidden=true; mountApp(); saveNow();
+});
+function mountWho(){ $('#who').innerHTML = `${esc(state.alumno.nombre+' '+state.alumno.apellidos)} · ${esc(state.alumno.ciclo)}${state.alumno.grupo?' · '+esc(state.alumno.grupo):''} · <a href="#" id="editWho">cambiar datos</a>`; $('#editWho').onclick=e=>{e.preventDefault(); showStart(true);}; }
+$('#draftLoad').addEventListener('click', ()=>{ state=draft; draft=null; $('#start').hidden=true; mountApp(); toast('Borrador cargado'); });
+$('#draftDiscard').addEventListener('click', async ()=>{ if(!confirm('¿Seguro que quieres borrar el borrador guardado? No se puede deshacer.')) return; await dbDel(); draft=null; showStart(false); toast('Borrador descartado'); });
+
+(async function init(){
+  renderBrief();
+  if(DEMO){ state=exampleState(); $('#start').hidden=true; mountApp(); return; }
+  draft = await dbGet();
+  if(draft){ const d=draft.updated?new Date(draft.updated).toLocaleString('es-ES',{dateStyle:'short',timeStyle:'short'}):''; $('#draftInfo').textContent=`de ${draft.alumno.nombre} ${draft.alumno.apellidos}${d?' ('+d+')':''}, con ${draft.sel.length} tecnologías elegidas.`; }
+  showStart(false);
+})();
+
+/* =========================================================
+   EJEMPLO RELLENO (abrir con ?ejemplo en la dirección)
+   ========================================================= */
+function exampleState(){
+  const st=newState({nombre:'Lucía',apellidos:'Martín Ruiz',ciclo:'Educación Infantil',grupo:''});
+  const T=n=>TECHS.indexOf(n);
+  const put=[['Pizarra digital interactiva',6,5],['Tablets',15,10.5],['Medidor de CO2',3,10],
+    ['Firma electrónica',21,4.5],['Certificado digital',24,8],['Copias de seguridad',20,10],
+    ['Placas solares',8,27],['Riego automático',23,21],
+    ['Marcador electrónico',43,8],['Reloj inteligente',36,20]];
+  st.sel=put.map(([n,x,y])=>({id:T(n),placed:true,x,y}));
+  const tx={
+    'Pizarra digital interactiva':['<p>En el aula hacemos la <b>asamblea</b> cada mañana y ahora usamos cartulinas que se estropean. Con la pizarra digital todo el grupo ve lo mismo a la vez y los niños pueden participar tocando.</p>','<p>La educadora, a primera hora: los niños tocan la pantalla para elegir el tiempo que hace y pasar lista con su foto.</p>'],
+    'Tablets':['<p>Algunos niños necesitan actividades adaptadas a su ritmo. Las tablets permiten trabajar en pequeños grupos sin parar a toda la clase.</p>','<ul><li>Rincón de cuentos: escuchar audiolibros.</li><li>Hacer fotos de sus construcciones para enseñarlas a las familias.</li></ul>'],
+    'Medidor de CO2':['<p>El aula es grande y con muchos niños el aire se carga, sobre todo en invierno con las ventanas cerradas.</p>','<p>La educadora mira el semáforo del medidor y abre las ventanas cuando se pone en rojo.</p>'],
+    'Firma electrónica':['<p>En el despacho se gestionan muchas autorizaciones en papel que se pierden o llegan tarde.</p>','<p>La directora envía la autorización de una excursión y las familias la firman desde el móvil.</p>'],
+    'Certificado digital':['<p>La dirección tiene que hacer trámites con la Administración y así no tiene que desplazarse.</p>','<p>La secretaria presenta la solicitud de ayudas del comedor desde el ordenador del despacho.</p>'],
+    'Copias de seguridad':['<p>En el despacho están los datos de todas las familias; si el ordenador se rompe no se pueden perder.</p>','<p>Cada viernes se hace una copia automática de los expedientes.</p>'],
+    'Placas solares':['<p>El patio recibe sol casi todo el día y una pérgola con placas daría sombra y energía a la vez.</p><p><span class="img" data-w="50" style="width:50%"><img src="IMG" alt=""></span></p>','<p>Todo el centro: la energía alimenta la iluminación de las aulas.</p>'],
+    'Riego automático':['<p>Las plantas del huerto escolar se secan en vacaciones porque nadie las riega.</p>','<p>El conserje lo programa para que riegue temprano, antes de que lleguen los niños.</p>'],
+    'Marcador electrónico':['<p>En los partidos del recreo siempre hay discusiones sobre cómo van.</p>','<p>El monitor de deporte lo usa en los torneos de los viernes.</p>'],
+    'Reloj inteligente':['<p>En la cancha se hace psicomotricidad y es útil saber cuánto se mueve cada niño.</p>','<p>En la clase de educación física, para convertir los pasos en un juego por equipos.</p>']
+  };
+  Object.entries(tx).forEach(([n,a])=>{ const id=T(n); PREGUNTAS.forEach((p,i)=>st.textos[id+'_'+p.k]=a[i]); });
+  // imagen de ejemplo generada
+  const cv=document.createElement('canvas'); cv.width=600; cv.height=300; const c=cv.getContext('2d'); c.fillStyle='#ebe6fd'; c.fillRect(0,0,600,300); c.fillStyle='#1d1b20'; c.font='bold 40px Arial'; c.fillText('Imagen de ejemplo',110,165);
+  const pid=T('Placas solares')+'_porque'; st.textos[pid]=st.textos[pid].replace('IMG', cv.toDataURL('image/jpeg',.85));
+  st.textos.conclusion='<p>El espacio más transformado es el <b>aula</b>, porque allí pasan los niños la mayor parte del día. En Educación Infantil creo que la tecnología con más impacto será la <u>pizarra digital</u>, siempre que no sustituya al juego ni al contacto con la educadora.</p>';
+  st.leidos={}; TICK_KEYS().forEach(k=>st.leidos[k]=true);
+  st.updated=new Date().toISOString();
+  return st;
+}
+</script>
+</body>
+</html>
