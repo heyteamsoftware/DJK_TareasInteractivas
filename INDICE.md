@@ -18,7 +18,7 @@
 | UT1_E1 | Revoluciones industriales canarias y quinta revolución industrial | RA1 | a, b | AF, AS, EI, HB, IS | A | [UT1_E1](UT1/UT1_E1_Revoluciones_Industriales_Canarias.html) | [Ejemplo](UT1/UT1_E1_EJEMPLO_relleno.html) | Sí | Sí | Hecho |
 | UT1_E2 | — | | | | | | | | | Pendiente |
 | UT1_E3 | Sistemas ciberfísicos y digitalización del sector | RA1 | c, d, e, f | AF, AS, EI, HB, IS | A | [UT1_E3](UT1/UT1_E3_Digitalizacion_Sistemas_CiberFisicos.html) | [Ejemplo](UT1/UT1_E3_EJEMPLO_relleno.html) | Sí | Sí | Hecho |
-| UT2_E1 | Tecnologías habilitadoras | RA2 | a, c, d, e | Común (el alumno escribe su ciclo) | B | [UT2_E1](UT2/UT2_E1_Tecnologias_Habilitadoras.html) | `?ejemplo` | Sí (otro reparto) | Sí (original) | Hecho |
+| UT2_E1 | Tecnologías habilitadoras | RA2 | a, c, d, e | Común (elige su ciclo entre los 5) | B | [UT2_E1](UT2/UT2_E1_Tecnologias_Habilitadoras.html) | `?ejemplo` | Sí (otro reparto) | Sí (original) | Hecho |
 
 ## Ciclos
 
@@ -35,11 +35,11 @@
 | Rasgo | A · Proyecto por partes con variante por ciclo (UT1_E1, UT1_E3) | B · Actividad visual tipo juego (UT2_E1) |
 |---|---|---|
 | Idea | Partes o fases con cajas de respuesta | Elegir 10 de 50 tecnologías y colocarlas en un plano (aula, despacho, patio, cancha), mínimo 2 por espacio |
-| Inicio | Nombre, Apellidos y Ciclo a elegir (5 opciones) | Nombre, Apellidos y Ciclo escrito a mano |
+| Inicio | Nombre, Apellidos y Ciclo a elegir (5 opciones) | Nombre, Apellidos y Ciclo a elegir (5 opciones) |
 | Estructura | RA → Objetivo y criterios → Qué tienes que hacer (checks) → Partes → Fuentes e IA → Antes de entregar, comprueba → Entrega → Abreviaturas | Enunciado (checks) → Banco de tecnologías → Plano → Ficha por tecnología → Reflexión final |
 | Escritura | Editor con formato; pegar texto bloqueado, pegar/soltar imágenes y redimensionarlas | Pegar texto desactivado; se pueden añadir imágenes |
 | Guardado | IndexedDB con respaldo en `localStorage` (prefijo `DJK_UTn_Em_`); guarda también los checks; avisa de borradores (Cargar / Descartar) | IndexedDB con respaldo en `localStorage` |
-| PDF | jsPDF embebido (funciona sin conexión), generado desde el DOM | jsPDF desde CDN (necesita conexión) |
+| PDF | jsPDF embebido (funciona sin conexión), generado desde el DOM | jsPDF embebido (funciona sin conexión) |
 | Ejemplo | Archivo `_EJEMPLO_relleno.html` aparte | Modo `?ejemplo` en la URL |
 
 ## Sistema de checks
@@ -86,5 +86,4 @@ Todos los ejercicios muestran una tabla «Cómo se califica» con esta forma, y 
 
 | Ejercicio | Qué falta |
 |---|---|
-| UT2_E1 | Pasar el ciclo a elegir entre los 5 (ahora se escribe a mano) y decidir si pasa a jsPDF embebido (ahora necesita conexión para el PDF) |
 | Web | Pendiente de decidir: analítica y contador de visitas (lista `rematadorweb`) |
