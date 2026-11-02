@@ -650,6 +650,28 @@ ul.pend li small{display:block;color:var(--muted);font-size:12.5px;margin-top:2p
 .toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%) translateY(20px);opacity:0;z-index:120;background:var(--ink);color:#fff;border-radius:12px;padding:10px 16px;font-size:14px;font-weight:500;transition:all .25s;max-width:calc(100% - 32px);text-align:center;pointer-events:none}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 footer.foot{color:var(--muted);font-size:12px;text-align:center;padding:10px 0 40px}
+/* ---------- Tablet y móvil (DJK norma 13) ---------- */
+@media (max-width:1023px), (pointer:coarse){
+  .btn{min-height:44px}
+  .btn.small{min-height:40px;padding:8px 12px}
+  .chip{min-height:44px;padding:8px 14px;font-size:14px}
+  .tray li .x{width:44px;height:44px}
+  .toolbar button{min-width:44px;height:44px}
+  .tk{min-height:48px;align-items:center}
+  .start input{min-height:48px;font-size:16px}
+  .start .ciclo{min-height:52px}
+  .start .ciclo input{min-height:0}
+  .search{min-height:48px;font-size:16px}
+  .brand small a{display:inline-block;padding:12px 4px;margin:-12px 0}
+}
+@media (max-width:600px){
+  .top .wrap{flex-wrap:nowrap;gap:8px}
+  .top .logo,.top .status{display:none}
+  .top .brand b{font-size:13px;white-space:normal;display:block;line-height:1.2}
+  .top .btn{padding:8px 10px;font-size:13px}
+  .toolbar{top:72px}
+}
+/* fin norma 13 */
 </style>
 </head>
 <body>

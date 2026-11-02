@@ -19,7 +19,7 @@
   --r:14px;
 }
 *{box-sizing:border-box}
-html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);font:16px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;overflow-x:hidden}
+html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);font:16px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;overflow-x:clip}
 h1,h2,h3{line-height:1.25}
 button{font:inherit;cursor:pointer;border:1px solid var(--line);background:#fff;color:var(--ink);border-radius:10px;padding:.45rem .8rem}
 button:hover{background:var(--lav)}
@@ -189,6 +189,28 @@ ul.checks li.ok i{background:var(--mint3);border-color:var(--mint3)}
   #herr .sep{display:none}
   .progreso{font-size:.75rem}
   table.siglas{font-size:.86rem}
+}
+
+/* ---------- Tablet y móvil: todo pensado para el dedo (mínimo 44 px) ---------- */
+@media (max-width:1023px), (pointer:coarse){
+  button{min-height:44px}
+  #barra .acciones button{min-width:44px;min-height:44px}
+  #herr{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+  #herr::-webkit-scrollbar{display:none}
+  #herr button{min-width:44px;min-height:44px;flex:none}
+  #herr .sep{flex:none}
+  #imgHerr button{min-width:44px;min-height:40px}
+  #imgAsa{width:32px;height:32px;right:-16px;bottom:-16px}
+  input[type=text]{min-height:48px;font-size:16px}
+  .ciclo{min-height:54px}
+  .tk{min-height:48px;align-items:center}
+  .video a{min-height:44px;display:inline-flex;align-items:center}
+  .ed{font-size:16px}
+}
+/* Móvil: la barra de formato solo aparece mientras escribes, para dejar más pantalla */
+@media (max-width:600px){
+  body:not(.editando) #herr{display:none}
+  #barra .acciones{gap:.3rem}
 }
 </style>
 </head>
@@ -1089,6 +1111,10 @@ function guardarCursor(){
   if (ed){ ultimoEd = ed; ultimoRango = r.cloneRange(); }
 }
 document.addEventListener('selectionchange', guardarCursor);
+// Móvil: mostrar la barra de formato solo mientras se escribe en una caja
+const enHerramientas = t => t && t.closest && t.closest('#herr,#imgHerr,#imgMarco');
+document.addEventListener('focusin', e => { if (!enHerramientas(e.target)) document.body.classList.toggle('editando', !!edDe(e.target)); });
+document.addEventListener('pointerdown', e => { if (!edDe(e.target) && !enHerramientas(e.target) && !(e.target.closest && e.target.closest('#barra'))) document.body.classList.remove('editando'); });
 ['keyup','mouseup','focusin','touchend'].forEach(ev => document.addEventListener(ev, guardarCursor, true));
 function restaurarCursor(){
   if (!ultimoEd || !document.body.contains(ultimoEd)) return false;

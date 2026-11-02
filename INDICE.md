@@ -92,6 +92,21 @@ Todos los ejercicios muestran una tabla «Cómo se califica» con esta forma, y 
 | Móvil | < 600 px | Una sola columna; sin desplazamiento horizontal; barra de formato reducida a iconos; botones Guardar y PDF siempre visibles; textos y casillas legibles sin hacer zoom. |
 | Pruebas | 375 px, 768 px y escritorio | Se prueba cada ejercicio en los tres tamaños antes de publicarlo. |
 
+| Cómo se aplica | Dónde |
+|---|---|
+| Botones, casillas y ticks de mínimo 44 px en tablet y móvil (o en cualquier pantalla táctil) | Motor común (`_fuente/comun_head.html`) y bloque «norma 13» en UT2_E1 |
+| Barra de formato en una sola fila que se desliza con el dedo | Motor común |
+| En móvil, la barra de formato solo aparece mientras se escribe en una caja | Motor común (`_fuente/motor.js`) |
+| Barra superior con Guardar y PDF fija al hacer scroll (`overflow-x:clip`, no `hidden`) | Motor común |
+| Cabecera de UT2_E1 en una sola fila en móvil, con «Descargar PDF» siempre visible | UT2_E1 |
+| Asa para redimensionar imágenes más grande en pantallas táctiles | Motor común |
+
+| Ejercicio | Ordenador | Tablet | Móvil |
+|---|---|---|---|
+| UT1_E1 | ✓ | ✓ | ✓ |
+| UT1_E3 | ✓ | ✓ | ✓ |
+| UT2_E1 | ✓ | ✓ | ✓ |
+
 ## Pendiente de unificar
 
 | Ejercicio | Qué falta |

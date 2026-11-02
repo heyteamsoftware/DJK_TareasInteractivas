@@ -241,6 +241,10 @@ function guardarCursor(){
   if (ed){ ultimoEd = ed; ultimoRango = r.cloneRange(); }
 }
 document.addEventListener('selectionchange', guardarCursor);
+// Móvil: mostrar la barra de formato solo mientras se escribe en una caja
+const enHerramientas = t => t && t.closest && t.closest('#herr,#imgHerr,#imgMarco');
+document.addEventListener('focusin', e => { if (!enHerramientas(e.target)) document.body.classList.toggle('editando', !!edDe(e.target)); });
+document.addEventListener('pointerdown', e => { if (!edDe(e.target) && !enHerramientas(e.target) && !(e.target.closest && e.target.closest('#barra'))) document.body.classList.remove('editando'); });
 ['keyup','mouseup','focusin','touchend'].forEach(ev => document.addEventListener(ev, guardarCursor, true));
 function restaurarCursor(){
   if (!ultimoEd || !document.body.contains(ultimoEd)) return false;
