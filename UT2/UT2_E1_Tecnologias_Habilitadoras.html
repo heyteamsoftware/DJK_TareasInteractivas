@@ -690,9 +690,6 @@ footer.foot{color:var(--muted);font-size:12px;text-align:center;padding:10px 0 4
 /* Barra de formato solo al escribir */
 body:not(.editando) .toolbar{visibility:hidden;pointer-events:none}
 .obligatorio{background:var(--rose);color:var(--rose-ink);border-radius:10px;padding:8px 12px;margin:10px 0 0;font-size:13px}
-.aviso-guardado{background:var(--sky);border-radius:12px;padding:10px 14px;margin:0 0 14px;font-size:14px}
-.aviso-guardado .cod-inline{display:inline-flex;flex-wrap:wrap;gap:8px;align-items:center;margin-left:6px}
-.aviso-guardado b{font-family:ui-monospace,Consolas,monospace;letter-spacing:.06em}
 .nota-cod{margin:10px 0 0;font-size:13px;color:var(--muted)}
 .cod-grande{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;background:var(--sky);border-radius:14px;padding:12px 14px;margin:14px 0}
 .cod-grande b{font-family:ui-monospace,Consolas,monospace;font-size:24px;letter-spacing:.08em}
@@ -799,8 +796,7 @@ ul.cod-info li{margin:5px 0}
     </button>
     <div id="enunBody">
       <p class="lead enun-lead">Marca con un tick cada paso y cada norma cuando los hayas leído y entendido. Cuando los marques todos, esta sección se recogerá para dejarte más espacio.</p>
-      <div class="aviso-guardado" id="avisoGuardado">💾 Puedes guardar tu tarea en este navegador. Si vas a continuar en otro dispositivo, copia el código que se te proporciona para poder recuperarla y no perderla.<span class="cod-inline" id="codAviso" hidden></span></div>
-      <div class="brief" id="brief"></div>
+            <div class="brief" id="brief"></div>
     </div>
   </section>
 

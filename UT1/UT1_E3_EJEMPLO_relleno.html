@@ -98,10 +98,6 @@ input[type=text]{width:100%;font:inherit;padding:.65rem .8rem;border:1px solid v
 .rec-fila{display:flex;gap:.5rem;flex-wrap:wrap}
 .rec-fila input{flex:1;min-width:180px;font-family:ui-monospace,Consolas,monospace;letter-spacing:.06em;text-transform:uppercase}
 .obligatorio{background:var(--rose);border:1px solid #f1b3c3;color:#6e2236;border-radius:10px;padding:.55rem .8rem;margin:.7rem 0 0;font-size:.95rem}
-.aviso-guardado{background:var(--sky);border:1px solid var(--sky2);border-radius:10px;padding:.6rem .8rem;margin:.8rem 0 0;font-size:.95rem}
-.aviso-guardado .cod-inline{display:inline-flex;flex-wrap:wrap;gap:.4rem;align-items:center;margin-top:.3rem}
-.aviso-guardado b{font-family:ui-monospace,Consolas,monospace;letter-spacing:.06em}
-.aviso-guardado button{padding:.25rem .7rem}
 .nota-cod{margin:.8rem 0 0;font-size:.92rem;color:var(--muted)}
 .banner-ej{background:var(--peach);border:1px solid var(--peach2);color:#7a3b1b;border-radius:12px;padding:.6rem .9rem;margin:1rem 0 0;font-weight:600}
 
@@ -1337,16 +1333,11 @@ function tablaCriterios(){
 }
 const TICKS = () => [...COMUN.pasos.map((_, i) => 'p' + i), ...COMUN.normas.map((_, i) => 'n' + i)];
 const todoLeido = () => TICKS().every(k => LEIDOS[k]);
-// Aviso de guardado (norma 18): se puede guardar en este navegador y el código sirve para seguir en otro dispositivo
-function avisoGuardado(){
-  return `<div class="aviso-guardado">💾 Puedes guardar tu tarea en este navegador. Si vas a continuar en otro dispositivo, copia el código que se te proporciona para poder recuperarla y no perderla.${enServidor() ? ' Lo tienes en el botón <b>🔑 Código</b> de la barra de arriba.' : ''}</div>`;
-}
 function enunciadoHTML(){
   const item = (k, txt, num) => `<li><button type="button" class="tk" data-tick="${k}" data-num="${num}" aria-pressed="false"><i>${num}</i><span>${txt}</span></button></li>`;
   return `<section class="card enun" id="enun">
     <button type="button" class="enun-head" id="enunHead" aria-expanded="true" aria-controls="enunBody"><span class="eh"><small>Antes de empezar</small><b>Qué tienes que hacer</b></span><span class="enun-prog" id="enunProg"></span><span class="chev" aria-hidden="true">▾</span></button>
     <div id="enunBody"><p class="pista" style="color:var(--muted);margin:.6rem 0 0">Marca con un tick cada paso y cada norma cuando los hayas leído y entendido. Cuando estén todos, se desbloquea la tarea y esta sección se recoge.</p>
-      ${avisoGuardado()}
       <h3>Pasos</h3><ul class="tks">${COMUN.pasos.map((t, i) => item('p' + i, t, i + 1)).join('')}</ul>
       <h3>Normas</h3><ul class="tks">${COMUN.normas.map((t, i) => item('n' + i, t, '!')).join('')}</ul></div></section>
     <div class="lockmsg" id="lockMsg" role="status"><span aria-hidden="true">🔒</span><div><b>Primero lee qué tienes que hacer.</b> Marca todos los pasos y normas (te faltan <b id="lockN"></b>). Después se desbloquea la tarea.</div><button type="button" id="lockGo">Ir a los pasos</button></div>`;
