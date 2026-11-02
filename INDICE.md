@@ -6,6 +6,9 @@
 | Organización | Una carpeta por unidad (`UT1` … `UT5`) |
 | Nombre de archivo | `UTn_Em_Titulo_Corto.html` (un HTML por ejercicio) + `UTn_Em_EJEMPLO_relleno.html` |
 | Repositorio | https://github.com/heyteamsoftware/DJK_TareasInteractivas |
+| Web publicada | https://myappsserver.duckdns.org/DJK/DJK_EjerciciosInteractivos/ |
+| Servidor | CIFP Tony Gallardo · Apache · `/var/www/html/DJK/DJK_EjerciciosInteractivos` (usuario `ubuntu`, clave en `Documentos\Oracle`) |
+| Portada | `index.html` con enlaces a cada ejercicio y aviso de privacidad; `.htaccess` desactiva el listado de carpetas |
 
 ## Registro de ejercicios
 
@@ -60,6 +63,8 @@ Reparto en UT1_E1: Parte 1 → 4 (1 por revolución) · Parte 2 → 3 (0,5 por p
 | 5 | Nombre del PDF según el enunciado (en UT1_E1: `UT1_E1_Apellido1_Apellido2_Nombre.pdf`); por eso se piden nombre y apellidos por separado. |
 | 6 | El ejemplo relleno usa solo texto de muestra entre corchetes, nunca respuestas reales que el alumnado pueda copiar. |
 | 7 | Cada ejercicio nuevo se sube al repositorio de GitHub. |
+| 8 | Cada ejercicio nuevo se despliega en el servidor y se añade a la portada (`index.html`). |
+| 9 | Antes de publicar se repasa la lista de la skill `rematadorweb` (sin claves expuestas, HTTPS, metadatos, favicon, móvil). |
 
 ## Pendiente de unificar
 
@@ -67,3 +72,4 @@ Reparto en UT1_E1: Parte 1 → 4 (1 por revolución) · Parte 2 → 3 (0,5 por p
 |---|---|
 | UT1_E3 | Añadir la tabla de criterios unificados y su ejemplo relleno |
 | UT2_E1 | Decidir si pasa a jsPDF embebido (ahora necesita conexión para el PDF) |
+| Web | Pendiente de decidir: analítica y contador de visitas (lista `rematadorweb`) |
