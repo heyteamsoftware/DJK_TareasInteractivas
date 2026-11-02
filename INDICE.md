@@ -57,7 +57,10 @@
 | Al volver a abrir | Avisa del borrador y carga la copia más reciente (Cargar / Descartar). |
 | Almacenamiento | Primero copia instantánea (localStorage) y después IndexedDB (admite más imágenes). Se pide al navegador que no borre los datos. |
 | Indicador | «✓ Guardado automáticamente · hh:mm:ss» en la barra superior. |
-| Límite | Se guarda en el navegador de ese dispositivo: si el alumno cambia de ordenador o borra los datos del navegador, el borrador no estará. |
+| Copia en el servidor | Cada minuto (si hay cambios), al pulsar «Guardar» y al cerrar (si el borrador es pequeño) se sube una copia a `api/borradores.php` (`/var/www/djk_datos/borradores.db`). Máximo 6 MB por borrador; si las imágenes lo superan, se avisa. Las copias de más de un año se borran solas. |
+| Código de recuperación | Cada alumno tiene un código aleatorio (p. ej. `K7QF-M2XR-9P`) que vale para todos los ejercicios. Lo ve arriba del ejercicio con botón «Copiar». Sin el código no se puede leer ninguna copia; máximo 60 intentos de recuperación por hora e IP. |
+| Seguir en otro dispositivo | En la pantalla de inicio: «¿Empezaste en otro ordenador o móvil?» → escribe el código → se recupera el trabajo. Si en ese dispositivo hay un borrador más reciente, pregunta cuál usar. |
+| Sin conexión | Se sigue guardando en el navegador y la copia sube al servidor cuando vuelve la conexión. |
 
 ## Sistema de checks
 
@@ -139,9 +142,9 @@ Todos los ejercicios muestran una tabla «Cómo se califica» con esta forma, y 
 |---|---|
 | Acceso | La dirección principal pide la contraseña. Máximo 10 intentos cada 15 minutos por IP. La sesión dura hasta cerrar el navegador o pulsar «Salir». |
 | Disponibilidad | Tabla ciclo × ejercicio con interruptores «✓ Abierto / 🔒 Bloqueado». Un ejercicio bloqueado no se puede empezar ni cargar desde un borrador en ese ciclo (aparece con candado en la pantalla de inicio). |
-| Entregas | Se registra cuando el alumno descarga el PDF: nombre, apellidos, ciclo, ejercicio, primera y última descarga y nº de veces. Las respuestas no se envían. |
+| Entregas | Se registra cuando el alumno descarga el PDF: nombre, apellidos, ciclo, ejercicio, primera y última descarga y nº de veces. |
 | Resumen | Tabla ciclo × ejercicio con el número de personas que han descargado el PDF. |
-| Detalle | Por ciclo (pestañas) y ejercicio: quién lo ha descargado y cuándo; buscador por nombre. |
+| Detalle | Por ciclo (pestañas) y ejercicio: quién lo ha descargado y cuándo; buscador por nombre; botón 🗑 para borrar la descarga de un alumno concreto (pide confirmación). |
 | Archivos | `index.html` (raíz), `api/admin.php`, `api/entregas.php`, `api/estado.php`, `api/comun.php` (no accesible desde la web) · datos en `/var/www/djk_datos/entregas.db` |
 | Sin conexión | Si el ejercicio se abre sin internet no puede consultar los bloqueos ni registrar la entrega: se puede hacer igualmente. |
 | Ejercicios nuevos | Añadir su código y nombre en `EJERCICIOS` de `index.html` (raíz) para que salga en las tablas aunque nadie lo haya descargado aún. |

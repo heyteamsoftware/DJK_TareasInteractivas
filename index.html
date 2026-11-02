@@ -44,6 +44,9 @@ td.n0{color:#b0abb9}
 .disp.bloq{background:var(--peach);border-color:#f6bf9e;color:#7a3b1b}
 .disp:disabled{opacity:.5;cursor:wait}
 td.celda{text-align:center}
+button.borrar{min-height:36px;min-width:40px;padding:.3rem .5rem;color:var(--rose3);background:#fff}
+button.borrar:hover{background:#fde4ea}
+@media (pointer:coarse){button.borrar{min-height:44px;min-width:44px}}
 a.enlace{display:inline-flex;align-items:center;min-height:44px;padding:.5rem .9rem;border:1px solid var(--line);border-radius:10px;background:#fff;color:var(--lav3);font-weight:600;text-decoration:none}
 a.enlace:hover{background:var(--lav)}
 /* Lista de ejercicios por unidad, con el color de cada unidad */
@@ -177,12 +180,25 @@ function pintar(){
   for (const ej of ejs){
     const filas = E.filter(e => e.ciclo === CICLO && e.ejercicio === ej && (!q || (e.nombre + ' ' + e.apellidos).toLowerCase().includes(q)));
     h += `<h3 class="ej">${esc(EJERCICIOS[ej] || ej)} · ${filas.length}</h3>`;
-    h += filas.length ? `<div class="tabla"><table><thead><tr><th>Apellidos</th><th>Nombre</th><th>Primera descarga</th><th>Última descarga</th><th class="num">Veces</th></tr></thead><tbody>${filas.map(e => `<tr><td>${esc(e.apellidos)}</td><td>${esc(e.nombre)}</td><td>${fecha(e.primera)}</td><td>${fecha(e.ultima)}</td><td class="num">${e.veces}</td></tr>`).join('')}</tbody></table></div>`
+    h += filas.length ? `<div class="tabla"><table><thead><tr><th>Apellidos</th><th>Nombre</th><th>Primera descarga</th><th>Última descarga</th><th class="num">Veces</th><th></th></tr></thead><tbody>${filas.map(e => `<tr><td>${esc(e.apellidos)}</td><td>${esc(e.nombre)}</td><td>${fecha(e.primera)}</td><td>${fecha(e.ultima)}</td><td class="num">${e.veces}</td><td class="num"><button class="borrar" data-borrar="${e.id}" title="Borrar la descarga de ${esc(e.nombre + ' ' + e.apellidos)}" aria-label="Borrar la descarga de ${esc(e.nombre + ' ' + e.apellidos)}">🗑</button></td></tr>`).join('')}</tbody></table></div>`
       : `<p class="vacio">${q ? 'Nadie coincide con la búsqueda.' : 'Todavía nadie de este ciclo ha descargado el PDF.'}</p>`;
   }
   $('#detalle').innerHTML = h;
 }
 $('#chipsCiclo').addEventListener('click', e => { const b = e.target.closest('[data-ciclo]'); if (b){ CICLO = b.dataset.ciclo; pintar(); } });
+// Borrar el registro de descarga de un alumno concreto
+$('#detalle').addEventListener('click', async e => {
+  const b = e.target.closest('[data-borrar]'); if (!b) return;
+  const id = +b.dataset.borrar, f = DATOS.entregas.find(x => +x.id === id); if (!f) return;
+  if (!confirm(`¿Borrar la descarga de ${f.nombre} ${f.apellidos} en ${EJERCICIOS[f.ejercicio] || f.ejercicio} (${f.ciclo})?\n\nNo se puede deshacer. Si vuelve a descargar el PDF, aparecerá de nuevo.`)) return;
+  b.disabled = true;
+  try {
+    const r = await fetch(API, { method: 'POST', credentials: 'same-origin', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ accion: 'borrar', id }) });
+    if (r.status === 401) return mostrarLogin();
+    if (!(await r.json()).ok) throw new Error();
+    DATOS.entregas = DATOS.entregas.filter(x => +x.id !== id); pintar();
+  } catch(_){ alert('No se ha podido borrar.'); b.disabled = false; }
+});
 $('#buscar').addEventListener('input', () => DATOS && pintar());
 $('#bRecargar').addEventListener('click', () => cargar().catch(() => alert('No se han podido cargar los datos.')));
 $('#bSalir').addEventListener('click', async () => { await fetch(API, { method: 'POST', credentials: 'same-origin', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ accion: 'salir' }) }); DATOS = null; $('#clave').value = ''; mostrarLogin(); });

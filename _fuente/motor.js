@@ -140,6 +140,7 @@ function construir(esp){
   h += `<div class="cab"><small>${esc(COMUN.asignatura)} · ${esc(COMUN.unidad)}</small><h1>${esc(COMUN.ejercicio)}</h1>
     <div class="meta"><span class="chip">CFGS ${esc(C.nombre)}</span><span class="chip">Resultado de aprendizaje: ${COMUN.ra}</span><span class="chip">Criterios de evaluación: ${COMUN.ce}</span>${COMUN.peso ? `<span class="chip">Peso: ${esc(COMUN.peso)}</span>` : ''}${COMUN.modalidad ? `<span class="chip">${esc(COMUN.modalidad)}</span>` : ''}<span class="chip">Alumno/a: ${esc(completo())}</span></div></div>
     <section class="card">${introHTML(C)}<h2 style="font-size:1.1rem">Cómo se califica</h2>${tablaCriterios()}</section>`;
+  if (enServidor()) h += `<div class="codigo-card"><span>🔑 Tu código para seguir en otro ordenador o móvil: <b>${esc(miCodigo())}</b></span><button type="button" data-copiar-cod>Copiar</button><small>Apúntalo. En la pantalla de inicio de otro dispositivo, escríbelo en «¿Empezaste en otro dispositivo?» y recuperarás tu trabajo.</small></div>`;
   h += enunciadoHTML();
   h += `<div id="tarea">${construirTarea(C)}
     <section class="fase f4"><header><h2>Fuentes y uso de IA</h2></header><div class="cuerpo">${caja('fuentes', COMUN.numFuentes, 'Fuentes consultadas y declaración de uso de IA', `<div class="pista">${esc(COMUN.fuentes)}</div>`)}</div></section></div>`;
@@ -161,6 +162,7 @@ function abrirEditor(esp, nombre, apellidos, reg){
   $('#tTitulo').textContent = COMUN.corto + ' · ' + CICLOS[esp].nombre;
   $('#tSub').textContent = completo();
   $('#estado').textContent = EJEMPLO ? 'Ejemplo: no se guarda' : (reg ? 'Borrador cargado (' + fechaTxt(reg.fecha) + ')' : 'Sin guardar todavía');
+  $('#nube').textContent = '';
   $('#inicio').classList.add('hidden'); $('#editor').classList.remove('hidden');
   const todo = pintarTicks(); recoger(todo);
   window.scrollTo(0, 0); ultimoEd = null; ultimoRango = null; actualizarProgreso();
@@ -274,8 +276,71 @@ function guardarYa(){
   try { localStorage.setItem(PREF + ESP, JSON.stringify(reg)); } catch(e){}
   tx('readwrite', st => st.put(reg)).catch(() => {});
 }
-function programarGuardado(){ clearTimeout(tGuardar); if (!EJEMPLO) $('#estado').textContent = 'Cambios sin guardar…'; tGuardar = setTimeout(() => guardar(false), 1500); actualizarProgreso(); }
-$('#btnGuardar').addEventListener('click', () => guardar(true));
+function programarGuardado(){ clearTimeout(tGuardar); nubeSucia = true; if (!EJEMPLO) $('#estado').textContent = 'Cambios sin guardar…'; tGuardar = setTimeout(() => guardar(false), 1500); actualizarProgreso(); }
+$('#btnGuardar').addEventListener('click', () => { guardar(true); subirCopia(); });
+
+// ================= copia en el servidor (para seguir en otro dispositivo) =================
+// Cada navegador tiene un código de recuperación (sirve para todos los ejercicios); sin él no se puede leer la copia.
+const ALFA = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+const enServidor = () => !EJEMPLO && /^https?:$/.test(location.protocol);
+function nuevoCodigo(){ const a = new Uint8Array(10); crypto.getRandomValues(a); const s = [...a].map(n => ALFA[n % 32]).join(''); return s.slice(0, 4) + '-' + s.slice(4, 8) + '-' + s.slice(8); }
+function miCodigo(){
+  let c = null; try { c = localStorage.getItem('djk_codigo'); } catch(e){}
+  if (!c){ c = nuevoCodigo(); try { localStorage.setItem('djk_codigo', c); } catch(e){} }
+  return c;
+}
+let nubeSucia = false, nubeEnCurso = false;
+function cuerpoCopia(){ return JSON.stringify({ codigo: miCodigo(), ejercicio: COMUN.codigo, ciclo: ESP, nombre: NOMBRE, apellidos: APELLIDOS, datos: JSON.stringify(regActual()) }); }
+async function subirCopia(){
+  if (!ESP || !enServidor() || nubeEnCurso || $('#editor').classList.contains('hidden')) return;
+  nubeEnCurso = true; nubeSucia = false;
+  const n = $('#nube'), cuerpo = cuerpoCopia();
+  if (cuerpo.length > 6 * 1024 * 1024){ n.textContent = ' · ⚠ Demasiadas imágenes para la copia en el servidor (reduce alguna)'; nubeEnCurso = false; return; }
+  try {
+    const r = await fetch('../api/borradores.php', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: cuerpo });
+    if (!r.ok) throw new Error(r.status);
+    n.textContent = ' · ☁ Copia en el servidor ' + new Date().toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
+  } catch(e){ nubeSucia = true; n.textContent = ' · ☁ Sin conexión: se copiará al servidor cuando vuelva'; }
+  nubeEnCurso = false;
+}
+setInterval(() => { if (nubeSucia) subirCopia(); }, 60000);
+window.addEventListener('online', () => { if (nubeSucia) subirCopia(); });
+// Al cerrar: si el borrador es pequeño, se intenta mandar también al servidor
+function subirAlCerrar(){
+  if (!ESP || !enServidor() || !nubeSucia || $('#editor').classList.contains('hidden')) return;
+  try { const c = cuerpoCopia(); if (c.length < 60000) fetch('../api/borradores.php', { method: 'POST', keepalive: true, headers: { 'Content-Type': 'application/json' }, body: c }).catch(() => {}); } catch(e){}
+}
+document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden') subirAlCerrar(); });
+window.addEventListener('pagehide', subirAlCerrar);
+document.addEventListener('click', async e => {
+  if (!e.target.closest('[data-copiar-cod]')) return;
+  try { await navigator.clipboard.writeText(miCodigo()); aviso('Código copiado. Guárdalo en un sitio seguro.'); } catch(_){ prompt('Tu código:', miCodigo()); }
+});
+// Recuperar el trabajo desde otro dispositivo con el código
+$('#btnRecuperar').addEventListener('click', async () => {
+  const err = $('#errRec'); err.textContent = '';
+  const s = $('#codRec').value.toUpperCase().replace(/[^A-Z0-9]/g, '');
+  if (s.length !== 10){ err.textContent = 'El código tiene 10 letras y números, por ejemplo K7QF-M2XR-9P.'; return; }
+  const codigo = s.slice(0, 4) + '-' + s.slice(4, 8) + '-' + s.slice(8);
+  try {
+    const r = await fetch('../api/borradores.php?codigo=' + encodeURIComponent(codigo) + '&ejercicio=' + COMUN.codigo, { cache: 'no-store' });
+    const d = await r.json();
+    if (!d.ok){ err.textContent = d.error || 'No se ha podido recuperar.'; return; }
+    const reg = JSON.parse(d.datos);
+    if (!reg || !CICLOS[reg.esp]){ err.textContent = 'La copia no es válida.'; return; }
+    if (estaBloqueado(reg.esp)){ err.textContent = MSG_BLOQ(reg.esp); return; }
+    const local = await leerReg(reg.esp);
+    if (local && local.fecha > reg.fecha){
+      const v = await pregunta(`En este dispositivo tienes un borrador más reciente (${fechaTxt(local.fecha)}) que la copia del servidor (${fechaTxt(reg.fecha)}). ¿Cuál quieres usar?`, [['Cancelar', 0], ['El de este dispositivo', 1], ['El del servidor', 2, 'btn-main']]);
+      if (v === 0) return;
+      if (v === 1){ try { localStorage.setItem('djk_codigo', codigo); } catch(e){} return abrirEditor(local.esp, local.nombre, local.apellidos, local); }
+    }
+    try { localStorage.setItem('djk_codigo', codigo); } catch(e){}
+    reg.clave = PREF + reg.esp; await guardarReg(reg);
+    abrirEditor(reg.esp, reg.nombre, reg.apellidos, reg);
+    aviso('Trabajo recuperado. Sigues donde lo dejaste.', 4000);
+  } catch(e){ err.textContent = 'No se ha podido conectar con el servidor.'; }
+});
 // Copia de seguridad cada 30 s aunque no se detecte ningún cambio (por ejemplo, tras redimensionar una imagen)
 setInterval(() => { if (ESP && !EJEMPLO && !$('#editor').classList.contains('hidden')) guardar(false); }, 30000);
 document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden') guardarYa(); });
@@ -630,4 +695,4 @@ if (EJEMPLO){
   abrirEditor('ei', 'Nombre', 'Apellido1 Apellido2', null);
   document.querySelectorAll('.ed').forEach(ed => { const h = ejemploRespuesta(ed.dataset.id); if (h) ed.innerHTML = h; });
   actualizarProgreso();
-} else { pintarBorradores(); cargarBloqueos(); }
+} else { pintarBorradores(); cargarBloqueos(); if (enServidor()) $('#recuperar').classList.remove('hidden'); }

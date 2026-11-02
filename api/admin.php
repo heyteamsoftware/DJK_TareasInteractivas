@@ -35,9 +35,16 @@ try {
     if (empty($_SESSION['admin'])) salir(401, ['ok' => false, 'error' => 'Sin sesión.']);
 
     if ($accion === 'datos') {
-        $filas = $db->query('SELECT ejercicio, ciclo, nombre, apellidos, primera, ultima, veces FROM entregas ORDER BY ciclo, ejercicio, apellidos, nombre')->fetchAll(PDO::FETCH_ASSOC);
+        $filas = $db->query('SELECT id, ejercicio, ciclo, nombre, apellidos, primera, ultima, veces FROM entregas ORDER BY ciclo, ejercicio, apellidos, nombre')->fetchAll(PDO::FETCH_ASSOC);
         $bloqueos = $db->query('SELECT ejercicio, ciclo FROM bloqueos')->fetchAll(PDO::FETCH_ASSOC);
         salir(200, ['ok' => true, 'ciclos' => CICLOS, 'entregas' => $filas, 'bloqueos' => $bloqueos]);
+    }
+    // POST {"accion":"borrar","id":123} → borra el registro de descarga de un alumno
+    if ($accion === 'borrar' && $metodo === 'POST') {
+        $id = (int) ($in['id'] ?? 0);
+        if ($id <= 0) salir(400, ['ok' => false]);
+        $db->prepare('DELETE FROM entregas WHERE id = ?')->execute([$id]);
+        salir(200, ['ok' => true]);
     }
     // POST {"accion":"bloqueo","ejercicio":"UT1_E1","ciclo":"…","bloqueado":true|false}
     if ($accion === 'bloqueo' && $metodo === 'POST') {
