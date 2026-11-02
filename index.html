@@ -158,10 +158,9 @@ function ejerciciosConocidos(){
   return [...set].sort();
 }
 const bloqueado = (ej, c) => DATOS.bloqueos.some(b => b.ejercicio === ej && b.ciclo === c);
-// Qué ejercicios son de cada ciclo: UTn_SP solo para semipresencial; si la unidad tiene UTn_SP, sus UTn_Em solo para presencial
+// Qué ejercicios son de cada ciclo: los semipresenciales solo hacen UTn_SP; los presenciales, los UTn_Em
 const esSemi = c => /Semipresencial/i.test(c);
-const tieneSP = ej => LISTA.some(e => e.semi && e.cod === ej.split('_')[0] + '_SP');
-const aplica = (ej, c) => /_SP$/.test(ej) ? esSemi(c) : !(esSemi(c) && tieneSP(ej));
+const aplica = (ej, c) => /_SP$/.test(ej) ? esSemi(c) : !esSemi(c);
 const celdaNo = '<td class="num n0" title="Este ejercicio no es para este ciclo">—</td>';
 function pintarDisponibilidad(){
   const ejs = ejerciciosConocidos();
