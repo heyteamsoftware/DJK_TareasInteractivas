@@ -119,7 +119,7 @@ Todos los ejercicios muestran una tabla «Cómo se califica» con esta forma, y 
 |---|---|
 | Botones, casillas y ticks de mínimo 44 px en tablet y móvil (o en cualquier pantalla táctil) | Motor común (`_fuente/comun_head.html`) y bloque «norma 13» en UT2_E1 |
 | Barra de formato en una sola fila que se desliza con el dedo | Motor común |
-| En móvil, la barra de formato solo aparece mientras se escribe en una caja | Motor común (`_fuente/motor.js`) |
+| La barra de formato solo aparece mientras se escribe en una caja (ordenador, tablet y móvil); al salir de la caja se oculta | Motor común (`_fuente/motor.js`) y UT2_E1 |
 | Barra superior con Guardar y PDF fija al hacer scroll (`overflow-x:clip`, no `hidden`) | Motor común |
 | Cabecera de UT2_E1 en una sola fila en móvil, con «Descargar PDF» siempre visible | UT2_E1 |
 | Asa para redimensionar imágenes más grande en pantallas táctiles | Motor común |

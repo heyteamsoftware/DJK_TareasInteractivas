@@ -220,9 +220,9 @@ ul.checks li.ok i{background:var(--mint3);border-color:var(--mint3)}
   .video a{min-height:44px;display:inline-flex;align-items:center}
   .ed{font-size:16px}
 }
-/* Móvil: la barra de formato solo aparece mientras escribes, para dejar más pantalla */
+/* La barra de formato solo aparece mientras se escribe en una caja (ordenador, tablet y móvil) */
+body:not(.editando) #herr{display:none}
 @media (max-width:600px){
-  body:not(.editando) #herr{display:none}
   #barra .acciones{gap:.3rem}
 }
 </style>

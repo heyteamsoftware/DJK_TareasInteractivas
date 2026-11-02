@@ -358,10 +358,18 @@ function guardarCursor(){
   if (ed){ ultimoEd = ed; ultimoRango = r.cloneRange(); }
 }
 document.addEventListener('selectionchange', guardarCursor);
-// Móvil: mostrar la barra de formato solo mientras se escribe en una caja
+// Mostrar la barra de formato solo mientras se escribe en una caja (todos los dispositivos)
 const enHerramientas = t => t && t.closest && t.closest('#herr,#imgHerr,#imgMarco');
-document.addEventListener('focusin', e => { if (!enHerramientas(e.target)) document.body.classList.toggle('editando', !!edDe(e.target)); });
-document.addEventListener('pointerdown', e => { if (!edDe(e.target) && !enHerramientas(e.target) && !(e.target.closest && e.target.closest('#barra'))) document.body.classList.remove('editando'); });
+// Mostrar u ocultar la barra sin que el texto salte: se compensa el desplazamiento
+function ponerEditando(si){
+  if (document.body.classList.contains('editando') === si) return;
+  const b = $('#barra'), h0 = b.getBoundingClientRect().height;
+  document.body.classList.toggle('editando', si);
+  const dh = b.getBoundingClientRect().height - h0;
+  if (dh && scrollY > 0) window.scrollBy(0, dh);
+}
+document.addEventListener('focusin', e => { if (!enHerramientas(e.target)) ponerEditando(!!edDe(e.target)); });
+document.addEventListener('pointerdown', e => { if (!edDe(e.target) && !enHerramientas(e.target) && !(e.target.closest && e.target.closest('#barra'))) ponerEditando(false); });
 ['keyup','mouseup','focusin','touchend'].forEach(ev => document.addEventListener(ev, guardarCursor, true));
 function restaurarCursor(){
   if (!ultimoEd || !document.body.contains(ultimoEd)) return false;

@@ -687,6 +687,8 @@ footer.foot{color:var(--muted);font-size:12px;text-align:center;padding:10px 0 4
 .codigo-card{display:flex;flex-wrap:wrap;gap:6px 12px;align-items:center;background:var(--sky);border-radius:14px;padding:10px 14px;margin:14px 0 0;font-size:14px}
 .codigo-card b{font-family:ui-monospace,Consolas,monospace;font-size:15px;letter-spacing:.06em}
 .codigo-card small{flex-basis:100%;color:var(--muted)}
+/* Barra de formato solo al escribir */
+body:not(.editando) .toolbar{visibility:hidden;pointer-events:none}
 /* Color de la unidad UT2 (menta) */
 .top{border-bottom:3px solid var(--mint-ink)}
 .kicker{color:var(--mint-ink)}
@@ -1948,6 +1950,9 @@ document.getElementById('btnRecuperar').addEventListener('click', async ()=>{
     $('#start').hidden = true; mountApp(); toast('Trabajo recuperado. Sigues donde lo dejaste.');
   }catch(e){ toast('No se ha podido conectar con el servidor.'); }
 });
+// Barra de formato: visible solo mientras se escribe en una caja
+document.addEventListener('focusin', e => { const t = e.target; if (t.closest && t.closest('#toolbar')) return; document.body.classList.toggle('editando', !!(t.closest && t.closest('.ed'))); });
+document.addEventListener('pointerdown', e => { const t = e.target; if (!(t.closest && (t.closest('.ed') || t.closest('#toolbar') || t.closest('.top')))) document.body.classList.remove('editando'); });
 (async function init(){
   renderBrief();
   if(DEMO){ state=exampleState(); $('#start').hidden=true; mountApp(); return; }
