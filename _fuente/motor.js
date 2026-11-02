@@ -43,24 +43,35 @@ function abrirDB(){
   return dbP;
 }
 function tx(modo, fn){ return abrirDB().then(db => new Promise((res, rej) => { const t = db.transaction('borradores', modo); const st = t.objectStore('borradores'); const r = fn(st); t.oncomplete = () => res(r && r.result); t.onerror = () => rej(t.error); })); }
+// Cada alumno tiene su propio borrador, aunque varios usen el mismo ordenador (aulas de informática):
+// la clave lleva el ciclo y el nombre del alumno. Las claves antiguas (solo ciclo) se siguen leyendo.
+const normNombre = (n, a) => ((n || '') + ' ' + (a || '')).normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_|_$/g, '');
+const claveLocal = (esp, n, a) => PREF + esp + '__' + normNombre(n, a);
 async function guardarReg(reg){
   let ok = false;
   // Primero la copia instantánea (localStorage) y después IndexedDB, que tarda más pero admite más imágenes
-  try { localStorage.setItem(PREF + reg.esp, JSON.stringify(reg)); ok = true; } catch(e){ try { localStorage.removeItem(PREF + reg.esp); } catch(_){} }
+  try { localStorage.setItem(reg.clave, JSON.stringify(reg)); ok = true; } catch(e){ try { localStorage.removeItem(reg.clave); } catch(_){} }
   try { await tx('readwrite', st => st.put(reg)); ok = true; } catch(e){}
   return ok;
 }
-async function leerReg(esp){
+async function leerClave(clave){
   let a = null, b = null;
-  try { a = await tx('readonly', st => st.get(PREF + esp)); } catch(e){}
-  try { b = JSON.parse(localStorage.getItem(PREF + esp) || 'null'); } catch(e){}
+  try { a = await tx('readonly', st => st.get(clave)); } catch(e){}
+  try { b = JSON.parse(localStorage.getItem(clave) || 'null'); } catch(e){}
   if (a && b) return (b.fecha > a.fecha) ? b : a;
   return a || b;
 }
-async function todosReg(){ const out = []; for (const k of ORDEN){ const r = await leerReg(k); if (r) out.push(r); } return out; }
-async function borrarReg(esp){
-  try { await tx('readwrite', st => st.delete(PREF + esp)); } catch(e){}
-  try { localStorage.removeItem(PREF + esp); } catch(e){}
+// Todos los borradores de este ejercicio guardados en este navegador (de cualquier alumno)
+async function todosReg(){
+  const m = new Map();
+  const meter = r => { if (r && r.clave && r.clave.startsWith(PREF) && CICLOS[r.esp]){ const o = m.get(r.clave); if (!o || r.fecha > o.fecha) m.set(r.clave, r); } };
+  try { (await tx('readonly', st => st.getAll()) || []).forEach(meter); } catch(e){}
+  try { for (let i = 0; i < localStorage.length; i++){ const k = localStorage.key(i); if (k && k.startsWith(PREF)) { try { meter(JSON.parse(localStorage.getItem(k))); } catch(_){} } } } catch(e){}
+  return [...m.values()].sort((x, y) => y.fecha - x.fecha);
+}
+async function borrarClave(clave){
+  try { await tx('readwrite', st => st.delete(clave)); } catch(e){}
+  try { localStorage.removeItem(clave); } catch(e){}
 }
 
 // ================= pantalla de inicio: nombre, apellidos y ciclo =================
@@ -82,16 +93,16 @@ async function pintarBorradores(){
   const lista = await todosReg();
   const sec = $('#borradores');
   if (!lista.length){ sec.classList.add('hidden'); return; }
-  $('#listaBor').innerHTML = lista.map(r => `<div class="bor"><div><b>${esc(CICLOS[r.esp].nombre)}</b> — ${esc(((r.nombre || '') + ' ' + (r.apellidos || '')).trim() || 'sin nombre')}<br><small>Guardado el ${fechaTxt(r.fecha)}</small></div><div class="acc"><button class="btn-main" data-cargar="${r.esp}">Cargar</button><button class="btn-danger" data-descartar="${r.esp}">Descartar</button></div></div>`).join('');
+  $('#listaBor').innerHTML = lista.map(r => `<div class="bor"><div><b>${esc(((r.nombre || '') + ' ' + (r.apellidos || '')).trim() || 'sin nombre')}</b> — ${esc(CICLOS[r.esp].nombre)}<br><small>Guardado el ${fechaTxt(r.fecha)}</small></div><div class="acc"><button class="btn-main" data-cargar="${esc(r.clave)}">Cargar</button><button class="btn-danger" data-descartar="${esc(r.clave)}">Descartar</button></div></div>`).join('');
   sec.classList.remove('hidden');
 }
 $('#listaBor').addEventListener('click', async e => {
   const c = e.target.closest('[data-cargar]'), d = e.target.closest('[data-descartar]');
-  if (c){ if (estaBloqueado(c.dataset.cargar)) return aviso(MSG_BLOQ(c.dataset.cargar), 4500); const r = await leerReg(c.dataset.cargar); if (r) abrirEditor(r.esp, r.nombre, r.apellidos, r); }
+  if (c){ const r = await leerClave(c.dataset.cargar); if (!r) return; if (estaBloqueado(r.esp)) return aviso(MSG_BLOQ(r.esp), 4500); abrirEditor(r.esp, r.nombre, r.apellidos, r); }
   if (d){
-    const esp = d.dataset.descartar;
-    const v = await pregunta(`¿Seguro que quieres borrar el borrador de ${CICLOS[esp].nombre}? No se puede recuperar.`, [['Cancelar', false], ['Sí, borrar', true, 'btn-danger']]);
-    if (v){ await borrarReg(esp); aviso('Borrador descartado'); pintarBorradores(); }
+    const r = await leerClave(d.dataset.descartar); if (!r) return pintarBorradores();
+    const v = await pregunta(`¿Seguro que quieres borrar de este navegador el borrador de ${((r.nombre || '') + ' ' + (r.apellidos || '')).trim()} (${CICLOS[r.esp].nombre})?${enServidor() ? ' Si tenía copia en el servidor, se podrá recuperar con su código.' : ' No se puede recuperar.'}`, [['Cancelar', false], ['Sí, borrar', true, 'btn-danger']]);
+    if (v){ await borrarClave(r.clave); aviso('Borrador descartado'); pintarBorradores(); }
   }
 });
 $('#btnEmpezar').addEventListener('click', async () => {
@@ -102,19 +113,47 @@ $('#btnEmpezar').addEventListener('click', async () => {
   if (!sel){ $('#errInicio').textContent = 'Elige tu ciclo.'; return; }
   if (estaBloqueado(sel.value)){ $('#errInicio').textContent = MSG_BLOQ(sel.value); return; }
   $('#errInicio').textContent = '';
-  const prev = await leerReg(sel.value);
+  // Solo cuenta el borrador de ESTE alumno (en un ordenador compartido puede haber borradores de otros)
+  const prev = await leerClave(claveLocal(sel.value, nombre, apellidos));
   if (prev){
     const v = await pregunta(`Ya tienes un borrador de ${CICLOS[sel.value].nombre} guardado el ${fechaTxt(prev.fecha)}. ¿Qué quieres hacer?`, [['Cancelar', 0], ['Empezar de cero (se borra)', 2, 'btn-danger'], ['Cargar borrador', 1, 'btn-main']]);
     if (v === 0) return;
     if (v === 1) return abrirEditor(sel.value, nombre, apellidos, prev);
-    await borrarReg(sel.value);
+    await borrarClave(prev.clave);
   }
   abrirEditor(sel.value, nombre, apellidos, null);
 });
 
 // ================= construcción del editor =================
-let ESP = null, NOMBRE = '', APELLIDOS = '', LEIDOS = {};
+let ESP = null, NOMBRE = '', APELLIDOS = '', LEIDOS = {}, CLAVE = '';
 const completo = () => (NOMBRE + ' ' + APELLIDOS).trim();
+// Limpia el contenido de una caja antes de mostrarlo (por si llega una copia manipulada desde el servidor):
+// solo se dejan etiquetas de formato, enlaces http(s) e imágenes incrustadas
+const ETIQ_OK = new Set(['P','DIV','BR','B','STRONG','I','EM','U','H1','H2','H3','UL','OL','LI','SPAN','A','IMG']);
+function limpiarHTML(html){
+  const t = document.createElement('template'); t.innerHTML = String(html || '');
+  const limpiar = n => {
+    for (const c of [...n.childNodes]){
+      if (c.nodeType === 3) continue;
+      if (c.nodeType !== 1 || !ETIQ_OK.has(c.tagName)){
+        if (c.nodeType === 1 && !/^(SCRIPT|STYLE|IFRAME|OBJECT|EMBED|TEMPLATE|SVG|MATH)$/.test(c.tagName)){ limpiar(c); c.replaceWith(...c.childNodes); }
+        else c.remove();
+        continue;
+      }
+      for (const at of [...c.attributes]){
+        const v = at.value, nm = at.name.toLowerCase();
+        const vale = (c.tagName === 'A' && ((nm === 'href' && /^https?:\/\//i.test(v)) || nm === 'target'))
+          || (c.tagName === 'IMG' && ((nm === 'src' && /^data:image\/(png|jpe?g|gif|webp);base64,/i.test(v)) || nm === 'alt' || nm === 'data-w' || nm === 'draggable'))
+          || (nm === 'style' && /^\s*width:\s*\d{1,3}%;?\s*$/i.test(v));
+        if (!vale) c.removeAttribute(at.name);
+      }
+      if (c.tagName === 'A') c.setAttribute('rel', 'noopener');
+      limpiar(c);
+    }
+  };
+  limpiar(t.content);
+  return t.innerHTML;
+}
 function caja(id, num, etiqueta, extra = '', o = {}){
   return `<div class="caja${o.ancha ? ' ancha' : ''}"><div class="et">${num ? `<span class="n">${num}</span>` : ''}${etiqueta}</div>${extra}<div class="ed${o.corta ? ' corta' : ''}" contenteditable="true" spellcheck="true" data-id="${id}" data-ph="${esc(o.ph || 'Escribe aquí tu respuesta. Puedes pegar o arrastrar imágenes.')}" role="textbox" aria-multiline="true" aria-label="${esc((num ? num + ' ' : '') + etiqueta.replace(/<[^>]+>/g, ''))}"></div></div>`;
 }
@@ -159,10 +198,13 @@ function construir(esp){
 }
 function abrirEditor(esp, nombre, apellidos, reg){
   ESP = esp; NOMBRE = nombre || (reg && reg.nombre) || ''; APELLIDOS = apellidos || (reg && reg.apellidos) || '';
+  CLAVE = claveLocal(ESP, NOMBRE, APELLIDOS);
+  // Borradores con la clave antigua (solo ciclo): se pasan a la clave del alumno
+  if (reg && reg.clave && reg.clave !== CLAVE && !EJEMPLO){ const vieja = reg.clave; reg.clave = CLAVE; guardarReg(reg).then(() => borrarClave(vieja)); }
   LEIDOS = Object.assign({}, reg && reg.leidos);
   if (EJEMPLO) TICKS().forEach(k => LEIDOS[k] = true);
   construir(esp);
-  if (reg && reg.cajas) document.querySelectorAll('.ed').forEach(ed => { if (reg.cajas[ed.dataset.id] != null) ed.innerHTML = reg.cajas[ed.dataset.id]; });
+  if (reg && reg.cajas) document.querySelectorAll('.ed').forEach(ed => { if (reg.cajas[ed.dataset.id] != null) ed.innerHTML = limpiarHTML(reg.cajas[ed.dataset.id]); });
   ponerCampos((reg && reg.campos) || (EJEMPLO && typeof ejemploCampos === 'function' ? ejemploCampos() : {}));
   $('#tTitulo').textContent = COMUN.corto + ' · ' + CICLOS[esp].nombre;
   $('#tSub').textContent = completo();
@@ -177,7 +219,7 @@ function abrirEditor(esp, nombre, apellidos, reg){
 }
 $('#btnInicio').addEventListener('click', async () => {
   if (EJEMPLO) return aviso('Esto es un ejemplo. Abre la tarea normal para empezar la tuya.');
-  await guardar(false); deselImg(); $('#editor').classList.add('hidden'); $('#inicio').classList.remove('hidden'); $('#nombre').value = NOMBRE; $('#apellidos').value = APELLIDOS; pintarBorradores(); window.scrollTo(0,0);
+  await guardar(false); if (nubeSucia) subirCopia(); deselImg(); $('#editor').classList.add('hidden'); $('#inicio').classList.remove('hidden'); $('#nombre').value = NOMBRE; $('#apellidos').value = APELLIDOS; pintarBorradores(); window.scrollTo(0,0);
 });
 
 // ================= checks: pasos y normas leídos =================
@@ -264,7 +306,7 @@ function actualizarProgreso(){
 let tGuardar = null;
 function regActual(){
   const cajas = {}; document.querySelectorAll('.ed').forEach(ed => { cajas[ed.dataset.id] = tieneContenido(ed) ? ed.innerHTML : ''; });
-  return { clave: PREF + ESP, esp: ESP, nombre: NOMBRE, apellidos: APELLIDOS, fecha: Date.now(), leidos: LEIDOS, campos: leerCampos(), cajas };
+  return { clave: CLAVE, esp: ESP, nombre: NOMBRE, apellidos: APELLIDOS, fecha: Date.now(), leidos: LEIDOS, campos: leerCampos(), cajas };
 }
 async function guardar(manual){
   if (!ESP) return;
@@ -280,7 +322,7 @@ function guardarYa(){
   if (!ESP || EJEMPLO || $('#editor').classList.contains('hidden')) return;
   clearTimeout(tGuardar);
   const reg = regActual();
-  try { localStorage.setItem(PREF + ESP, JSON.stringify(reg)); } catch(e){}
+  try { localStorage.setItem(reg.clave, JSON.stringify(reg)); } catch(e){}
   tx('readwrite', st => st.put(reg)).catch(() => {});
 }
 function programarGuardado(){ clearTimeout(tGuardar); nubeSucia = true; if (!EJEMPLO) $('#estado').textContent = 'Cambios sin guardar…'; tGuardar = setTimeout(() => guardar(false), 1500); actualizarProgreso(); }
@@ -291,11 +333,19 @@ $('#btnGuardar').addEventListener('click', () => { guardar(true); subirCopia(); 
 const ALFA = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
 const enServidor = () => !EJEMPLO && /^https?:$/.test(location.protocol);
 function nuevoCodigo(){ const a = new Uint8Array(10); crypto.getRandomValues(a); const s = [...a].map(n => ALFA[n % 32]).join(''); return s.slice(0, 4) + '-' + s.slice(4, 8) + '-' + s.slice(8); }
+// Un código por alumno, aunque varios compartan el navegador (vale para todos los ejercicios)
+function codigos(){ try { return JSON.parse(localStorage.getItem('djk_codigos') || '{}') || {}; } catch(e){ return {}; } }
 function miCodigo(){
-  let c = null; try { c = localStorage.getItem('djk_codigo'); } catch(e){}
-  if (!c){ c = nuevoCodigo(); try { localStorage.setItem('djk_codigo', c); } catch(e){} }
-  return c;
+  const k = normNombre(NOMBRE, APELLIDOS) || '_', m = codigos();
+  if (!m[k]){
+    // Código antiguo (uno por navegador): se queda con el primer alumno que lo use
+    let viejo = null; try { viejo = localStorage.getItem('djk_codigo'); } catch(e){}
+    m[k] = viejo && !Object.keys(m).length ? viejo : nuevoCodigo();
+    try { localStorage.setItem('djk_codigos', JSON.stringify(m)); if (viejo) localStorage.removeItem('djk_codigo'); } catch(e){}
+  }
+  return m[k];
 }
+function adoptarCodigo(n, a, codigo){ const m = codigos(); m[normNombre(n, a) || '_'] = codigo; try { localStorage.setItem('djk_codigos', JSON.stringify(m)); } catch(e){} }
 let nubeSucia = false, nubeEnCurso = false;
 function cuerpoCopia(){ return JSON.stringify({ codigo: miCodigo(), ejercicio: COMUN.codigo, ciclo: ESP, nombre: NOMBRE, apellidos: APELLIDOS, datos: JSON.stringify(regActual()) }); }
 async function subirCopia(){
@@ -336,14 +386,15 @@ $('#btnRecuperar').addEventListener('click', async () => {
     const reg = JSON.parse(d.datos);
     if (!reg || !CICLOS[reg.esp]){ err.textContent = 'La copia no es válida.'; return; }
     if (estaBloqueado(reg.esp)){ err.textContent = MSG_BLOQ(reg.esp); return; }
-    const local = await leerReg(reg.esp);
+    reg.clave = claveLocal(reg.esp, reg.nombre, reg.apellidos);
+    const local = await leerClave(reg.clave);
     if (local && local.fecha > reg.fecha){
       const v = await pregunta(`En este dispositivo tienes un borrador más reciente (${fechaTxt(local.fecha)}) que la copia del servidor (${fechaTxt(reg.fecha)}). ¿Cuál quieres usar?`, [['Cancelar', 0], ['El de este dispositivo', 1], ['El del servidor', 2, 'btn-main']]);
       if (v === 0) return;
-      if (v === 1){ try { localStorage.setItem('djk_codigo', codigo); } catch(e){} return abrirEditor(local.esp, local.nombre, local.apellidos, local); }
+      if (v === 1){ adoptarCodigo(local.nombre, local.apellidos, codigo); return abrirEditor(local.esp, local.nombre, local.apellidos, local); }
     }
-    try { localStorage.setItem('djk_codigo', codigo); } catch(e){}
-    reg.clave = PREF + reg.esp; await guardarReg(reg);
+    adoptarCodigo(reg.nombre, reg.apellidos, codigo);
+    await guardarReg(reg);
     abrirEditor(reg.esp, reg.nombre, reg.apellidos, reg);
     aviso('Trabajo recuperado. Sigues donde lo dejaste.', 4000);
   } catch(e){ err.textContent = 'No se ha podido conectar con el servidor.'; }

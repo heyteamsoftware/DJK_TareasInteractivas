@@ -1906,12 +1906,58 @@ $('#draftDiscard').addEventListener('click', async ()=>{ if(!confirm('¿Seguro q
   const ce = RA.ce.filter(c => c[2]);
   document.getElementById('raInicio').innerHTML = '<h3>Resultado de aprendizaje que trabaja este ejercicio</h3><p><b>' + RA.codigo + '.</b> ' + RA.texto + '</p><b>Criterios de evaluación:</b><ul>' + ce.map(c => '<li><b>' + c[0] + ')</b> ' + c[1] + '</li>').join('') + '</ul>';
 })();
+// Limpieza del contenido recuperado del servidor (por si llega una copia manipulada)
+const ETIQ_OK = new Set(['P','DIV','BR','B','STRONG','I','EM','U','H1','H2','H3','UL','OL','LI','SPAN','A','IMG']);
+function limpiarHTML(html){
+  const t = document.createElement('template'); t.innerHTML = String(html || '');
+  const limpiar = n => {
+    for (const c of [...n.childNodes]){
+      if (c.nodeType === 3) continue;
+      if (c.nodeType !== 1 || !ETIQ_OK.has(c.tagName)){
+        if (c.nodeType === 1 && !/^(SCRIPT|STYLE|IFRAME|OBJECT|EMBED|TEMPLATE|SVG|MATH)$/.test(c.tagName)){ limpiar(c); c.replaceWith(...c.childNodes); }
+        else c.remove();
+        continue;
+      }
+      for (const at of [...c.attributes]){
+        const v = at.value, nm = at.name.toLowerCase();
+        const vale = (c.tagName === 'A' && ((nm === 'href' && /^https?:\/\//i.test(v)) || nm === 'target'))
+          || (c.tagName === 'IMG' && ((nm === 'src' && /^data:image\/(png|jpe?g|gif|webp);base64,/i.test(v)) || nm === 'alt' || nm === 'data-w' || nm === 'draggable'))
+          || (nm === 'style' && /^\s*width:\s*\d{1,3}%;?\s*$/i.test(v));
+        if (!vale) c.removeAttribute(at.name);
+      }
+      if (c.tagName === 'A') c.setAttribute('rel', 'noopener');
+      limpiar(c);
+    }
+  };
+  limpiar(t.content);
+  return t.innerHTML;
+}
+// Ordenador compartido: antes de que otro alumno sustituya el borrador, se guarda en el servidor con el código de su dueño
+document.getElementById('startForm').addEventListener('submit', ()=>{
+  try{
+    if(!draft || !draft.alumno || DEMO || !/^https?:$/.test(location.protocol)) return;
+    const n = $('#fNombre').value, a = $('#fApellidos').value;
+    if(normNombre(n, a) === normNombre(draft.alumno.nombre, draft.alumno.apellidos)) return;
+    const c = JSON.stringify({ codigo: codigoDe(draft.alumno.nombre, draft.alumno.apellidos), ejercicio: 'UT2_E1', ciclo: draft.alumno.ciclo, nombre: draft.alumno.nombre, apellidos: draft.alumno.apellidos, datos: JSON.stringify(draft) });
+    if(c.length < 6*1024*1024) fetch('../api/borradores.php', { method:'POST', keepalive: c.length < 60000, headers:{'Content-Type':'application/json'}, body:c }).catch(()=>{});
+  }catch(e){}
+}, true);
 // Copia en el servidor (para seguir en otro dispositivo) con código de recuperación
 var nubeSucia = false, nubeEnCurso = false;
 const ALFA = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
 const enServidor = () => !DEMO && /^https?:$/.test(location.protocol);
 function nuevoCodigo(){ const a = new Uint8Array(10); crypto.getRandomValues(a); const s = [...a].map(n => ALFA[n % 32]).join(''); return s.slice(0,4)+'-'+s.slice(4,8)+'-'+s.slice(8); }
-function miCodigo(){ let c=null; try{ c=localStorage.getItem('djk_codigo'); }catch(e){} if(!c){ c=nuevoCodigo(); try{ localStorage.setItem('djk_codigo', c); }catch(e){} } return c; }
+const normNombre = (n, a) => ((n || '') + ' ' + (a || '')).normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_|_$/g, '');
+function codigos(){ try{ return JSON.parse(localStorage.getItem('djk_codigos') || '{}') || {}; }catch(e){ return {}; } }
+function codigoDe(n, a){
+  const k = normNombre(n, a) || '_', m = codigos();
+  if(!m[k]){ let viejo=null; try{ viejo=localStorage.getItem('djk_codigo'); }catch(e){}
+    m[k] = viejo && !Object.keys(m).length ? viejo : nuevoCodigo();
+    try{ localStorage.setItem('djk_codigos', JSON.stringify(m)); if(viejo) localStorage.removeItem('djk_codigo'); }catch(e){} }
+  return m[k];
+}
+function adoptarCodigo(n, a, codigo){ const m = codigos(); m[normNombre(n, a) || '_'] = codigo; try{ localStorage.setItem('djk_codigos', JSON.stringify(m)); }catch(e){} }
+function miCodigo(){ return state && state.alumno ? codigoDe(state.alumno.nombre, state.alumno.apellidos) : nuevoCodigo(); }
 function cuerpoCopia(){ return JSON.stringify({ codigo: miCodigo(), ejercicio: 'UT2_E1', ciclo: state.alumno.ciclo, nombre: state.alumno.nombre, apellidos: state.alumno.apellidos, datos: JSON.stringify(state) }); }
 async function subirCopia(){
   if(!state || !enServidor() || nubeEnCurso || !$('#start').hidden) return;
@@ -1957,7 +2003,8 @@ document.getElementById('btnRecuperar').addEventListener('click', async ()=>{
     const rb = document.querySelector('input[name=fCiclo][value="'+st.alumno.ciclo+'"]');
     if(rb && rb.disabled){ toast('El profesor ha bloqueado este ejercicio para '+st.alumno.ciclo+'. Todavía no puedes hacerlo.'); return; }
     if(draft && String(draft.updated||'') > String(st.updated||'') && !confirm('En este dispositivo tienes un borrador más reciente que la copia del servidor. ¿Quieres sustituirlo por la del servidor?')) return;
-    try{ localStorage.setItem('djk_codigo', codigo); }catch(e){}
+    if(st.textos) for(const k of Object.keys(st.textos)) st.textos[k] = limpiarHTML(st.textos[k]);
+    adoptarCodigo(st.alumno.nombre, st.alumno.apellidos, codigo);
     state = st; draft = null; await dbSet(JSON.parse(JSON.stringify(state)));
     $('#start').hidden = true; mountApp(); toast('Trabajo recuperado. Sigues donde lo dejaste.');
   }catch(e){ toast('No se ha podido conectar con el servidor.'); }

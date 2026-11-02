@@ -18,7 +18,7 @@ try {
         $ejercicio = (string) ($_GET['ejercicio'] ?? '');
         if (!$codigoValido($codigo) || !$ejercicioValido($ejercicio)) salir(400, ['ok' => false, 'error' => 'Código no válido.']);
         // Tope de intentos de recuperación por IP para que no se puedan probar códigos al azar
-        if (!limite(bd(), 'recuperar', 60, 3600)) salir(429, ['ok' => false, 'error' => 'Demasiados intentos. Espera un rato.']);
+        if (!limite(bd(), 'recuperar', 300, 3600)) salir(429, ['ok' => false, 'error' => 'Demasiados intentos. Espera un rato.']);
         $q = bdb()->prepare('SELECT datos, actualizado FROM borradores WHERE codigo = ? AND ejercicio = ?');
         $q->execute([$codigo, $ejercicio]);
         $f = $q->fetch(PDO::FETCH_ASSOC);

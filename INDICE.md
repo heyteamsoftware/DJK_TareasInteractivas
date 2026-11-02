@@ -61,6 +61,8 @@
 | Código de recuperación | Cada alumno tiene un código aleatorio (p. ej. `K7QF-M2XR-9P`) que vale para todos los ejercicios. Lo ve arriba del ejercicio con botón «Copiar». Sin el código no se puede leer ninguna copia; máximo 60 intentos de recuperación por hora e IP. |
 | Seguir en otro dispositivo | En la pantalla de inicio: «¿Empezaste en otro ordenador o móvil?» → escribe el código → se recupera el trabajo. Si en ese dispositivo hay un borrador más reciente, pregunta cuál usar. |
 | Sin conexión | Se sigue guardando en el navegador y la copia sube al servidor cuando vuelve la conexión. |
+| Ordenadores compartidos | Cada alumno tiene su propio borrador y su propio código aunque usen el mismo navegador (la clave lleva ciclo + nombre). En UT2_E1, si otro alumno empieza en ese navegador, el borrador anterior se sube antes al servidor con el código de su dueño. |
+| Seguridad al recuperar | El contenido que llega del servidor se limpia: solo formato, enlaces https e imágenes incrustadas. |
 
 ## Sistema de checks
 
