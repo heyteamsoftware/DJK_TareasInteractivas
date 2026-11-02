@@ -1020,18 +1020,12 @@ const COMUN = {
   contexto: 'Las tecnologías habilitadoras son muchas y muy variadas. Además de las que aparecen en los apuntes de la UT2, hay otras que usamos a diario y que también se podrían estudiar en clase. En este ejercicio trabajarás con 20 de ellas, elegidas para tu ciclo.',
   objetivo: 'Elegir tecnologías habilitadoras del día a día, decidir dónde instalarlas y justificar por qué mejoran ese espacio.',
   pasos: [
-    'Revisa el banco de 50 tecnologías. Pasa el ratón por encima para ver para qué sirve cada una.',
-    'Elige <b>10</b>.',
-    'Instálalas en el plano. Es obligatorio poner <b>al menos 2 en cada uno de los 4 espacios</b>.',
-    'En cada ficha te decimos para qué sirve. Tú explica <b>por qué la has instalado ahí</b> y quién la usaría.',
-    'Escribe la reflexión final relacionándola con tu ciclo.',
-    'Guarda y pulsa <b>Descargar PDF</b> (puedes hacerlo cuando quieras; si falta algo, te avisará). Entrega ese PDF en el aula virtual.'
+    'Elige <b>10</b> de las 20 tecnologías de tu banco (pasa el ratón o tócalas para ver para qué sirve cada una) e instálalas en el plano: es obligatorio poner <b>al menos 2 en cada uno de los 4 espacios</b>.',
+    'En cada ficha explica <b>por qué la has instalado ahí</b> y quién la usaría, escribe la reflexión final relacionándola con tu ciclo y pulsa <b>Descargar PDF</b> para entregarlo en el aula virtual (si falta algo, te avisará).'
   ],
   normas: [
-    'Escribe con tus palabras: pegar texto está desactivado.',
-    'Piensa en cada espacio: no vale la misma explicación para todas.',
-    'Puedes pegar, arrastrar o subir imágenes y cambiar su tamaño.',
-    'El trabajo se guarda solo en este navegador. Si cambias de ordenador, no estará.'
+    'Escribe con tus palabras (pegar texto está desactivado) y piensa en cada espacio: no vale la misma explicación para todas.',
+    'Puedes pegar, arrastrar o subir imágenes y cambiar su tamaño.'
   ],
   criterios: [
     ['Selección y colocación coherente de las 10 tecnologías en los 4 espacios', 3],
@@ -1472,7 +1466,9 @@ function renderBank(){
   const q=$('#search').value.trim().toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'');
   const full = state.sel.length>=MAX;
   const banco = BANCO[TEMA] || BANCO.ei;
-  $('#bank').innerHTML = state.orden.filter(id=>banco.includes(id)).map(id=>{
+  // Orden propio del alumno; si cambia de ciclo, las que falten de su banco se añaden al final
+  const orden = state.orden.filter(id=>banco.includes(id)); banco.forEach(id=>{ if(!orden.includes(id)) orden.push(id); });
+  $('#bank').innerHTML = orden.map(id=>{
     const i=selIndex(id), on=i>=0;
     const nm=TECHS[id]; const hit=!q || nm.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').includes(q);
     return `<button type="button" class="chip${on?' on':''}${!on&&full?' off':''}" data-id="${id}" ${hit?'':'hidden'} aria-pressed="${on}" title="${esc(PARA[id])}">${on?`<span class="n">${i+1}</span>`:''}${esc(nm)}</button>`;
