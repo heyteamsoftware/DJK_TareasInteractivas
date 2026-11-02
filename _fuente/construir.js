@@ -8,7 +8,8 @@ const leer = n => fs.readFileSync(path.join(F, n), 'utf8');
 const EJERCICIOS = [
   { cod: 'UT1_E1', dir: 'UT1', archivo: 'UT1_E1_Revoluciones_Industriales_Canarias.html', titulo: 'UT1 · E1 · Revoluciones industriales canarias y quinta revolución industrial' },
   { cod: 'UT1_E2', dir: 'UT1', archivo: 'UT1_E2_Combinacion_Sistemas_Ciberfisicos.html', titulo: 'UT1 · E2 · Combinación de sistemas ciberfísicos' },
-  { cod: 'UT1_E3', dir: 'UT1', archivo: 'UT1_E3_Digitalizacion_Sistemas_CiberFisicos.html', titulo: 'UT1 · E3 · Sistemas ciberfísicos y digitalización del sector' }
+  { cod: 'UT1_E3', dir: 'UT1', archivo: 'UT1_E3_Digitalizacion_Sistemas_CiberFisicos.html', titulo: 'UT1 · E3 · Sistemas ciberfísicos y digitalización del sector' },
+  { cod: 'UT2_E1', dir: 'UT2', archivo: 'UT2_E1_Parejas_Tecnologias_Habilitadoras.html', titulo: 'UT2 · E1 · Parejas de tecnologías habilitadoras' }
 ];
 
 // Imágenes del ejercicio: _fuente/img/UTn_Em/*.jpg|png → const IMAGENES = { nombre: dataURL }

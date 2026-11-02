@@ -21,7 +21,8 @@
 | UT1_E1 | Revoluciones industriales canarias y quinta revolución industrial | RA1 | a, b | AF, AS, EI, HB, IS + EI SP, IS SP, MC SP | A | [UT1_E1](UT1/UT1_E1_Revoluciones_Industriales_Canarias.html) | [Ejemplo](UT1/UT1_E1_EJEMPLO_relleno.html) | Sí | Sí | Hecho |
 | UT1_E2 | Combinación de sistemas ciberfísicos | RA1 | e, f, g | AF, AS, EI, HB, IS + EI SP, IS SP, MC SP | A (bocadillos + diapositivas) | [UT1_E2](UT1/UT1_E2_Combinacion_Sistemas_Ciberfisicos.html) | [Ejemplo](UT1/UT1_E2_EJEMPLO_relleno.html) | Sí (4·2·2·1·1) | Sí | Hecho |
 | UT1_E3 | Sistemas ciberfísicos y digitalización del sector | RA1 | c, d, e, f | AF, AS, EI, HB, IS + EI SP, IS SP, MC SP | A | [UT1_E3](UT1/UT1_E3_Digitalizacion_Sistemas_CiberFisicos.html) | [Ejemplo](UT1/UT1_E3_EJEMPLO_relleno.html) | Sí | Sí | Hecho |
-| UT2_E1 | Tecnologías habilitadoras | RA2 | a, c, d, e | Común (elige su ciclo entre los 8) | B | [UT2_E1](UT2/UT2_E1_Tecnologias_Habilitadoras.html) | `?ejemplo` | Sí (otro reparto) | Sí (original) | Hecho |
+| UT2_E1 | Parejas de tecnologías habilitadoras (juego) | RA2 | a | AF, AS, EI, HB, IS + EI SP, IS SP, MC SP | C (juego en el motor común) | [UT2_E1](UT2/UT2_E1_Parejas_Tecnologias_Habilitadoras.html) | [Ejemplo](UT2/UT2_E1_EJEMPLO_relleno.html) | Sí (5 rondas × 2) | Sí | Hecho |
+| UT2_E2 | Tecnologías habilitadoras en tu centro (plano) | RA2 | a, c, d, e | Los 8 · plano adaptado a cada especialidad | B | [UT2_E2](UT2/UT2_E2_Tecnologias_Habilitadoras.html) | `?ejemplo` | Sí (otro reparto) | Sí (original) | Hecho (antes era UT2_E1) |
 
 ## Ciclos
 
@@ -38,9 +39,9 @@
 
 ## Modelos de ejercicio
 
-| Rasgo | A · Proyecto por partes con variante por ciclo (UT1_E1, UT1_E3) | B · Actividad visual tipo juego (UT2_E1) |
+| Rasgo | A · Proyecto por partes con variante por ciclo (UT1_E1, UT1_E3) | B · Actividad visual con plano (UT2_E2) |
 |---|---|---|
-| Idea | Partes o fases con cajas de respuesta | Elegir 10 de 50 tecnologías y colocarlas en un plano (Patio, Aula Grande, Despacho, Cancha de Fútbol), mínimo 2 por espacio |
+| Idea | Partes o fases con cajas de respuesta | Elegir 10 de 50 tecnologías y colocarlas en un plano de 4 espacios adaptado a la especialidad (ver «Planos de UT2_E2»), mínimo 2 por espacio |
 | Inicio | Nombre, Apellidos y Ciclo a elegir (5 opciones) | Nombre, Apellidos y Ciclo a elegir (5 opciones) |
 | Estructura | Inicio: RA + nombre, apellidos y ciclo · Ejercicio: Objetivo y criterios → Qué tienes que hacer (checks) → Partes → Fuentes e IA → Antes de entregar, comprueba → Entrega → Abreviaturas | Enunciado (checks) → Banco de tecnologías → Plano → Ficha por tecnología → Reflexión final |
 | Escritura | Editor con formato; pegar texto bloqueado, pegar/soltar imágenes y redimensionarlas | Pegar texto desactivado; se pueden añadir imágenes |
@@ -48,11 +49,34 @@
 | PDF | jsPDF embebido (funciona sin conexión), generado desde el DOM | jsPDF embebido (funciona sin conexión) |
 | Ejemplo | Archivo `_EJEMPLO_relleno.html` aparte | Modo `?ejemplo` en la URL |
 
+**C · Juego dentro del motor común (UT2_E1).** Usa todo lo común (inicio, barra, checks, «Cómo se califica», guardado, copia en el servidor, PDF) pero en lugar de cajas de texto tiene un juego. Ganchos del motor: `COMUN.sinFuentes` (sin sección de fuentes) y `progresoPropio()` (la barra de progreso cuenta el juego). El estado del juego se guarda en un campo oculto `data-campo="juego"`.
+
+| Pieza | UT2_E1 · Parejas de tecnologías |
+|---|---|
+| Juego | Las 50 tecnologías y definiciones de UT2_E2 en 5 rondas de 10 parejas. Cuadrados mezclados: tecnología (verde, con icono) y definición (blanco). Orden aleatorio por alumno. |
+| Cómo se juega | Tocar o hacer clic en una tecnología y luego en su definición (o al revés). Con ratón también se puede arrastrar un cuadrado encima de su pareja; en tablet, mantener pulsado un momento y arrastrar. Funciona con teclado. |
+| Acierto / fallo | Acierto: la pareja brilla, se recoge y pasa a «Tus parejas». Fallo: los dos cuadrados tiemblan en rojo y suma un error. |
+| Extras | Marcador (ronda, parejas, errores, tiempo), 5 pistas para todo el juego, barra por rondas, estrellas por ronda, confeti al terminar cada ronda y pantalla final con trofeo y precisión. |
+| Tiempo | Solo cuenta con la página visible, la tarea desbloqueada y actividad en los últimos 90 s. |
+| PDF | Parejas, rondas, errores (total y por ronda), precisión, pistas, tiempo y las 50 tecnologías con su definición. |
+| Definiciones retocadas | 10 definiciones se reescribieron para no repetir el nombre de la tecnología (pizarra digital, documentos compartidos, firma electrónica, huella dactilar, tarjeta de acceso, detector de humo, iluminación LED, persianas, riego automático, gestor de contraseñas). |
+
+## Planos de UT2_E2 por especialidad
+
+| Ciclo | Título del plano | Sala grande | Despacho | Zona inferior | Zona derecha |
+|---|---|---|---|---|---|
+| EI, EI SP | Plano de la escuela infantil | Aula Grande | Despacho | Patio | Cancha de Fútbol |
+| AF | Plano del centro deportivo | Sala de Musculación | Despacho | Zona Exterior | Piscina |
+| AS | Plano del polideportivo | Sala Polivalente | Oficina | Zona de Aire Libre | Pista Polideportiva |
+| HB | Plano de la clínica dental | Gabinete Dental | Recepción | Sala de Espera | Esterilización y Rayos X |
+| IS, IS SP | Plano del centro de día | Sala de Actividades | Despacho | Jardín y Huerto | Comedor |
+| MC SP | Plano del servicio de mediación | Aula de Formación | Despacho | Sala de Espera | Salón de Actos |
+
 ## Autoguardado
 
 | Cuándo | Qué hace |
 |---|---|
-| Al escribir | Guarda 1,5 s después de cada cambio (0,9 s en UT2_E1). |
+| Al escribir | Guarda 1,5 s después de cada cambio (0,9 s en UT2_E2). |
 | Cada 30 s | Copia de seguridad aunque no se detecte ningún cambio. |
 | Al cerrar, ocultar la pestaña o cambiar de app en el móvil | Guardado inmediato, sin esperas, antes de que el navegador cierre la página. |
 | Al volver a abrir | Avisa del borrador y carga la copia más reciente (Cargar / Descartar). |
@@ -62,7 +86,7 @@
 | Código de recuperación | Cada alumno tiene un código aleatorio (p. ej. `K7QF-M2XR-9P`) que vale para todos los ejercicios. Lo ve arriba del ejercicio con botón «Copiar». Sin el código no se puede leer ninguna copia; máximo 60 intentos de recuperación por hora e IP. |
 | Seguir en otro dispositivo | En la pantalla de inicio: «¿Empezaste en otro ordenador o móvil?» → escribe el código → se recupera el trabajo. Si en ese dispositivo hay un borrador más reciente, pregunta cuál usar. |
 | Sin conexión | Se sigue guardando en el navegador y la copia sube al servidor cuando vuelve la conexión. |
-| Ordenadores compartidos | Cada alumno tiene su propio borrador y su propio código aunque usen el mismo navegador (la clave lleva ciclo + nombre). En UT2_E1, si otro alumno empieza en ese navegador, el borrador anterior se sube antes al servidor con el código de su dueño. |
+| Ordenadores compartidos | Cada alumno tiene su propio borrador y su propio código aunque usen el mismo navegador (la clave lleva ciclo + nombre). En UT2_E2, si otro alumno empieza en ese navegador, el borrador anterior se sube antes al servidor con el código de su dueño. |
 | Seguridad al recuperar | El contenido que llega del servidor se limpia: solo formato, enlaces https e imágenes incrustadas. |
 
 ## Sistema de checks
@@ -87,6 +111,7 @@ Todos los ejercicios muestran una tabla «Cómo se califica» con esta forma, de
 |---|---|
 | UT1_E1 | Parte 1 → 4 (1 por revolución) · Parte 2 → 3 (2 preguntas, 1,5 cada una) · Parte 3 → 3 (1 por pregunta) |
 | UT1_E3 | Fase 1 → 5 (1 por producto) · Fase 2 → 5 (5 preguntas, 1 cada una) · Fase 3 eliminada |
+| UT2_E1 | Juego → 10 (2 por ronda completa; errores, pistas y tiempo informativos) |
 
 ## Normas acordadas
 
@@ -107,7 +132,7 @@ Todos los ejercicios muestran una tabla «Cómo se califica» con esta forma, de
 | 17 | En «Cómo se califica» se indica siempre, debajo de la tabla, que **todas las partes son obligatorias** (aviso destacado). |
 | 18 | Lo relativo al guardado y al código de recuperación va **solo en el botón «🔑 Código»** de la barra superior (popup), no en la descripción de la tarea. |
 | 19 | «🔑 ¿Has perdido tu código? Pídeselo a tu profesor» va **dentro del popup del botón «Código»** (destacado), no en el checklist. En la casilla de recuperar de la pantalla de inicio se mantiene «Si lo has perdido, pídeselo a tu profesor». El profesor ve los códigos en el Detalle de la administración. |
-| 20 | Todas las tareas usan la **barra superior de UT2_E1**: logo, título, «nombre · ciclo · cambiar datos», estado del guardado, botones Guardar, **🔑 Código** y Descargar PDF (en el color de la unidad, con línea inferior del mismo color). El botón «Código» abre un popup con el código del alumno, «Copiar», para qué sirve y que si lo pierde se lo pida al profesor. El código ya no aparece dentro del ejercicio. En móvil: sin logo ni estado, «Código» solo con 🔑, y la línea de abajo solo con «cambiar datos». |
+| 20 | Todas las tareas usan la **barra superior de UT2_E2 (antes UT2_E1)**: logo, título, «nombre · ciclo · cambiar datos», estado del guardado, botones Guardar, **🔑 Código** y Descargar PDF (en el color de la unidad, con línea inferior del mismo color). El botón «Código» abre un popup con el código del alumno, «Copiar», para qué sirve y que si lo pierde se lo pida al profesor. El código ya no aparece dentro del ejercicio. En móvil: sin logo ni estado, «Código» solo con 🔑, y la línea de abajo solo con «cambiar datos». |
 | 12 | Los ejercicios nuevos se crean en `_fuente/` (archivo de datos `UTn_Em.js`) con el motor común; no se editan los HTML a mano. |
 | 13 | Todos los ejercicios tienen versión para ordenador y para móvil/tablet, adaptada para que el alumno trabaje cómodo en cada dispositivo (ver «Versión por dispositivo»). |
 | 14 | El resultado de aprendizaje y sus criterios se muestran en la pantalla de inicio (junto al nombre, apellidos y ciclo), no dentro del ejercicio. En el PDF se mantienen. |
@@ -124,11 +149,11 @@ Todos los ejercicios muestran una tabla «Cómo se califica» con esta forma, de
 
 | Cómo se aplica | Dónde |
 |---|---|
-| Botones, casillas y ticks de mínimo 44 px en tablet y móvil (o en cualquier pantalla táctil) | Motor común (`_fuente/comun_head.html`) y bloque «norma 13» en UT2_E1 |
+| Botones, casillas y ticks de mínimo 44 px en tablet y móvil (o en cualquier pantalla táctil) | Motor común (`_fuente/comun_head.html`) y bloque «norma 13» en UT2_E2 |
 | Barra de formato en una sola fila que se desliza con el dedo | Motor común |
-| La barra de formato solo aparece mientras se escribe en una caja (ordenador, tablet y móvil); al salir de la caja se oculta | Motor común (`_fuente/motor.js`) y UT2_E1 |
+| La barra de formato solo aparece mientras se escribe en una caja (ordenador, tablet y móvil); al salir de la caja se oculta | Motor común (`_fuente/motor.js`) y UT2_E2 |
 | Barra superior con Guardar y PDF fija al hacer scroll (`overflow-x:clip`, no `hidden`) | Motor común |
-| Cabecera de UT2_E1 en una sola fila en móvil, con «Descargar PDF» siempre visible | UT2_E1 |
+| Cabecera de UT2_E2 en una sola fila en móvil, con «Descargar PDF» siempre visible | UT2_E1 |
 | Asa para redimensionar imágenes más grande en pantallas táctiles | Motor común |
 
 | Ejercicio | Ordenador | Tablet | Móvil |
@@ -136,12 +161,13 @@ Todos los ejercicios muestran una tabla «Cómo se califica» con esta forma, de
 | UT1_E1 | ✓ | ✓ | ✓ |
 | UT1_E3 | ✓ | ✓ | ✓ |
 | UT2_E1 | ✓ | ✓ | ✓ |
+| UT2_E2 | ✓ | ✓ | ✓ |
 
 ## Pendiente de unificar
 
 | Ejercicio | Qué falta |
 |---|---|
-| — | Nada pendiente |
+| UT2_E2 | No está en el motor común: cualquier norma nueva se aplica con scripts sobre su HTML. Guarda en el navegador con el nombre antiguo (`UT2_E1_Tecnologias_Habilitadoras`) para no perder borradores; en el servidor ya usa `UT2_E2`. El enlace antiguo `UT2/UT2_E1_Tecnologias_Habilitadoras.html` redirige a UT2_E2. |
 
 ## Zona de administración
 
