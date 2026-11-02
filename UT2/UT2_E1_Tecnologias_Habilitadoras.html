@@ -689,6 +689,7 @@ footer.foot{color:var(--muted);font-size:12px;text-align:center;padding:10px 0 4
 .codigo-card small{flex-basis:100%;color:var(--muted)}
 /* Barra de formato solo al escribir */
 body:not(.editando) .toolbar{visibility:hidden;pointer-events:none}
+.obligatorio{background:var(--rose);color:var(--rose-ink);border-radius:10px;padding:8px 12px;margin:10px 0 0;font-size:13px}
 /* Color de la unidad UT2 (menta) */
 .top{border-bottom:3px solid var(--mint-ink)}
 .kicker{color:var(--mint-ink)}
@@ -1739,7 +1740,7 @@ function renderBrief(){
     <div class="box b-lav"><h3>Contexto</h3><p>${COMUN.contexto}</p><p style="margin-top:8px"><b>Objetivo:</b> ${COMUN.objetivo}</p></div>
     <div class="box b-mint"><h3>Pasos</h3><ul class="ticks">${COMUN.pasos.map((p,i)=>tickItem('p'+i,p,i+1)).join('')}</ul></div>
     <div class="box b-peach"><h3>Normas</h3><ul class="ticks">${COMUN.normas.map((p,i)=>tickItem('n'+i,p,'')).join('')}</ul></div>
-    <div class="box b-sky"><h3>Criterios de evaluación (10 puntos)</h3><table class="crit">${COMUN.criterios.map(([t,p])=>`<tr><td>${t}</td><td>${p} pt</td></tr>`).join('')}</table><p style="margin-top:8px;font-size:13px"><b>Entrega:</b> ${COMUN.entrega}</p></div>
+    <div class="box b-sky"><h3>Criterios de evaluación (10 puntos)</h3><table class="crit">${COMUN.criterios.map(([t,p])=>`<tr><td>${t}</td><td>${p} pt</td></tr>`).join('')}</table><p class="obligatorio">⚠️ <b>Todas las partes son obligatorias.</b> Hay que hacerlas todas: una tarea con alguna parte sin hacer no está completa.</p><p style="margin-top:8px;font-size:13px"><b>Entrega:</b> ${COMUN.entrega}</p></div>
   `;
 }
 

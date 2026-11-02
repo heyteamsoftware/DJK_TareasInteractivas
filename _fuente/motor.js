@@ -120,7 +120,7 @@ function caja(id, num, etiqueta, extra = '', o = {}){
 }
 function tablaCriterios(){
   const tot = COMUN.criterios.reduce((s, c) => s + c[2], 0);
-  return `<table class="siglas"><thead><tr><th>Parte</th><th>Qué se valora</th><th class="pts">Puntos</th></tr></thead><tbody>${COMUN.criterios.map(c => `<tr><td>${esc(c[0])}</td><td>${esc(c[1])}</td><td class="pts">${String(c[2]).replace('.', ',')}</td></tr>`).join('')}</tbody><tfoot><tr><td colspan="2">Total</td><td class="pts">${tot}</td></tr></tfoot></table>`;
+  return `<table class="siglas"><thead><tr><th>Parte</th><th>Qué se valora</th><th class="pts">Puntos</th></tr></thead><tbody>${COMUN.criterios.map(c => `<tr><td>${esc(c[0])}</td><td>${esc(c[1])}</td><td class="pts">${String(c[2]).replace('.', ',')}</td></tr>`).join('')}</tbody><tfoot><tr><td colspan="2">Total</td><td class="pts">${tot}</td></tr></tfoot></table><p class="obligatorio">⚠️ <b>Todas las partes son obligatorias.</b> Hay que hacerlas todas: una tarea con alguna parte sin hacer no está completa.</p>`;
 }
 const TICKS = () => [...COMUN.pasos.map((_, i) => 'p' + i), ...COMUN.normas.map((_, i) => 'n' + i)];
 const todoLeido = () => TICKS().every(k => LEIDOS[k]);

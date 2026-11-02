@@ -84,6 +84,7 @@ input[type=text]{width:100%;font:inherit;padding:.65rem .8rem;border:1px solid v
 .codigo-card small{flex-basis:100%;color:var(--muted)}
 .rec-fila{display:flex;gap:.5rem;flex-wrap:wrap}
 .rec-fila input{flex:1;min-width:180px;font-family:ui-monospace,Consolas,monospace;letter-spacing:.06em;text-transform:uppercase}
+.obligatorio{background:var(--rose);border:1px solid #f1b3c3;color:#6e2236;border-radius:10px;padding:.55rem .8rem;margin:.7rem 0 0;font-size:.95rem}
 .banner-ej{background:var(--peach);border:1px solid var(--peach2);color:#7a3b1b;border-radius:12px;padding:.6rem .9rem;margin:1rem 0 0;font-weight:600}
 
 .cab{background:linear-gradient(135deg,var(--lav),var(--sky));border-radius:var(--r);padding:1.2rem;margin:1rem 0}
@@ -1065,7 +1066,7 @@ function caja(id, num, etiqueta, extra = '', o = {}){
 }
 function tablaCriterios(){
   const tot = COMUN.criterios.reduce((s, c) => s + c[2], 0);
-  return `<table class="siglas"><thead><tr><th>Parte</th><th>Qué se valora</th><th class="pts">Puntos</th></tr></thead><tbody>${COMUN.criterios.map(c => `<tr><td>${esc(c[0])}</td><td>${esc(c[1])}</td><td class="pts">${String(c[2]).replace('.', ',')}</td></tr>`).join('')}</tbody><tfoot><tr><td colspan="2">Total</td><td class="pts">${tot}</td></tr></tfoot></table>`;
+  return `<table class="siglas"><thead><tr><th>Parte</th><th>Qué se valora</th><th class="pts">Puntos</th></tr></thead><tbody>${COMUN.criterios.map(c => `<tr><td>${esc(c[0])}</td><td>${esc(c[1])}</td><td class="pts">${String(c[2]).replace('.', ',')}</td></tr>`).join('')}</tbody><tfoot><tr><td colspan="2">Total</td><td class="pts">${tot}</td></tr></tfoot></table><p class="obligatorio">⚠️ <b>Todas las partes son obligatorias.</b> Hay que hacerlas todas: una tarea con alguna parte sin hacer no está completa.</p>`;
 }
 const TICKS = () => [...COMUN.pasos.map((_, i) => 'p' + i), ...COMUN.normas.map((_, i) => 'n' + i)];
 const todoLeido = () => TICKS().every(k => LEIDOS[k]);

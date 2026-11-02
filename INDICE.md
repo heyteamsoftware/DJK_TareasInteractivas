@@ -73,7 +73,7 @@
 
 ## Criterios unificados
 
-Todos los ejercicios muestran una tabla «Cómo se califica» con esta forma, y debajo los 4 criterios generales de entrega.
+Todos los ejercicios muestran una tabla «Cómo se califica» con esta forma, debajo el aviso «Todas las partes son obligatorias» y los 4 criterios generales de entrega.
 
 | Parte | Qué se valora | Puntos |
 |---|---|---|
@@ -101,6 +101,7 @@ Todos los ejercicios muestran una tabla «Cómo se califica» con esta forma, y 
 | 10 | Todos los ejercicios llevan el sistema de checks (ver arriba): el alumno sabe lo que tiene que hacer y lo confirma. |
 | 11 | Datos iniciales unificados: Nombre, Apellidos y Ciclo a elegir entre los 8 (5 presenciales + 3 semipresenciales). |
 | 16 | Ciclos semipresenciales: EI SP e IS SP reutilizan el contenido presencial; MC SP lleva contenido adaptado propio. En semipresencial el trabajo es individual (sin compañero/a). |
+| 17 | En «Cómo se califica» se indica siempre, debajo de la tabla, que **todas las partes son obligatorias** (aviso destacado). |
 | 12 | Los ejercicios nuevos se crean en `_fuente/` (archivo de datos `UTn_Em.js`) con el motor común; no se editan los HTML a mano. |
 | 13 | Todos los ejercicios tienen versión para ordenador y para móvil/tablet, adaptada para que el alumno trabaje cómodo en cada dispositivo (ver «Versión por dispositivo»). |
 | 14 | El resultado de aprendizaje y sus criterios se muestran en la pantalla de inicio (junto al nombre, apellidos y ciclo), no dentro del ejercicio. En el PDF se mantienen. |
