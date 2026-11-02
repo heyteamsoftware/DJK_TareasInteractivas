@@ -304,7 +304,52 @@ const CICLOS = {
   }
 };
 
-const ORDEN = ['af','as','ei','hb','is'];
+// Ciclos semipresenciales: IS y EI reutilizan el contenido del presencial; MC tiene contenido propio
+CICLOS.ei_sp = Object.assign(structuredClone(CICLOS.ei), { nombre: 'Educación Infantil Semipresencial', semipresencial: true });
+CICLOS.is_sp = Object.assign(structuredClone(CICLOS.is), { nombre: 'Integración Social Semipresencial', semipresencial: true });
+CICLOS.mc_sp = {
+  nombre: 'Mediación Comunicativa Semipresencial', semipresencial: true,
+  contexto: 'La mediación comunicativa está viviendo una transformación digital. Los sistemas ciberfísicos (dispositivos físicos conectados y controlados digitalmente, como los bucles magnéticos conectados a audífonos e implantes, los avisadores luminosos o las gafas con subtítulos) y las herramientas digitales (videointerpretación en lengua de signos, transcripción automática del habla, comunicadores) abren nuevas vías para que las personas sordas, sordociegas o con dificultades de comunicación participen en igualdad. También plantean retos de accesibilidad real, privacidad, dependencia de la conexión y mantenimiento del papel del profesional.',
+  objetivo: 'Vamos a incorporar en nuestro «Servicio de Mediación Comunicativa» sistemas ciberfísicos y herramientas digitales, justificando su uso desde el punto de vista de la accesibilidad, la autonomía de la persona usuaria, la organización del servicio y la ética profesional.',
+  f1: {
+    intro: 'Busca productos reales de los siguientes tipos de sistemas para integrar en el servicio (orientados a personas sordas, sordociegas o con dificultades de comunicación):',
+    items: [
+      'Sistemas de videointerpretación y mediación a distancia en lengua de signos',
+      'Subtitulado y transcripción automática del habla en tiempo real',
+      'Bucles magnéticos o sistemas de FM conectados a audífonos e implantes cocleares',
+      'Avisadores luminosos y vibratorios (timbre, alarmas, llamadas)',
+      'Otro de tu elección'
+    ],
+    instr: 'Adjunta capturas o enlaces de los productos, justifica su uso en la mediación comunicativa (beneficios para la persona usuaria) y explica cómo se aplicarían en el día a día del servicio.'
+  },
+  f2: {
+    intro: 'Redacta un documento de «Preguntas Frecuentes» dirigido a las personas usuarias del servicio, a sus familias y a los profesionales con los que se coordina, donde des una respuesta argumentada, profesional y tranquilizadora a estas objeciones:',
+    grupos: [
+      { t: 'Sobre la videointerpretación a distancia', q: [
+        { p: 'Si la interpretación se hace por videollamada, ¿no se pierde la cercanía y la calidad de tener al intérprete o mediador presente en la consulta o en la reunión?', ej: '«La videointerpretación se usará para gestiones breves o urgentes; las situaciones importantes seguirán teniendo un profesional presente».' },
+        { p: '¿Qué pasa con la confidencialidad de lo que cuento en una videollamada con un intérprete? ¿Se graba o puede verlo alguien más?' }
+      ]},
+      { t: 'Sobre el subtitulado y la transcripción automática', q: [
+        { p: 'Los subtítulos automáticos se equivocan a menudo. ¿No es peligroso fiarse de ellos en una cita médica o en una gestión importante?' },
+        { p: 'Si ya hay subtítulos automáticos, ¿para qué hace falta un mediador comunicativo o un intérprete de lengua de signos?' }
+      ]},
+      { t: 'Sobre los bucles magnéticos y los sistemas de FM', q: [
+        { p: '¿Funcionan con cualquier audífono o implante? ¿Qué tengo que hacer para conectarme y quién me lo explica?' },
+        { p: 'Si el bucle falla en mitad de una charla o de una clase, ¿me quedo sin enterarme de nada?' }
+      ]},
+      { t: 'Sobre los avisadores luminosos y vibratorios', q: [
+        { p: '¿No es invasivo tener luces y vibraciones avisando de todo en casa o en el centro? ¿Se pueden ajustar a lo que yo necesito?' },
+        { p: 'Si un avisador se queda sin batería o pierde la conexión, ¿cómo me entero de una alarma de incendio o de una llamada importante?' }
+      ]},
+      { t: 'Transversales (accesibilidad, datos y autonomía)', q: [
+        { p: '¿Quién guarda las transcripciones, las grabaciones y los datos de uso de estos sistemas, y durante cuánto tiempo?' },
+        { p: 'Con tanta tecnología, ¿no se dejará de enseñar y de respetar la lengua de signos y la comunicación directa con la persona?' }
+      ]}
+    ]
+  },
+  siglas: [['LSE','Lengua de signos española'],['SAAC','Sistemas aumentativos y alternativos de comunicación'],['FM','Frecuencia modulada (sistema de transmisión de sonido a audífonos e implantes)'],['IA','Inteligencia artificial'],['RGPD','Reglamento General de Protección de Datos']]
+};
+const ORDEN = ['af','as','ei','hb','is','ei_sp','is_sp','mc_sp'];
 
 // Fase 2: como máximo 5 preguntas por ciclo, cogiendo una de cada grupo por turnos
 const MAX_FAQ = 5;

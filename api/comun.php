@@ -7,7 +7,8 @@ header('Cache-Control: no-store');
 header('X-Content-Type-Options: nosniff');
 
 const DIR_DATOS = '/var/www/djk_datos';
-const CICLOS = ['Acondicionamiento Físico', 'Animación Sociodeportiva', 'Educación Infantil', 'Higiene Bucodental', 'Integración Social'];
+const CICLOS = ['Acondicionamiento Físico', 'Animación Sociodeportiva', 'Educación Infantil', 'Higiene Bucodental', 'Integración Social',
+    'Educación Infantil Semipresencial', 'Integración Social Semipresencial', 'Mediación Comunicativa Semipresencial'];
 
 function salir(int $codigo, array $datos): never
 {

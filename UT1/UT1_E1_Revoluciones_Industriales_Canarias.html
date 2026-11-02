@@ -813,7 +813,13 @@ const CICLOS = {
     centro: 'Céntrate en un centro o servicio de integración social de Canarias (centro de día, vivienda tutelada o servicio de atención a personas en situación de dependencia).',
     pistas: 'expedientes y registros de seguimiento de los usuarios, coordinación con otros servicios, gestión de ayudas y citas, comunicación con las familias.' }
 };
-const ORDEN = ['af','as','ei','hb','is'];
+// Ciclos semipresenciales: IS y EI reutilizan el contenido del presencial; MC tiene contenido propio
+CICLOS.ei_sp = Object.assign(structuredClone(CICLOS.ei), { nombre: 'Educación Infantil Semipresencial', semipresencial: true });
+CICLOS.is_sp = Object.assign(structuredClone(CICLOS.is), { nombre: 'Integración Social Semipresencial', semipresencial: true });
+CICLOS.mc_sp = { nombre: 'Mediación Comunicativa Semipresencial', semipresencial: true,
+  centro: 'Céntrate en un servicio de mediación comunicativa de Canarias (servicio de intérpretes y mediadores de lengua de signos, asociación de personas sordas o sordociegas, o centro educativo con alumnado con dificultades de comunicación).',
+  pistas: 'citas y avisos a las personas usuarias, interpretación y videointerpretación en lengua de signos, subtitulado, sistemas aumentativos y alternativos de comunicación, coordinación con familias y servicios.' };
+const ORDEN = ['af','as','ei','hb','is','ei_sp','is_sp','mc_sp'];
 
 function introHTML(C){
   return `<h2 style="margin-top:0;font-size:1.1rem">Objetivo</h2><p>${esc(COMUN.objetivo)}</p>`;

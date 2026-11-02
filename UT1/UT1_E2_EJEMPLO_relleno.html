@@ -728,7 +728,7 @@ const COMUN = {
   objetivo: 'Crear un producto basado en tecnologías que se puedan instalar y sean útiles.',
   pasos: [
     'Lee el contexto, el objetivo y la tabla «Cómo se califica».',
-    'Escribe el nombre de tu compañero/a de grupo (si haces el trabajo individual en semipresencial, escribe «Individual») y elige el <b>dispositivo</b> que os han asignado.',
+    'Si eres de un ciclo presencial, escribe el nombre de tu compañero/a de pareja (en semipresencial el trabajo es individual). Elige el <b>dispositivo</b> que te han asignado.',
     '<b>Fase 1:</b> escribe en cada bocadillo una tecnología habilitadora del dispositivo y explica qué hace y por qué es útil; después explica cómo se combinan sus datos, propón 4 actividades con usuarios y completa las ventajas e inconvenientes.',
     '<b>Fase 2:</b> prepara tu presentación en las 6 diapositivas, con texto, imágenes y ejemplos. Cada diapositiva saldrá en el PDF en una página apaisada, lista para presentar.',
     'Cita tus fuentes y declara si has usado inteligencia artificial.',
@@ -798,7 +798,11 @@ const CICLOS = {
   hb: { nombre: 'Higiene Bucodental', usuario: 'un paciente de la clínica dental' },
   is: { nombre: 'Integración Social', usuario: 'un usuario del centro o servicio de integración social' }
 };
-const ORDEN = ['af','as','ei','hb','is'];
+// Ciclos semipresenciales: IS y EI reutilizan el contenido del presencial; MC tiene contenido propio
+CICLOS.ei_sp = Object.assign(structuredClone(CICLOS.ei), { nombre: 'Educación Infantil Semipresencial', semipresencial: true });
+CICLOS.is_sp = Object.assign(structuredClone(CICLOS.is), { nombre: 'Integración Social Semipresencial', semipresencial: true });
+CICLOS.mc_sp = { nombre: 'Mediación Comunicativa Semipresencial', semipresencial: true, usuario: 'una persona sorda, sordociega o con dificultades de comunicación a la que acompaña el mediador comunicativo' };
+const ORDEN = ['af','as','ei','hb','is','ei_sp','is_sp','mc_sp'];
 
 const dispositivoElegido = () => COMUN.dispositivos.find(d => d.k === campo('dispositivo'));
 const textoDe = id => { const ed = edDeId(id); return ed ? ed.textContent.replace(/\s+/g, ' ').trim() : ''; };
@@ -828,7 +832,8 @@ function construirTarea(C){
   </style>`;
   // Fase 1
   h += `<section class="fase f1"><header><h2>Fase 1 · El dispositivo y sus tecnologías</h2></header><div class="cuerpo">`;
-  h += caja('pareja', '1.1', 'Compañero/a de grupo', '<div class="pista">Nombre y apellidos de tu compañero/a. Si eres de un ciclo semipresencial y lo haces individual, escribe «Individual».</div>', { corta: true, ph: 'Nombre y apellidos…' });
+  if (C.semipresencial) h += '<div class="caja"><div class="et"><span class="n">1.1</span>Modalidad</div><div class="nota">Ciclo semipresencial: este trabajo es <b>individual</b>.</div></div>';
+  else h += caja('pareja', '1.1', 'Compañero/a de grupo', '<div class="pista">Nombre y apellidos de tu compañero/a de pareja.</div>', { corta: true, ph: 'Nombre y apellidos…' });
   h += `<div class="caja"><div class="et"><span class="n">1.2</span>Dispositivo asignado</div><div class="pista">Elige el dispositivo que os ha asignado el profesor.</div>
     <div class="disps" role="radiogroup" aria-label="Dispositivo asignado">${COMUN.dispositivos.map(d => `<label class="disp-op"><img src="${IMAGENES[d.k]}" alt=""><span><input type="radio" name="dispositivo" data-campo="dispositivo" value="${d.k}">${esc(d.n)}</span></label>`).join('')}</div></div>`;
   h += `<div class="caja"><div class="et"><span class="n">1.3</span>Las 4 tecnologías habilitadoras</div>
@@ -868,7 +873,8 @@ async function pdfTarea(api, C){
   const { banda, P, caja, separador, sitio, COL, doc, diapositiva } = api;
   const d = dispositivoElegido();
   banda('Fase 1 · El dispositivo y sus tecnologías', [223,243,234], COL.mint);
-  await caja('pareja', '1.1', 'Compañero/a de grupo', { compacta: true });
+  if (C.semipresencial) P('Modalidad: individual (ciclo semipresencial)', { size: 10.5, b: true, color: COL.muted, tras: 2 });
+  else await caja('pareja', '1.1', 'Compañero/a de grupo', { compacta: true });
   P('Dispositivo asignado: ' + (d ? d.n : '(sin elegir)'), { size: 11, b: true, color: COL.lav, tras: 2 });
   if (d){
     const pr = doc.getImageProperties(IMAGENES[d.k]); const w = api.CW, h = w * pr.height / pr.width;
@@ -900,7 +906,7 @@ function listaChecks(C){
   const act = cuentaLlenas([0,1,2,3].map(i => `act${i}`));
   const dia = COMUN.diapositivas.filter((_, i) => llena(`d${i}_txt`)).length;
   return [
-    { ok: llena('pareja'), t: 'Compañero/a de grupo', falta: 'Escribe el nombre de tu compañero/a (o «Individual»).' },
+    ...(C.semipresencial ? [] : [{ ok: llena('pareja'), t: 'Compañero/a de grupo', falta: 'Escribe el nombre de tu compañero/a de pareja.' }]),
     { ok: !!dispositivoElegido(), t: 'Dispositivo elegido', falta: 'Elige el dispositivo asignado en 1.2.' },
     { ok: tec === 4, t: 'Las 4 tecnologías', cuenta: `${tec}/4`, falta: 'Escribe el nombre y la explicación de cada tecnología.' },
     { ok: llena('combinadas'), t: 'Funciones combinadas', falta: 'Explica cómo se combinan los datos (1.4).' },
