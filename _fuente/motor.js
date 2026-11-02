@@ -63,8 +63,19 @@ async function borrarReg(esp){
 }
 
 // ================= pantalla de inicio: nombre, apellidos y ciclo =================
+// Ejercicio bloqueado por el profesor para ciertos ciclos (zona de administración)
+let BLOQUEADOS = [];
+const estaBloqueado = esp => !EJEMPLO && BLOQUEADOS.includes(CICLOS[esp].nombre);
+const MSG_BLOQ = esp => `El profesor ha bloqueado este ejercicio para ${CICLOS[esp].nombre}. Todavía no puedes hacerlo.`;
+function cargarBloqueos(){
+  if (EJEMPLO || !/^https?:$/.test(location.protocol)) return;
+  fetch('../api/estado.php?ejercicio=' + COMUN.codigo, { cache: 'no-store' }).then(r => r.json())
+    .then(d => { if (d && d.ok){ BLOQUEADOS = d.bloqueados || []; const sel = document.querySelector('input[name=ciclo]:checked'); pintarCiclos(); if (sel && !estaBloqueado(sel.value)) document.querySelector(`input[name=ciclo][value=${sel.value}]`).checked = true; pintarBorradores(); } })
+    .catch(() => {});
+}
 function pintarCiclos(){
-  $('#ciclos').innerHTML = ORDEN.map(k => `<label class="ciclo"><input type="radio" name="ciclo" value="${k}"><span><b>${esc(CICLOS[k].nombre)}</b><small>CFGS</small></span></label>`).join('');
+  $('#ciclos').innerHTML = ORDEN.map(k => { const b = estaBloqueado(k);
+    return `<label class="ciclo${b ? ' bloq' : ''}"${b ? ' title="Bloqueado por el profesor"' : ''}><input type="radio" name="ciclo" value="${k}"${b ? ' disabled' : ''}><span><b>${esc(CICLOS[k].nombre)}</b><small>${b ? '🔒 Bloqueado por el profesor' : 'CFGS'}</small></span></label>`; }).join('');
 }
 async function pintarBorradores(){
   const lista = await todosReg();
@@ -75,7 +86,7 @@ async function pintarBorradores(){
 }
 $('#listaBor').addEventListener('click', async e => {
   const c = e.target.closest('[data-cargar]'), d = e.target.closest('[data-descartar]');
-  if (c){ const r = await leerReg(c.dataset.cargar); if (r) abrirEditor(r.esp, r.nombre, r.apellidos, r); }
+  if (c){ if (estaBloqueado(c.dataset.cargar)) return aviso(MSG_BLOQ(c.dataset.cargar), 4500); const r = await leerReg(c.dataset.cargar); if (r) abrirEditor(r.esp, r.nombre, r.apellidos, r); }
   if (d){
     const esp = d.dataset.descartar;
     const v = await pregunta(`¿Seguro que quieres borrar el borrador de ${CICLOS[esp].nombre}? No se puede recuperar.`, [['Cancelar', false], ['Sí, borrar', true, 'btn-danger']]);
@@ -88,6 +99,7 @@ $('#btnEmpezar').addEventListener('click', async () => {
   if (!nombre){ $('#errInicio').textContent = 'Escribe tu nombre.'; $('#nombre').focus(); return; }
   if (!apellidos){ $('#errInicio').textContent = 'Escribe tus apellidos.'; $('#apellidos').focus(); return; }
   if (!sel){ $('#errInicio').textContent = 'Elige tu ciclo.'; return; }
+  if (estaBloqueado(sel.value)){ $('#errInicio').textContent = MSG_BLOQ(sel.value); return; }
   $('#errInicio').textContent = '';
   const prev = await leerReg(sel.value);
   if (prev){
@@ -558,7 +570,16 @@ async function descargarPDF(){
   const nombreArchivo = `${COMUN.codigo}_${limpio(APELLIDOS) || 'Apellidos'}_${limpio(NOMBRE) || 'Nombre'}.pdf`;
   if (window.__PDF_PRUEBA) { window.__PDF_PRUEBA(doc, nombreArchivo); return; }
   doc.save(nombreArchivo);
+  registrarEntrega();
   aviso('PDF generado. Revisa tu carpeta de descargas.');
+}
+// Avisa al profesor de que este alumno ha descargado su PDF (solo nombre, apellidos, ciclo y ejercicio)
+function registrarEntrega(){
+  try {
+    if (EJEMPLO || !/^https?:$/.test(location.protocol)) return;
+    fetch('../api/entregas.php', { method: 'POST', keepalive: true, headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ ejercicio: COMUN.codigo, ciclo: CICLOS[ESP].nombre, nombre: NOMBRE, apellidos: APELLIDOS }) }).catch(() => {});
+  } catch(e){}
 }
 $('#btnPDF').addEventListener('click', intentarPDF);
 
@@ -578,4 +599,4 @@ if (EJEMPLO){
   abrirEditor('ei', 'Nombre', 'Apellido1 Apellido2', null);
   document.querySelectorAll('.ed').forEach(ed => { const h = ejemploRespuesta(ed.dataset.id); if (h) ed.innerHTML = h; });
   actualizarProgreso();
-} else pintarBorradores();
+} else { pintarBorradores(); cargarBloqueos(); }

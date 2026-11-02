@@ -1,0 +1,4 @@
+# comun.php solo se usa desde las otras APIs, no se abre directamente
+<Files "comun.php">
+  Require all denied
+</Files>

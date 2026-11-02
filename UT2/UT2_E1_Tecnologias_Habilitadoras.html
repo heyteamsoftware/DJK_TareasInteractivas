@@ -672,6 +672,8 @@ footer.foot{color:var(--muted);font-size:12px;text-align:center;padding:10px 0 4
   .toolbar{top:72px}
 }
 /* fin norma 13 */
+.start .ciclo.bloq{cursor:not-allowed;background:#f3f1f6;border-style:dashed;color:var(--muted)}
+.start .ciclo.bloq em{font-style:normal;font-size:12px;color:#7a3b1b;margin-left:auto}
 </style>
 </head>
 <body>
@@ -694,6 +696,7 @@ footer.foot{color:var(--muted);font-size:12px;text-align:center;padding:10px 0 4
       <div class="kicker" style="margin-top:6px">UT2 · Ejercicio 1</div>
       <h1>Tecnologías Habilitadoras</h1>
       <p class="sub">Elige 10 tecnologías del día a día, instálalas en el plano del centro y explica por qué las has puesto ahí.</p>
+       <p class="sub" style="font-size:13px">Al descargar el PDF se avisa al profesor de que lo has hecho (nombre, apellidos, ciclo y fecha). Tus respuestas no salen de este navegador.</p>
       <div class="draft" id="draftBox" hidden>
         <b>Hay un borrador guardado</b> <span id="draftInfo"></span>
         <div class="acts">
@@ -1642,6 +1645,8 @@ async function generarPDF(asBlob){
   const fname = ('UT2_E1_'+A.apellidos+'_'+A.nombre).normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^A-Za-z0-9_]+/g,'_').replace(/_+/g,'_')+'.pdf';
   if(asBlob) return {blob:doc.output('blob'), name:fname, pages:n};
   doc.save(fname);
+  // Avisa al profesor de que este alumno ha descargado su PDF (solo nombre, apellidos, ciclo y ejercicio)
+  try { if (!DEMO && /^https?:$/.test(location.protocol)) fetch('../api/entregas.php', { method: 'POST', keepalive: true, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ejercicio: 'UT2_E1', ciclo: A.ciclo, nombre: A.nombre, apellidos: A.apellidos }) }).catch(() => {}); } catch(e){}
   return {name:fname,pages:n};
 }
 
@@ -1814,6 +1819,31 @@ $('#draftDiscard').addEventListener('click', async ()=>{ if(!confirm('¿Seguro q
     if (!id){ id = crypto.randomUUID ? crypto.randomUUID() : (Date.now().toString(36) + Math.random().toString(36).slice(2) + Math.random().toString(36).slice(2)); localStorage.setItem('djk_visitante', id); }
     fetch('../api/visitas.php', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id, pagina: 'UT2_E1' + (DEMO ? '_ejemplo' : '') }) }).catch(() => {});
   } catch(e){}
+})();
+// Bloqueos por ciclo (DJK)
+(function(){
+  let bloq = [];
+  const msg = c => 'El profesor ha bloqueado este ejercicio para ' + c + '. Todavía no puedes hacerlo.';
+  function pintar(){
+    document.querySelectorAll('input[name=fCiclo]').forEach(r => {
+      const b = bloq.includes(r.value), l = r.closest('label');
+      r.disabled = b; if (b) r.checked = false;
+      l.classList.toggle('bloq', b);
+      let em = l.querySelector('em'); if (b && !em){ em = document.createElement('em'); em.textContent = '🔒 Bloqueado'; l.appendChild(em); } if (!b && em) em.remove();
+    });
+  }
+  // Empezar con un ciclo bloqueado
+  document.getElementById('startForm').addEventListener('submit', e => {
+    const s = document.querySelector('input[name=fCiclo]:checked');
+    if (s && bloq.includes(s.value)){ e.preventDefault(); e.stopImmediatePropagation(); toast(msg(s.value)); }
+  }, true);
+  // Cargar un borrador de un ciclo bloqueado
+  document.getElementById('draftLoad').addEventListener('click', e => {
+    const c = draft && draft.alumno && draft.alumno.ciclo;
+    if (c && bloq.includes(c)){ e.stopImmediatePropagation(); toast(msg(c)); }
+  }, true);
+  if (DEMO || !/^https?:$/.test(location.protocol)) return;
+  fetch('../api/estado.php?ejercicio=UT2_E1', { cache: 'no-store' }).then(r => r.json()).then(d => { if (d && d.ok){ bloq = d.bloqueados || []; pintar(); } }).catch(() => {});
 })();
 (async function init(){
   renderBrief();

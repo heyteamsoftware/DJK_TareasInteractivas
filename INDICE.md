@@ -11,6 +11,7 @@
 | Servidor | CIFP Tony Gallardo · Apache · `/var/www/html/DJK/DJK_EjerciciosInteractivos` (usuario `ubuntu`, clave en `Documentos\Oracle`) |
 | Portada | `index.html` con enlaces a cada ejercicio, aviso de privacidad y contador discreto de visitantes; `.htaccess` desactiva el listado de carpetas |
 | Analítica | `api/visitas.php` (anónima, sin cookies) · base de datos en `/var/www/djk_datos/visitas.db`, fuera de la web · panel en `estadisticas.html` (no enlazado, sin indexar) |
+| Administración | https://myappsserver.duckdns.org/DJK/DJK_EjerciciosInteractivos/admin/ · solo contraseña (guardada cifrada en `/var/www/djk_datos/admin.json`) |
 
 ## Registro de ejercicios
 
@@ -113,6 +114,19 @@ Todos los ejercicios muestran una tabla «Cómo se califica» con esta forma, y 
 | Ejercicio | Qué falta |
 |---|---|
 | — | Nada pendiente |
+
+## Zona de administración
+
+| Pieza | Qué hace |
+|---|---|
+| Acceso | `admin/` pide la contraseña. Máximo 10 intentos cada 15 minutos por IP. La sesión dura hasta cerrar el navegador o pulsar «Salir». |
+| Disponibilidad | Tabla ciclo × ejercicio con interruptores «✓ Abierto / 🔒 Bloqueado». Un ejercicio bloqueado no se puede empezar ni cargar desde un borrador en ese ciclo (aparece con candado en la pantalla de inicio). |
+| Entregas | Se registra cuando el alumno descarga el PDF: nombre, apellidos, ciclo, ejercicio, primera y última descarga y nº de veces. Las respuestas no se envían. |
+| Resumen | Tabla ciclo × ejercicio con el número de personas que han descargado el PDF. |
+| Detalle | Por ciclo (pestañas) y ejercicio: quién lo ha descargado y cuándo; buscador por nombre. |
+| Archivos | `admin/index.html`, `api/admin.php`, `api/entregas.php`, `api/estado.php`, `api/comun.php` (no accesible desde la web) · datos en `/var/www/djk_datos/entregas.db` |
+| Sin conexión | Si el ejercicio se abre sin internet no puede consultar los bloqueos ni registrar la entrega: se puede hacer igualmente. |
+| Ejercicios nuevos | Añadir su código y nombre en `EJERCICIOS` de `admin/index.html` para que salga en las tablas aunque nadie lo haya descargado aún. |
 
 ## Analítica y contador de visitas
 

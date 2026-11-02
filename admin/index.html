@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light only">
+<meta name="robots" content="noindex, nofollow">
+<title>Administración · Ejercicios DJK</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%236a54b8'/%3E%3Ctext x='32' y='42' font-family='Arial' font-weight='700' font-size='26' fill='white' text-anchor='middle'%3EDJK%3C/text%3E%3C/svg%3E">
+<style>
+:root{--bg:#fbf8f3;--card:#fff;--ink:#2f2d3a;--muted:#5f5b6b;--line:#e7e1ef;--lav:#e9e2fb;--lav2:#c9b8f0;--lav3:#6a54b8;--mint:#dff3ea;--mint3:#2f7d5c;--peach:#ffe9dc;--rose3:#a33c58;--r:14px}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif}
+.wrap{max-width:1000px;margin:0 auto;padding:1rem}
+.hidden{display:none!important}
+h1{font-size:1.5rem;margin:.6rem 0 .2rem}
+.sub{color:var(--muted);margin:0 0 1rem}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:1rem;margin:1rem 0}
+.card h2{margin:0 0 .7rem;font-size:1.1rem}
+button{font:inherit;cursor:pointer;border:1px solid var(--line);background:#fff;color:var(--ink);border-radius:10px;padding:.5rem .9rem;min-height:44px}
+button:hover{background:var(--lav)}
+.btn-main{background:var(--lav3);border-color:var(--lav3);color:#fff;font-weight:600}
+.btn-main:hover{background:#5a45a4}
+input[type=password],input[type=search]{width:100%;font:inherit;padding:.65rem .8rem;border:1px solid var(--line);border-radius:10px;min-height:48px}
+:focus-visible{outline:3px solid var(--lav2);outline-offset:2px}
+.login{max-width:380px;margin:3rem auto}
+.err{color:var(--rose3);font-weight:600;min-height:1.4em;margin:.5rem 0 0}
+.barra{display:flex;flex-wrap:wrap;gap:.6rem;align-items:center;justify-content:space-between}
+.chips{display:flex;flex-wrap:wrap;gap:.4rem;margin:.4rem 0 .8rem}
+.chip{border-radius:999px;padding:.45rem .9rem;border:1.5px solid var(--line);background:#fff;font-weight:600;font-size:.92rem}
+.chip.on{background:var(--lav);border-color:var(--lav3);color:var(--lav3)}
+.chip small{font-weight:700;margin-left:.3rem;color:var(--muted)}
+.tabla{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:.93rem}
+th,td{text-align:left;padding:.45rem .55rem;border-bottom:1px solid var(--line);vertical-align:top}
+th{background:var(--lav);font-weight:600;white-space:nowrap}
+td.num,th.num{text-align:center;font-variant-numeric:tabular-nums}
+td.n0{color:#b0abb9}
+.ej{margin:1.2rem 0 .4rem;font-size:1rem;color:var(--lav3)}
+.vacio{color:var(--muted);font-style:italic}
+.nota{font-size:.88rem;color:var(--muted)}
+.disp{min-width:118px;border-radius:999px;font-weight:700;font-size:.88rem;padding:.4rem .8rem}
+.disp.abierto{background:var(--mint);border-color:#9fd8bd;color:var(--mint3)}
+.disp.bloq{background:var(--peach);border-color:#f6bf9e;color:#7a3b1b}
+.disp:disabled{opacity:.5;cursor:wait}
+td.celda{text-align:center}
+@media (max-width:600px){.wrap{padding:.7rem}table{font-size:.86rem}}
+</style>
+</head>
+<body>
+<main class="wrap">
+
+  <section id="vLogin" class="card login">
+    <h1>Administración</h1>
+    <p class="sub">Ejercicios Interactivos DJK</p>
+    <form id="fLogin">
+      <label for="clave" style="font-weight:600;display:block;margin-bottom:.35rem">Contraseña</label>
+      <input type="password" id="clave" autocomplete="current-password" required>
+      <p class="err" id="errLogin"></p>
+      <button class="btn-main" type="submit" style="width:100%">Entrar</button>
+    </form>
+  </section>
+
+  <div id="vPanel" class="hidden">
+    <div class="barra">
+      <div><h1>Entregas por ciclo</h1><p class="sub">Alumnado que ha descargado el PDF de cada ejercicio.</p></div>
+      <div style="display:flex;gap:.5rem"><button id="bRecargar">↻ Actualizar</button><button id="bSalir">Salir</button></div>
+    </div>
+
+    <section class="card"><h2>Disponibilidad</h2>
+      <p class="nota" style="margin-top:0">Pulsa para abrir o bloquear un ejercicio a un ciclo. Si está bloqueado, el alumnado de ese ciclo no puede abrirlo (ni cargar un borrador suyo) hasta que lo abras.</p>
+      <div class="tabla"><table id="tDisp"></table></div></section>
+
+    <section class="card"><h2>Resumen</h2><div class="tabla"><table id="tResumen"></table></div>
+      <p class="nota">Número de personas distintas que han descargado el PDF de cada ejercicio.</p></section>
+
+    <section class="card">
+      <h2>Detalle</h2>
+      <div class="chips" id="chipsCiclo" role="tablist" aria-label="Ciclo"></div>
+      <input type="search" id="buscar" placeholder="Buscar por nombre o apellidos…" aria-label="Buscar alumno">
+      <div id="detalle"></div>
+    </section>
+  </div>
+</main>
+<script>
+const EJERCICIOS = {
+  UT1_E1: 'UT1 · E1 · Revoluciones industriales canarias', UT1_E2: 'UT1 · E2 · Combinación de sistemas ciberfísicos',
+  UT1_E3: 'UT1 · E3 · Sistemas ciberfísicos', UT2_E1: 'UT2 · E1 · Tecnologías habilitadoras'
+};
+const API = '../api/admin.php';
+const $ = s => document.querySelector(s);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const fecha = t => new Date(t * 1000).toLocaleString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+let DATOS = null, CICLO = null;
+
+async function cargar(){
+  const r = await fetch(API + '?accion=datos', { cache: 'no-store', credentials: 'same-origin' });
+  if (r.status === 401){ mostrarLogin(); return; }
+  const d = await r.json(); if (!d.ok) throw new Error();
+  DATOS = d; if (!CICLO) CICLO = d.ciclos[0];
+  $('#vLogin').classList.add('hidden'); $('#vPanel').classList.remove('hidden');
+  pintar();
+}
+function mostrarLogin(){ $('#vPanel').classList.add('hidden'); $('#vLogin').classList.remove('hidden'); $('#clave').focus(); }
+function ejerciciosConocidos(){
+  const set = new Set(Object.keys(EJERCICIOS)); DATOS.entregas.forEach(e => set.add(e.ejercicio));
+  return [...set].sort();
+}
+const bloqueado = (ej, c) => DATOS.bloqueos.some(b => b.ejercicio === ej && b.ciclo === c);
+function pintarDisponibilidad(){
+  const ejs = ejerciciosConocidos();
+  $('#tDisp').innerHTML = `<thead><tr><th>Ciclo</th>${ejs.map(ej => `<th class="num" title="${esc(EJERCICIOS[ej] || ej)}">${esc(ej.replace('_', ' · '))}</th>`).join('')}</tr></thead>
+    <tbody>${DATOS.ciclos.map(c => `<tr><td>${esc(c)}</td>${ejs.map(ej => { const b = bloqueado(ej, c); return `<td class="celda"><button class="disp ${b ? 'bloq' : 'abierto'}" data-ej="${esc(ej)}" data-ciclo="${esc(c)}" aria-pressed="${b}" title="${esc((EJERCICIOS[ej] || ej) + ' · ' + c)}">${b ? '🔒 Bloqueado' : '✓ Abierto'}</button></td>`; }).join('')}</tr>`).join('')}</tbody>`;
+}
+$('#tDisp').addEventListener('click', async e => {
+  const b = e.target.closest('button.disp'); if (!b) return;
+  const ej = b.dataset.ej, c = b.dataset.ciclo, nuevo = !bloqueado(ej, c);
+  b.disabled = true;
+  try {
+    const r = await fetch(API, { method: 'POST', credentials: 'same-origin', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ accion: 'bloqueo', ejercicio: ej, ciclo: c, bloqueado: nuevo }) });
+    if (r.status === 401) return mostrarLogin();
+    if (!(await r.json()).ok) throw new Error();
+    if (nuevo) DATOS.bloqueos.push({ ejercicio: ej, ciclo: c }); else DATOS.bloqueos = DATOS.bloqueos.filter(x => !(x.ejercicio === ej && x.ciclo === c));
+    pintarDisponibilidad();
+  } catch(_){ alert('No se ha podido guardar el cambio.'); b.disabled = false; }
+});
+function pintar(){
+  pintarDisponibilidad();
+  const ejs = ejerciciosConocidos(), E = DATOS.entregas;
+  const cuenta = (c, ej) => E.filter(e => e.ciclo === c && (!ej || e.ejercicio === ej)).length;
+  $('#tResumen').innerHTML = `<thead><tr><th>Ciclo</th>${ejs.map(ej => `<th class="num" title="${esc(EJERCICIOS[ej] || ej)}">${esc(ej.replace('_', ' · '))}</th>`).join('')}</tr></thead>
+    <tbody>${DATOS.ciclos.map(c => `<tr><td>${esc(c)}</td>${ejs.map(ej => { const n = cuenta(c, ej); return `<td class="num${n ? '' : ' n0'}">${n}</td>`; }).join('')}</tr>`).join('')}</tbody>`;
+  $('#chipsCiclo').innerHTML = DATOS.ciclos.map(c => `<button class="chip${c === CICLO ? ' on' : ''}" role="tab" aria-selected="${c === CICLO}" data-ciclo="${esc(c)}">${esc(c)}<small>${cuenta(c)}</small></button>`).join('');
+  const q = $('#buscar').value.trim().toLowerCase();
+  let h = '';
+  for (const ej of ejs){
+    const filas = E.filter(e => e.ciclo === CICLO && e.ejercicio === ej && (!q || (e.nombre + ' ' + e.apellidos).toLowerCase().includes(q)));
+    h += `<h3 class="ej">${esc(EJERCICIOS[ej] || ej)} · ${filas.length}</h3>`;
+    h += filas.length ? `<div class="tabla"><table><thead><tr><th>Apellidos</th><th>Nombre</th><th>Primera descarga</th><th>Última descarga</th><th class="num">Veces</th></tr></thead><tbody>${filas.map(e => `<tr><td>${esc(e.apellidos)}</td><td>${esc(e.nombre)}</td><td>${fecha(e.primera)}</td><td>${fecha(e.ultima)}</td><td class="num">${e.veces}</td></tr>`).join('')}</tbody></table></div>`
+      : `<p class="vacio">${q ? 'Nadie coincide con la búsqueda.' : 'Todavía nadie de este ciclo ha descargado el PDF.'}</p>`;
+  }
+  $('#detalle').innerHTML = h;
+}
+$('#chipsCiclo').addEventListener('click', e => { const b = e.target.closest('[data-ciclo]'); if (b){ CICLO = b.dataset.ciclo; pintar(); } });
+$('#buscar').addEventListener('input', () => DATOS && pintar());
+$('#bRecargar').addEventListener('click', () => cargar().catch(() => alert('No se han podido cargar los datos.')));
+$('#bSalir').addEventListener('click', async () => { await fetch(API, { method: 'POST', credentials: 'same-origin', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ accion: 'salir' }) }); DATOS = null; $('#clave').value = ''; mostrarLogin(); });
+$('#fLogin').addEventListener('submit', async e => {
+  e.preventDefault(); $('#errLogin').textContent = '';
+  try {
+    const r = await fetch(API, { method: 'POST', credentials: 'same-origin', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ accion: 'entrar', clave: $('#clave').value }) });
+    const d = await r.json();
+    if (!d.ok){ $('#errLogin').textContent = d.error || 'No se ha podido entrar.'; return; }
+    $('#clave').value = ''; await cargar();
+  } catch(_){ $('#errLogin').textContent = 'No se ha podido conectar con el servidor.'; }
+});
+cargar().catch(mostrarLogin);
+</script>
+</body>
+</html>
