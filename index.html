@@ -77,13 +77,27 @@ footer{color:var(--muted);font-size:.85rem;text-align:center;margin:2rem 0}
     <h2 id="priv">Privacidad y uso</h2>
     <ul>
       <li>Lo que escribes se guarda solo en el navegador de este dispositivo. No se envía a ningún servidor y no hay cuentas ni cookies.</li>
+      <li>Para saber cuánto se usa cada ejercicio contamos las visitas de forma anónima: tu navegador guarda un número aleatorio y solo se registra qué página se abre y qué día. No se guarda tu nombre, tus respuestas ni tu dirección IP.</li>
       <li>Si cambias de ordenador o borras los datos del navegador, el borrador no estará. Descarga el PDF para no perder tu trabajo.</li>
       <li>El trabajo debe ser tuyo: el texto no se puede pegar y el uso de inteligencia artificial debe declararse.</li>
       <li>Probado en navegadores de escritorio actuales (Chrome, Edge). En tablets y móviles puede comportarse distinto.</li>
     </ul>
   </section>
 
-  <footer>CIFP Tony Gallardo · Digitalización aplicada a los sectores productivos (DJK)</footer>
+  <footer>CIFP Tony Gallardo · Digitalización aplicada a los sectores productivos (DJK)<span class="visitas" id="visitas" hidden title="Personas distintas que han entrado"> · 👁 <b id="nVisitas">0</b> <span id="tVisitas">visitantes</span></span></footer>
 </main>
+<script>
+// Visita anónima (sin cookies ni datos personales) y contador discreto
+(function(){
+  try {
+    if (!/^https?:$/.test(location.protocol)) return;
+    let id = localStorage.getItem('djk_visitante');
+    if (!id){ id = crypto.randomUUID ? crypto.randomUUID() : (Date.now().toString(36) + Math.random().toString(36).slice(2) + Math.random().toString(36).slice(2)); localStorage.setItem('djk_visitante', id); }
+    fetch('api/visitas.php', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id, pagina: 'portada' }) })
+      .then(r => r.json()).then(d => { if (d && d.ok){ document.getElementById('nVisitas').textContent = d.total.toLocaleString('es-ES'); document.getElementById('tVisitas').textContent = d.total === 1 ? 'visitante' : 'visitantes'; document.getElementById('visitas').hidden = false; } })
+      .catch(() => {});
+  } catch(e){}
+})();
+</script>
 </body>
 </html>

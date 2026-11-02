@@ -1478,6 +1478,16 @@ async function descargarPDF(){
 }
 $('#btnPDF').addEventListener('click', intentarPDF);
 
+// ================= visita anónima (sin cookies ni datos personales) =================
+(function(){
+  try {
+    if (!/^https?:$/.test(location.protocol)) return;
+    let id = localStorage.getItem('djk_visitante');
+    if (!id){ id = crypto.randomUUID ? crypto.randomUUID() : (Date.now().toString(36) + Math.random().toString(36).slice(2) + Math.random().toString(36).slice(2)); localStorage.setItem('djk_visitante', id); }
+    fetch('../api/visitas.php', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id, pagina: COMUN.codigo + (EJEMPLO ? '_ejemplo' : '') }) }).catch(() => {});
+  } catch(e){}
+})();
+
 // ================= arranque =================
 pintarCiclos();
 if (EJEMPLO){

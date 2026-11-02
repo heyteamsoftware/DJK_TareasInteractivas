@@ -9,7 +9,8 @@
 | Repositorio | https://github.com/heyteamsoftware/DJK_TareasInteractivas |
 | Web publicada | https://myappsserver.duckdns.org/DJK/DJK_EjerciciosInteractivos/ |
 | Servidor | CIFP Tony Gallardo · Apache · `/var/www/html/DJK/DJK_EjerciciosInteractivos` (usuario `ubuntu`, clave en `Documentos\Oracle`) |
-| Portada | `index.html` con enlaces a cada ejercicio y aviso de privacidad; `.htaccess` desactiva el listado de carpetas |
+| Portada | `index.html` con enlaces a cada ejercicio, aviso de privacidad y contador discreto de visitantes; `.htaccess` desactiva el listado de carpetas |
+| Analítica | `api/visitas.php` (anónima, sin cookies) · base de datos en `/var/www/djk_datos/visitas.db`, fuera de la web · panel en `estadisticas.html` (no enlazado, sin indexar) |
 
 ## Registro de ejercicios
 
@@ -111,4 +112,14 @@ Todos los ejercicios muestran una tabla «Cómo se califica» con esta forma, y 
 
 | Ejercicio | Qué falta |
 |---|---|
-| Web | Pendiente de decidir: analítica y contador de visitas (lista `rematadorweb`) |
+| — | Nada pendiente |
+
+## Analítica y contador de visitas
+
+| Pieza | Qué hace |
+|---|---|
+| Identificador | Cada navegador guarda un número aleatorio (`djk_visitante`). Sin cookies, sin nombre, sin respuestas y sin IP guardada (solo una huella cifrada temporal para frenar abusos). |
+| Qué se registra | Qué página se abre y qué día: `portada`, `UT1_E1`, `UT1_E1_ejemplo`… |
+| Contador | En el pie de la portada: «👁 N visitantes» (personas distintas). |
+| Estadísticas | `estadisticas.html`: visitantes distintos, visitas totales y de los últimos 7 días, visitas por página y por día (30 días). |
+| Ejercicios nuevos | El motor común registra la visita solo; en la página de estadísticas hay que añadir el nombre del ejercicio en `NOMBRES`. |

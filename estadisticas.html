@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light only">
+<meta name="robots" content="noindex, nofollow">
+<title>Estadísticas · Ejercicios DJK</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%236a54b8'/%3E%3Ctext x='32' y='42' font-family='Arial' font-weight='700' font-size='26' fill='white' text-anchor='middle'%3EDJK%3C/text%3E%3C/svg%3E">
+<style>
+:root{--bg:#fbf8f3;--card:#fff;--ink:#2f2d3a;--muted:#5f5b6b;--line:#e7e1ef;--lav:#e9e2fb;--lav3:#6a54b8;--mint:#dff3ea;--mint3:#2f7d5c;--r:14px}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif}
+.wrap{max-width:900px;margin:0 auto;padding:1rem}
+h1{font-size:1.5rem;margin:1rem 0 .2rem}
+.sub{color:var(--muted);margin:0 0 1rem}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:.8rem;margin:1rem 0}
+.kpi{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:.9rem 1rem}
+.kpi small{color:var(--muted);display:block}
+.kpi b{font-size:1.8rem;font-variant-numeric:tabular-nums}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:1rem;margin:1rem 0;overflow-x:auto}
+.card h2{margin:0 0 .6rem;font-size:1.1rem}
+table{width:100%;border-collapse:collapse;font-size:.93rem}
+th,td{text-align:left;padding:.45rem .5rem;border-bottom:1px solid var(--line);vertical-align:middle}
+th{background:var(--lav);font-weight:600}
+td.num,th.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.barra{height:10px;border-radius:5px;background:var(--lav3);min-width:2px}
+.vacio{color:var(--muted);font-style:italic}
+@media (max-width:600px){.wrap{padding:.7rem}table{font-size:.86rem}}
+</style>
+</head>
+<body>
+<main class="wrap">
+  <h1>Estadísticas de uso</h1>
+  <p class="sub">Ejercicios Interactivos DJK · datos anónimos (sin nombres ni respuestas).</p>
+  <div class="kpis">
+    <div class="kpi"><small>Visitantes distintos</small><b id="kTotal">–</b></div>
+    <div class="kpi"><small>Visitas totales</small><b id="kVistas">–</b></div>
+    <div class="kpi"><small>Visitas últimos 7 días</small><b id="k7">–</b></div>
+  </div>
+  <section class="card"><h2>Por página</h2><table><thead><tr><th>Página</th><th class="num">Personas</th><th class="num">Visitas</th><th style="width:35%"></th></tr></thead><tbody id="tPag"><tr><td colspan="4" class="vacio">Cargando…</td></tr></tbody></table></section>
+  <section class="card"><h2>Últimos 30 días</h2><table><thead><tr><th>Día</th><th class="num">Visitas</th><th style="width:55%"></th></tr></thead><tbody id="tDias"><tr><td colspan="3" class="vacio">Cargando…</td></tr></tbody></table></section>
+</main>
+<script>
+const NOMBRES = {
+  portada: 'Portada',
+  UT1_E1: 'UT1 · E1 · Revoluciones industriales canarias', UT1_E2: 'UT1 · E2 · Combinación de sistemas ciberfísicos', UT1_E3: 'UT1 · E3 · Sistemas ciberfísicos',
+  UT2_E1: 'UT2 · E1 · Tecnologías habilitadoras'
+};
+const nombre = k => { const ej = /_ejemplo$/.test(k); const b = k.replace(/_ejemplo$/, ''); return (NOMBRES[b] || b) + (ej ? ' (ejemplo)' : ''); };
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const n = v => Number(v).toLocaleString('es-ES');
+fetch('api/visitas.php?estadisticas', { cache: 'no-store' }).then(r => r.json()).then(d => {
+  if (!d.ok) throw new Error();
+  const pags = d.paginas.map(p => ({ ...p, vistas: +p.vistas, personas: +p.personas })).sort((a, b) => b.vistas - a.vistas);
+  const maxP = Math.max(1, ...pags.map(p => p.vistas));
+  document.getElementById('kTotal').textContent = n(d.total);
+  document.getElementById('kVistas').textContent = n(pags.reduce((s, p) => s + p.vistas, 0));
+  const hace7 = new Date(Date.now() - 6 * 864e5).toISOString().slice(0, 10);
+  document.getElementById('k7').textContent = n(d.dias.filter(x => x.dia >= hace7).reduce((s, x) => s + +x.vistas, 0));
+  document.getElementById('tPag').innerHTML = pags.length ? pags.map(p => `<tr><td>${esc(nombre(p.pagina))}</td><td class="num">${n(p.personas)}</td><td class="num">${n(p.vistas)}</td><td><div class="barra" style="width:${p.vistas / maxP * 100}%"></div></td></tr>`).join('') : '<tr><td colspan="4" class="vacio">Todavía no hay visitas.</td></tr>';
+  const maxD = Math.max(1, ...d.dias.map(x => +x.vistas));
+  document.getElementById('tDias').innerHTML = d.dias.length ? d.dias.slice().reverse().map(x => `<tr><td>${new Date(x.dia + 'T12:00').toLocaleDateString('es-ES', { weekday: 'short', day: '2-digit', month: '2-digit' })}</td><td class="num">${n(x.vistas)}</td><td><div class="barra" style="width:${x.vistas / maxD * 100}%"></div></td></tr>`).join('') : '<tr><td colspan="3" class="vacio">Todavía no hay visitas.</td></tr>';
+}).catch(() => {
+  document.getElementById('tPag').innerHTML = '<tr><td colspan="4" class="vacio">No se han podido cargar las estadísticas.</td></tr>';
+  document.getElementById('tDias').innerHTML = '<tr><td colspan="3" class="vacio">—</td></tr>';
+});
+</script>
+</body>
+</html>
