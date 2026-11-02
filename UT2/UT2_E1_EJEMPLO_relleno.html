@@ -807,7 +807,8 @@ const TEC = [
   ['Drones', 'Tomar fotos y vídeos desde el aire y revisar zonas difíciles de alcanzar.', '🚁'],
   ['Microscopio digital', 'Ver objetos muy aumentados en una pantalla y guardar fotos de lo que se observa.', '🔬']
 ];
-const NT = TEC.length, RONDAS = 5, POR_RONDA = 10, MAX_PISTAS = 5;
+// Tablero: 10 parejas como máximo (20 cuadrados). Cuando quedan 5 o menos, se rellena hasta 10.
+const NT = TEC.length, MESA = 10, UMBRAL = 5, CELDAS = MESA * 2, MAX_PISTAS = 5;
 
 const COMUN = {
   codigo: 'UT2_E1',
@@ -826,9 +827,8 @@ const COMUN = {
   objetivo: 'Conocer 50 tecnologías habilitadoras del día a día y saber para qué sirve cada una. Las vas a necesitar en el siguiente ejercicio (UT2 · E2), en el que elegirás algunas para tu centro de trabajo.',
   pasos: [
     'Lee el objetivo y la tabla «Cómo se califica».',
-    'El juego tiene <b>5 rondas</b>. En cada ronda aparecen <b>10 tecnologías y 10 definiciones</b> mezcladas en cuadrados.',
-    'Toca (o haz clic en) una <b>tecnología</b> y después en <b>su definición</b>. También puedes <b>arrastrar</b> un cuadrado encima de su pareja (en tablet, mantén el dedo pulsado un momento y arrastra).',
-    'Si aciertas, la pareja queda casada y pasa a «Tus parejas». Si fallas, se suma un error. Para terminar tienes que casar <b>las 50 tecnologías</b>.',
+    'Toca una <b>tecnología</b> (cuadrado verde) y después su <b>definición</b> (cuadrado blanco). También puedes <b>arrastrar</b> un cuadrado encima de su pareja (en tablet, mantén el dedo pulsado un momento y arrastra).',
+    'Cuando quede libre la <b>mitad del tablero</b>, aparecen nuevas tecnologías y definiciones. Sigue hasta casar las <b>50</b>.',
     'Revisa «Antes de entregar, comprueba», pulsa <b>Descargar PDF</b> y entrega ese PDF en el aula virtual.'
   ],
   normas: [
@@ -836,17 +836,8 @@ const COMUN = {
     'Lee bien cada definición antes de elegir: los errores, las pistas y el tiempo aparecen en el PDF.',
     'Tienes 5 pistas para todo el juego. Úsalas solo si te atascas.'
   ],
-  entregaEj: [
-    'Un único archivo PDF con el nombre UT2_E1_Apellido1_Apellido2_Nombre.pdf. Esta página lo genera con ese nombre al pulsar «Descargar PDF».',
-    'Entrega por el aula virtual, en la tarea correspondiente. Ni por correo ni en papel.',
-    'El PDF recoge las 50 parejas, los errores, las pistas usadas y el tiempo de juego.'
-  ],
-  entrega: [
-    'El profesor indica en clase y en el Campus el momento recomendado para entregar cada tarea; es él quien decide cuándo se muestra u oculta cada ejercicio en el aula virtual.',
-    'El alumnado con causa justificada documentalmente conserva la escala completa de 0 a 10 en la nueva fecha acordada.'
-  ],
   criterios: [
-    ['Juego · Parejas de tecnologías habilitadoras', 'Las 50 tecnologías casadas con su definición en las 5 rondas (2 puntos por ronda completa). Los errores, las pistas y el tiempo son informativos.', 10]
+    ['Juego · Parejas de tecnologías habilitadoras', 'Las 50 tecnologías casadas con su definición. Los errores, las pistas y el tiempo son informativos.', 10]
   ],
   siglas: [
     ['THD', 'Tecnologías habilitadoras digitales'],
@@ -877,7 +868,7 @@ document.head.insertAdjacentHTML('beforeend', `<style>
 .jg-como div{background:var(--mint);border:1px solid var(--mint2);border-radius:14px;padding:.7rem .8rem;font-size:.9rem;line-height:1.35}
 .jg-como b{display:block;color:var(--mint3);font-size:1.4rem;line-height:1.1;margin-bottom:.2rem}
 .jg-centro{background:var(--sky);border:1px solid var(--sky2);border-radius:12px;padding:.6rem .8rem;font-size:.92rem}
-.jg-stats{display:flex;flex-wrap:wrap;gap:.5rem;align-items:stretch;margin:.4rem 0 .6rem}
+.jg-stats{display:flex;flex-wrap:wrap;gap:.5rem;align-items:stretch;margin:.4rem 0 .9rem}
 .jg-stat{flex:1 1 84px;background:var(--mint);border:1px solid var(--mint2);border-radius:12px;padding:.35rem .7rem}
 .jg-stat small{display:block;font-size:.68rem;color:var(--mint3);font-weight:800;text-transform:uppercase;letter-spacing:.05em}
 .jg-stat b{font-size:1.2rem;font-variant-numeric:tabular-nums}
@@ -886,21 +877,19 @@ document.head.insertAdjacentHTML('beforeend', `<style>
 #jgPista:hover{background:#ffeeb0}
 #jgPista:disabled{opacity:.45;cursor:not-allowed}
 #jgPista span{display:inline-block;min-width:1.4rem;margin-left:.3rem;padding:0 .35rem;border-radius:99px;background:#efcd5f;color:#5a4300;font-size:.8rem}
-.jg-dots{display:flex;gap:.4rem;list-style:none;padding:0;margin:.2rem 0 1rem}
-.jg-dots li{flex:1;height:9px;border-radius:99px;background:var(--line);position:relative;overflow:hidden}
-.jg-dots li i{position:absolute;left:0;top:0;bottom:0;width:var(--p);background:linear-gradient(90deg,var(--mint3),#4fb38a);border-radius:inherit;transition:width .45s}
-.jg-dots li.act{box-shadow:0 0 0 2px var(--mint2)}
-.jg-tab{position:relative;display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:.75rem;min-height:180px}
-.tl{position:relative;aspect-ratio:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.4rem;margin:0;padding:.7rem;border-radius:18px;text-align:center;overflow:hidden;
+.jg-tab{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:.75rem;min-height:180px}
+.celda{position:relative;aspect-ratio:1;min-width:0}
+.celda>.vacio{position:absolute;inset:0;border:2px dashed var(--mint2);border-radius:18px;background:rgba(255,255,255,.45)}
+.tl{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.4rem;margin:0;padding:.7rem;border-radius:18px;text-align:center;overflow:hidden;box-sizing:border-box;
   touch-action:manipulation;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;-webkit-tap-highlight-color:transparent;
-  transition:transform .18s,box-shadow .18s,opacity .25s,background .2s;animation:jgEntra .45s backwards;animation-delay:var(--d,0ms)}
+  transition:transform .18s,box-shadow .18s,opacity .25s,background .2s;animation:jgEntra .45s backwards}
+.celda>.tl{position:absolute;inset:0;width:100%;height:100%}
 .tl.tec{background:linear-gradient(155deg,#effaf4,#bfe8d3);border:2px solid var(--mint2);color:#1d4d38;box-shadow:0 4px 0 #9fd8bd}
 .tl.tec .emo{font-size:2.3rem;line-height:1;filter:drop-shadow(0 2px 2px rgba(0,0,0,.12))}
 .tl.tec b{font-size:.98rem;line-height:1.2}
 .tl.def{background:#fff;border:2px solid var(--sky2);color:var(--ink);box-shadow:0 4px 0 var(--sky2);font-size:.84rem;line-height:1.32;padding-top:1.7rem}
 .tl.def .lbl{position:absolute;top:.5rem;left:.7rem;font-size:.6rem;font-weight:800;letter-spacing:.07em;text-transform:uppercase;color:var(--sky3)}
 .tl.def .tx{flex:1;display:flex;align-items:center}
-.tl:hover{background-color:inherit}
 .tl.tec:hover{background:linear-gradient(155deg,#f4fcf8,#ccefdd)}
 .tl.def:hover{background:#f7fbff}
 @media (hover:hover){.tl:hover{transform:translateY(-3px)}}
@@ -910,10 +899,8 @@ document.head.insertAdjacentHTML('beforeend', `<style>
 .tl.mal{animation:jgMal .45s;border-color:#e06666!important;background:#fdecec!important;box-shadow:0 4px 0 #f0a8a8}
 .tl.ok{animation:jgOk .65s forwards;border-color:var(--mint3)!important;background:#c9f0dc!important;pointer-events:none}
 .tl.pista{animation:jgPista .9s 3}
-.tl.hueco{background:repeating-linear-gradient(45deg,transparent 0 8px,rgba(159,216,189,.18) 8px 16px);border:2px dashed var(--mint2);box-shadow:none;color:var(--mint3);font-size:1.5rem;font-weight:800;animation:jgHueco .35s backwards;pointer-events:none}
-.tl.fantasma{position:fixed;z-index:300;pointer-events:none;animation:none;transform:rotate(3deg) scale(1.06);box-shadow:0 18px 34px rgba(0,0,0,.28);opacity:.96;transition:none}
+.tl.fantasma{position:fixed;z-index:300;pointer-events:none;animation:none;transform:rotate(3deg) scale(1.06);box-shadow:0 18px 34px rgba(0,0,0,.28);opacity:.96;transition:none;width:auto;height:auto}
 @keyframes jgEntra{from{opacity:0;transform:translateY(14px) scale(.88)}to{opacity:1;transform:none}}
-@keyframes jgHueco{from{opacity:0}to{opacity:1}}
 @keyframes jgMal{0%,100%{transform:none}20%{transform:translateX(-8px) rotate(-2deg)}40%{transform:translateX(8px) rotate(2deg)}60%{transform:translateX(-5px)}80%{transform:translateX(5px)}}
 @keyframes jgOk{0%{transform:scale(1)}35%{transform:scale(1.12) rotate(2deg)}100%{transform:scale(.15) rotate(-8deg);opacity:0}}
 @keyframes jgPista{0%,100%{box-shadow:0 0 0 0 rgba(255,207,77,0)}50%{box-shadow:0 0 0 8px rgba(255,207,77,.95)}}
@@ -921,18 +908,14 @@ document.head.insertAdjacentHTML('beforeend', `<style>
 .jg-aviso .big{font-size:3.2rem;line-height:1;display:inline-block;animation:jgBote 1.2s ease-in-out infinite}
 .jg-aviso h3{margin:.5rem 0 .3rem;font-size:1.35rem;color:#1d4d38}
 .jg-aviso p{margin:.2rem 0;color:var(--muted)}
-.jg-aviso .estrellas{font-size:1.7rem;letter-spacing:.15rem;margin:.3rem 0}
-.jg-aviso button{margin-top:.8rem;background:var(--mint3);border-color:var(--mint3);color:#fff;font-weight:700;padding:.65rem 1.3rem;border-radius:12px;font-size:1rem}
-.jg-aviso button:hover{background:var(--mint3);filter:brightness(.92)}
 .jg-res{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:.5rem;max-width:620px;margin:1rem auto .4rem}
 .jg-res div{background:#fff;border:1px solid var(--mint2);border-radius:12px;padding:.5rem}
 .jg-res small{display:block;font-size:.68rem;color:var(--mint3);font-weight:800;text-transform:uppercase;letter-spacing:.05em}
 .jg-res b{font-size:1.25rem}
-.jg-rondas{display:flex;flex-wrap:wrap;justify-content:center;gap:.4rem .9rem;margin:.6rem 0;font-size:.9rem;color:var(--muted)}
 @keyframes jgBote{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
 .jg-pill{position:fixed;left:50%;bottom:max(14px,env(safe-area-inset-bottom));transform:translateX(-50%);z-index:60;background:#2f2d3a;color:#fff;border-radius:99px;padding:.45rem .5rem .45rem 1rem;display:flex;gap:.6rem;align-items:center;box-shadow:0 10px 24px rgba(0,0,0,.25);max-width:calc(100vw - 24px);font-size:.9rem;animation:jgPillIn .25s backwards}
-@keyframes jgPillIn{from{opacity:0;transform:translate(-50%,12px)}to{opacity:1;transform:translate(-50%,0)}}
 .jg-pill[hidden]{display:none}
+@keyframes jgPillIn{from{opacity:0;transform:translate(-50%,12px)}to{opacity:1;transform:translate(-50%,0)}}
 .jg-pill span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .jg-pill button{flex:none;background:rgba(255,255,255,.15);border:0;color:#fff;border-radius:99px;width:2rem;height:2rem;padding:0}
 .jg-col{margin-top:1.2rem;border:1px solid var(--line);border-radius:14px;background:#fff}
@@ -941,7 +924,6 @@ document.head.insertAdjacentHTML('beforeend', `<style>
 .jg-col summary::after{content:'▾';color:var(--muted);transition:transform .2s}
 .jg-col[open] summary::after{transform:rotate(180deg)}
 .jg-col .vacia{padding:0 1rem 1rem;color:var(--muted);margin:0}
-.jg-col h4{margin:.4rem 1rem .2rem;font-size:.8rem;text-transform:uppercase;letter-spacing:.05em;color:var(--mint3)}
 .par{display:grid;grid-template-columns:2rem minmax(0,13rem) minmax(0,1fr);gap:.6rem;padding:.5rem 1rem;border-top:1px dashed var(--line);align-items:start;font-size:.92rem}
 .par .emo{font-size:1.3rem;line-height:1.2}
 .par b{color:#1d4d38}
@@ -950,9 +932,9 @@ document.head.insertAdjacentHTML('beforeend', `<style>
 .jg-confeti{position:fixed;inset:0;width:100vw;height:100vh;pointer-events:none;z-index:400}
 @media (max-width:640px){
   .jg-como{grid-template-columns:1fr}
+  .jg-tab{grid-template-columns:repeat(2,minmax(0,1fr));gap:.55rem}
   .jg-stat{padding:.3rem .55rem}
   .jg-stat b{font-size:1.05rem}
-  .jg-tab{grid-template-columns:repeat(2,minmax(0,1fr));gap:.55rem}
   .tl{padding:.55rem;border-radius:15px}
   .tl.tec .emo{font-size:1.9rem}
   .tl.tec b{font-size:.9rem}
@@ -960,186 +942,223 @@ document.head.insertAdjacentHTML('beforeend', `<style>
   .par{grid-template-columns:1.8rem minmax(0,1fr)}
   .par span:last-child{grid-column:2}
 }
-@media (prefers-reduced-motion:reduce){.tl,.tl.ok,.tl.mal,.jg-aviso .big,.par.nuevo{animation:none!important;transition:none}}
+@media (prefers-reduced-motion:reduce){.tl,.tl.ok,.tl.mal,.jg-aviso .big{animation:none!important;transition:none}}
 </style>`);
 
 // ================= textos de la página =================
 function introHTML(C){
   return `<h2 style="margin-top:0;font-size:1.1rem">Objetivo</h2><p>${esc(COMUN.objetivo)}</p>
     <h2 style="font-size:1.1rem">Cómo se juega</h2>
-    <div class="jg-como"><div><b>1</b>Toca o haz clic en una <b style="display:inline;font-size:inherit">tecnología</b> (cuadrado verde).</div><div><b>2</b>Toca su <b style="display:inline;font-size:inherit">definición</b> (cuadrado blanco). O arrastra un cuadrado encima del otro.</div><div><b>3</b>¡Pareja casada! Completa las 5 rondas hasta casar las 50.</div></div>
+    <div class="jg-como"><div><b>1</b>Toca una <b style="display:inline;font-size:inherit">tecnología</b> (verde) y después su <b style="display:inline;font-size:inherit">definición</b> (blanca).</div><div><b>2</b>¡Pareja casada! Si no coinciden, cuenta como error. También puedes arrastrar un cuadrado encima del otro.</div><div><b>3</b>Cuando quede libre la mitad del tablero, aparecen más. Casa las 50.</div></div>
     <div class="jg-centro">💭 Mientras juegas, piensa cuáles de estas tecnologías verías en ${esc(C.centro)}: te servirá para el E2.</div>`;
 }
-
 function construirTarea(C){
   return `<section class="fase f1"><header><h2>Juego · Casa cada tecnología con su definición</h2></header><div class="cuerpo">
     <input type="hidden" id="juegoDato" data-campo="juego">
     <div class="jg-stats">
-      <div class="jg-stat"><small>Ronda</small><b id="jgR">1/5</b></div>
       <div class="jg-stat"><small>Parejas</small><b id="jgP">0/50</b></div>
+      <div class="jg-stat"><small>En tablero</small><b id="jgM">0</b></div>
       <div class="jg-stat err"><small>Errores</small><b id="jgE">0</b></div>
       <div class="jg-stat"><small>Tiempo</small><b id="jgT">0:00</b></div>
       <button type="button" id="jgPista" title="Ilumina una tecnología y su definición">💡 Pista<span id="jgPN">5</span></button>
     </div>
-    <ol class="jg-dots" id="jgDots" aria-hidden="true"></ol>
-    <div class="jg-tab" id="tablero" role="group" aria-label="Cuadrados del juego"></div>
+    <div class="jg-tab" id="tablero" role="group" aria-label="Tablero del juego"></div>
     <details class="jg-col" id="jgCol" open><summary>📚 Tus parejas <span id="jgColN">0/50</span></summary><div id="coleccion"></div></details>
     <div class="jg-pill" id="jgPill" hidden role="status"><span id="jgPillTx"></span><button type="button" id="jgPillX" aria-label="Quitar la selección">✕</button></div>
   </div></section>`;
 }
 
 // ================= estado del juego (se guarda en el campo oculto «juego») =================
-let J = null, ULT = null, SEL = null, ENTRE = false, MAPA = new Map(), SUPR = 0, ULTACC = 0, ARR = null, NUEVO = -1;
+// J = { v:2, pool: parejas aún sin salir, celdas: 20 valores (-1 vacío; n*2 = tecnología, n*2+1 = definición),
+//       hechas: parejas casadas en orden, er: errores, pi: pistas, seg: segundos, fin: fecha de fin }
+let J = null, ULT = null, SEL = null, NUEVO = -1, SUPR = 0, ULTACC = 0, ARR = null;
+const ANIM = new Map();      // celdas con la pareja que se está casando (animación)
+let SIG = [];                // firma de lo pintado en cada celda, para repintar solo lo que cambia
 const barajar = a => { for (let i = a.length - 1; i > 0; i--){ const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
-const jgNuevo = () => ({ v: 1, orden: barajar([...Array(NT).keys()]), hechas: [], er: [0,0,0,0,0], pi: 0, seg: 0, fin: 0 });
-const entero = (n, max) => Number.isInteger(n) && n >= 0 && n < max;
+const celdaEl = i => { const t = document.getElementById('tablero'); return t ? t.children[i] : null; };
+const botonEn = i => { const c = celdaEl(i); return c ? c.querySelector('.tl') : null; };
+const enMesa = (s = est()) => s.celdas.filter(v => v !== -1).length / 2;
+const terminado = (s = est()) => s.hechas.length >= NT;
+const precision = (s = est()) => { const t = s.hechas.length + s.er; return t ? Math.round(s.hechas.length / t * 100) : 0; };
+const mmss = s => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`;
+const est = () => J || { hechas: [], er: 0, pi: 0, seg: 0, celdas: [], pool: [] };
+
+// Coloca hasta «max» parejas nuevas en celdas vacías (sin tocar las que se están casando)
+function colocar(s, max){
+  const libres = barajar(s.celdas.map((v, i) => (v === -1 && !ANIM.has(i)) ? i : -1).filter(i => i >= 0));
+  const n = Math.min(max, s.pool.length, Math.floor(libres.length / 2));
+  for (let p = 0; p < n; p++){
+    const par = s.pool.shift();
+    s.celdas[libres[2 * p]] = par * 2;
+    s.celdas[libres[2 * p + 1]] = par * 2 + 1;
+  }
+  return n;
+}
+function nuevoJuego(){
+  const s = { v: 2, pool: barajar([...Array(NT).keys()]), celdas: Array(CELDAS).fill(-1), hechas: [], er: 0, pi: 0, seg: 0, fin: 0 };
+  colocar(s, MESA);
+  return s;
+}
+// Comprueba que el estado guardado es coherente: cada pareja aparece exactamente una vez (sin salir, en tablero o casada)
+function valido(o){
+  if (!o || o.v !== 2 || !Array.isArray(o.pool) || !Array.isArray(o.celdas) || !Array.isArray(o.hechas) || o.celdas.length !== CELDAS) return false;
+  const ok = n => Number.isInteger(n) && n >= 0 && n < NT;
+  const veces = new Map(), suma = n => veces.set(n, (veces.get(n) || 0) + 1);
+  for (const n of o.hechas){ if (!ok(n)) return false; suma(n); }
+  for (const n of o.pool){ if (!ok(n)) return false; suma(n); }
+  const enCelda = new Map();
+  for (const v of o.celdas){
+    if (v === -1) continue;
+    if (!Number.isInteger(v) || v < 0 || v >= NT * 2) return false;
+    enCelda.set(v >> 1, (enCelda.get(v >> 1) || 0) + 1);
+  }
+  for (const [n, c] of enCelda){ if (c !== 2) return false; suma(n); }
+  return veces.size === NT && [...veces.values()].every(c => c === 1);
+}
 function jgCargar(v){
   try {
     const o = JSON.parse(v);
-    if (o && Array.isArray(o.orden) && o.orden.length === NT && new Set(o.orden).size === NT && o.orden.every(n => entero(n, NT))){
-      const r = { v: 1, orden: o.orden, hechas: [], er: [0,0,0,0,0], pi: Math.min(MAX_PISTAS, +o.pi || 0), seg: +o.seg || 0, fin: +o.fin || 0 };
-      if (Array.isArray(o.hechas)) r.hechas = [...new Set(o.hechas.filter(n => entero(n, NT)))];
-      if (Array.isArray(o.er)) r.er = [0,1,2,3,4].map(i => Math.max(0, +o.er[i] || 0));
-      return r;
-    }
+    if (valido(o)) return { v: 2, pool: o.pool, celdas: o.celdas, hechas: o.hechas, er: Math.max(0, +o.er || 0), pi: Math.min(MAX_PISTAS, Math.max(0, +o.pi || 0)), seg: Math.max(0, +o.seg || 0), fin: +o.fin || 0 };
   } catch(e){}
-  return jgNuevo();
+  return nuevoJuego();
 }
-const jgVacio = () => ({ orden: [...Array(NT).keys()], hechas: [], er: [0,0,0,0,0], pi: 0, seg: 0, fin: 0 });
-const est = () => J || jgVacio();
-function jgEscribir(){ const i = document.getElementById('juegoDato'); if (!i) return; ULT = JSON.stringify(J); i.value = ULT; }
-const deRonda = (r, s = est()) => s.orden.slice(r * POR_RONDA, r * POR_RONDA + POR_RONDA);
-const hechasRonda = (r, s = est()) => deRonda(r, s).filter(n => s.hechas.includes(n)).length;
-const rondaAct = () => { for (let r = 0; r < RONDAS; r++) if (hechasRonda(r) < POR_RONDA) return r; return RONDAS - 1; };
-const terminado = (s = est()) => s.hechas.length >= NT;
-const totalErr = (s = est()) => s.er.reduce((a, b) => a + b, 0);
-const mmss = s => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`;
-const estrellas = e => e <= 1 ? '⭐⭐⭐' : e <= 4 ? '⭐⭐' : '⭐';
-const precision = (s = est()) => { const t = s.hechas.length + totalErr(s); return t ? Math.round(s.hechas.length / t * 100) : 0; };
+function jgEscribir(){ const i = document.getElementById('juegoDato'); if (!i || !J) return; ULT = JSON.stringify(J); i.value = ULT; }
 
-// El motor llama a esto cada vez que algo cambia: si el estado guardado es otro (al abrir un borrador), se repinta
+// El motor llama a esto en cada cambio: si el valor del campo es otro (al abrir un borrador), se recarga
 function alActualizar(){
   const i = document.getElementById('juegoDato'), t = document.getElementById('tablero'); if (!i || !t) return;
-  if (!t.dataset.listo || i.value !== ULT){ J = jgCargar(i.value); jgEscribir(); t.dataset.listo = '1'; SEL = null; ENTRE = false; jgPintar(); }
+  if (!t.dataset.listo || i.value !== ULT){
+    J = jgCargar(i.value); jgEscribir(); t.dataset.listo = '1';
+    SEL = null; ANIM.clear(); t.dataset.modo = ''; jgPintar();
+  }
 }
 function progresoPropio(){ const n = est().hechas.length; return { hechas: n, total: NT, texto: `${n} de ${NT} parejas casadas` }; }
 function listaChecks(){
-  return [0,1,2,3,4].map(r => { const h = hechasRonda(r); return { ok: h === POR_RONDA, t: `Ronda ${r + 1} · ${POR_RONDA} parejas casadas`, cuenta: `${h}/${POR_RONDA}`, falta: 'Termina esta ronda del juego.' }; });
+  const n = est().hechas.length;
+  return [{ ok: n === NT, t: `Las ${NT} parejas casadas`, cuenta: `${n}/${NT}`, falta: `Sigue jugando hasta casar las ${NT} tecnologías.` }];
 }
 
 // ================= pintar =================
 function jgPintar(){ jgMarcador(); jgTablero(); jgColeccion(); }
 function jgMarcador(){
   const s = est(), q = (id, v) => { const e = document.getElementById(id); if (e) e.textContent = v; };
-  q('jgR', `${terminado() ? RONDAS : rondaAct() + 1}/${RONDAS}`); q('jgP', `${s.hechas.length}/${NT}`); q('jgE', totalErr()); q('jgT', mmss(s.seg));
+  q('jgP', `${s.hechas.length}/${NT}`); q('jgM', String(enMesa(s))); q('jgE', s.er); q('jgT', mmss(s.seg));
   q('jgPN', MAX_PISTAS - s.pi); q('jgColN', `${s.hechas.length}/${NT}`);
-  const p = document.getElementById('jgPista'); if (p) p.disabled = s.pi >= MAX_PISTAS || terminado() || ENTRE;
-  const d = document.getElementById('jgDots');
-  if (d) d.innerHTML = [0,1,2,3,4].map(r => `<li class="${!terminado() && !ENTRE && r === rondaAct() ? 'act' : ''}"><i style="--p:${hechasRonda(r) / POR_RONDA * 100}%"></i></li>`).join('');
-}
-function ficha(k, n, idx){
-  const id = Math.random().toString(36).slice(2, 10); MAPA.set(id, { k, n });
-  const [nom, def, emo] = TEC[n];
-  return k === 't'
-    ? `<button type="button" class="tl tec" data-k="t" data-id="${id}" style="--d:${idx * 30}ms" aria-label="Tecnología: ${esc(nom)}"><span class="emo" aria-hidden="true">${emo}</span><b>${esc(nom)}</b></button>`
-    : `<button type="button" class="tl def" data-k="d" data-id="${id}" style="--d:${idx * 30}ms" aria-label="Definición: ${esc(def)}"><span class="lbl" aria-hidden="true">Definición</span><span class="tx">${esc(def)}</span></button>`;
+  const p = document.getElementById('jgPista'); if (p) p.disabled = !J || s.pi >= MAX_PISTAS || terminado();
 }
 function jgTablero(){
-  const t = document.getElementById('tablero'); if (!t) return;
-  MAPA = new Map(); jgSel(null);
-  if (terminado()){ t.innerHTML = jgFinal(); return; }
-  if (ENTRE){ t.innerHTML = jgEntreRondas(); return; }
-  const quedan = deRonda(rondaAct()).filter(n => !est().hechas.includes(n));
-  t.innerHTML = barajar([...quedan.map(n => ['t', n]), ...quedan.map(n => ['d', n])]).map(([k, n], i) => ficha(k, n, i)).join('');
+  const t = document.getElementById('tablero'); if (!t || !J) return;
+  if (terminado()){
+    if (t.dataset.modo !== 'fin'){ SEL = null; t.dataset.modo = 'fin'; t.innerHTML = jgFinal(); }
+    return;
+  }
+  if (t.dataset.modo !== 'juego'){
+    t.innerHTML = Array.from({ length: CELDAS }, () => '<div class="celda"></div>').join('');
+    SIG = Array(CELDAS).fill(null); t.dataset.modo = 'juego';
+  }
+  for (let i = 0; i < CELDAS; i++) pintaCelda(i);
 }
-function jgEntreRondas(){
-  const r = rondaAct() - 1, e = est().er[r];
-  return `<div class="jg-aviso" role="status"><span class="big" aria-hidden="true">🎉</span><h3>¡Ronda ${r + 1} superada!</h3>
-    <div class="estrellas" aria-label="${estrellas(e).length / 2} estrellas">${estrellas(e)}</div>
-    <p>${POR_RONDA} parejas casadas · ${e} ${e === 1 ? 'error' : 'errores'} en esta ronda</p>
-    <p>Llevas ${est().hechas.length} de ${NT}. ¡A por la siguiente!</p>
-    <button type="button" id="jgSig">Ronda ${r + 2} de ${RONDAS} →</button></div>`;
+function pintaCelda(i){
+  const cel = celdaEl(i); if (!cel) return;
+  const anim = ANIM.has(i), v = anim ? ANIM.get(i) : J.celdas[i];
+  const sig = v === -1 ? 'x' : (anim ? 'o' : 'v') + v;
+  if (SIG[i] === sig) return;
+  SIG[i] = sig;
+  if (v === -1){ cel.innerHTML = '<div class="vacio" aria-hidden="true"></div>'; return; }
+  const n = v >> 1, esDef = (v & 1) === 1, [nom, dsc, emo] = TEC[n];
+  const cls = `tl ${esDef ? 'def' : 'tec'}${anim ? ' ok' : ''}${SEL === i ? ' sel' : ''}`;
+  const dis = anim ? ' disabled' : '';
+  cel.innerHTML = esDef
+    ? `<button type="button" class="${cls}" data-i="${i}" aria-label="${esc('Definición: ' + dsc)}"${dis}><span class="lbl" aria-hidden="true">Definición</span><span class="tx">${esc(dsc)}</span></button>`
+    : `<button type="button" class="${cls}" data-i="${i}" aria-label="${esc('Tecnología: ' + nom)}"${dis}><span class="emo" aria-hidden="true">${emo}</span><b>${esc(nom)}</b></button>`;
 }
 function jgFinal(){
   const s = est();
   return `<div class="jg-aviso" role="status"><span class="big" aria-hidden="true">🏆</span><h3>¡Has casado las ${NT} tecnologías!</h3>
     <p>Ya conoces para qué sirve cada una. Repásalas en «Tus parejas» y descarga el PDF para entregarlo.</p>
-    <div class="jg-res"><div><small>Parejas</small><b>${s.hechas.length}/${NT}</b></div><div><small>Errores</small><b>${totalErr(s)}</b></div><div><small>Precisión</small><b>${precision(s)} %</b></div><div><small>Pistas</small><b>${s.pi}/${MAX_PISTAS}</b></div><div><small>Tiempo</small><b>${mmss(s.seg)}</b></div></div>
-    <div class="jg-rondas">${[0,1,2,3,4].map(r => `<span>Ronda ${r + 1} ${estrellas(s.er[r])}</span>`).join('')}</div></div>`;
+    <div class="jg-res"><div><small>Parejas</small><b>${s.hechas.length}/${NT}</b></div><div><small>Errores</small><b>${s.er}</b></div><div><small>Precisión</small><b>${precision(s)} %</b></div><div><small>Pistas</small><b>${s.pi}/${MAX_PISTAS}</b></div><div><small>Tiempo</small><b>${mmss(s.seg)}</b></div></div></div>`;
 }
 function jgColeccion(){
   const c = document.getElementById('coleccion'); if (!c) return;
   const s = est();
   if (!s.hechas.length){ c.innerHTML = '<p class="vacia">Aquí irán apareciendo las parejas que cases.</p>'; return; }
-  let h = '';
-  for (let r = RONDAS - 1; r >= 0; r--){
-    const ns = s.hechas.filter(n => deRonda(r).includes(n)); if (!ns.length) continue;
-    h += `<h4>Ronda ${r + 1}</h4>` + ns.slice().reverse().map(n => `<div class="par${n === NUEVO ? ' nuevo' : ''}"><span class="emo" aria-hidden="true">${TEC[n][2]}</span><b>${esc(TEC[n][0])}</b><span>${esc(TEC[n][1])}</span></div>`).join('');
-  }
-  c.innerHTML = h; NUEVO = -1;
+  c.innerHTML = s.hechas.slice().reverse().map(n => `<div class="par${n === NUEVO ? ' nuevo' : ''}"><span class="emo" aria-hidden="true">${TEC[n][2]}</span><b>${esc(TEC[n][0])}</b><span>${esc(TEC[n][1])}</span></div>`).join('');
+  NUEVO = -1;
 }
 
 // ================= jugar =================
-function jgSel(el){
-  if (SEL) SEL.classList.remove('sel');
-  SEL = el; if (el) el.classList.add('sel');
-  const p = document.getElementById('jgPill'); if (!p) return;
-  if (!el){ p.hidden = true; return; }
-  const d = MAPA.get(el.dataset.id);
-  document.getElementById('jgPillTx').textContent = d.k === 't' ? `${TEC[d.n][2]} ${TEC[d.n][0]} → ahora toca su definición` : '📖 Definición elegida → ahora toca su tecnología';
+function jgSel(i){
+  if (SEL !== null) { const b = botonEn(SEL); if (b) b.classList.remove('sel'); }
+  SEL = i;
+  const p = document.getElementById('jgPill');
+  if (i !== null){ const b = botonEn(i); if (b) b.classList.add('sel'); }
+  if (!p) return;
+  if (i === null || !J){ p.hidden = true; return; }
+  const v = J.celdas[i];
+  document.getElementById('jgPillTx').textContent = (v & 1) ? '📖 Definición elegida → ahora toca su tecnología' : `${TEC[v >> 1][2]} ${TEC[v >> 1][0]} → ahora toca su definición`;
   p.hidden = false;
 }
-function jgTocar(el){
-  if (ENTRE || terminado()) return;
-  if (!SEL) return jgSel(el);
-  if (SEL === el) return jgSel(null);
-  if (SEL.dataset.k === el.dataset.k) return jgSel(el);
-  jgProbar(SEL, el);
+function jgTocar(i){
+  if (!J || terminado() || J.celdas[i] === -1) return;
+  if (SEL === null) return jgSel(i);
+  if (SEL === i) return jgSel(null);
+  if ((J.celdas[SEL] & 1) === (J.celdas[i] & 1)) return jgSel(i);
+  jgProbar(SEL, i);
 }
 function jgProbar(a, b){
-  const A = MAPA.get(a.dataset.id), B = MAPA.get(b.dataset.id); jgSel(null);
-  if (!A || !B || A.k === B.k || J.hechas.includes(A.n) || J.hechas.includes(B.n)) return;
-  const r = rondaAct();
-  if (A.n === B.n){
-    J.hechas.push(A.n); NUEVO = A.n;
-    // Fuera del juego al momento (aunque la animación siga): ya no se pueden volver a pulsar
-    [a, b].forEach(x => { x.classList.add('ok'); x.removeAttribute('data-id'); x.disabled = true; x.setAttribute('aria-label', 'Pareja casada'); });
-    setTimeout(() => [a, b].forEach(x => { x.className = 'tl hueco'; x.innerHTML = '✓'; }), 650);
-    if (hechasRonda(r) === POR_RONDA){
-      if (terminado()) J.fin = Date.now(); else ENTRE = true;
-      setTimeout(() => { jgTablero(); jgMarcador(); confeti(terminado() ? 240 : 90); }, 720);
-    }
+  jgSel(null);
+  if (!J) return;
+  const va = J.celdas[a], vb = J.celdas[b];
+  if (va === -1 || vb === -1 || (va & 1) === (vb & 1)) return;
+  if ((va >> 1) === (vb >> 1)){
+    const n = va >> 1, J0 = J;
+    J.hechas.push(n); NUEVO = n;
+    J.celdas[a] = -1; J.celdas[b] = -1;
+    ANIM.set(a, va); ANIM.set(b, vb);
+    pintaCelda(a); pintaCelda(b);
+    setTimeout(() => {
+      if (J !== J0) return;   // se ha cargado otro borrador mientras tanto
+      ANIM.delete(a); ANIM.delete(b);
+      if (!terminado() && enMesa() <= UMBRAL) colocar(J, MESA - enMesa());
+      if (terminado()){ J.fin = Date.now(); confeti(240); }
+      jgEscribir(); jgTablero(); jgMarcador(); jgColeccion();
+      programarGuardado();
+    }, 650);
   } else {
-    J.er[r]++;
-    [a, b].forEach(x => { x.classList.remove('mal'); void x.offsetWidth; x.classList.add('mal'); setTimeout(() => x.classList.remove('mal'), 460); });
+    J.er++;
+    [a, b].forEach(i => { const el = botonEn(i); if (!el) return; el.classList.remove('mal'); void el.offsetWidth; el.classList.add('mal'); setTimeout(() => el.classList.remove('mal'), 460); });
     if (navigator.vibrate) try { navigator.vibrate(60); } catch(e){}
   }
-  jgEscribir(); jgMarcador(); jgColeccion(); programarGuardado();
+  jgEscribir(); jgMarcador(); programarGuardado();
 }
 function jgPista(){
-  if (!J || J.pi >= MAX_PISTAS || ENTRE || terminado()) return;
-  const quedan = deRonda(rondaAct()).filter(n => !J.hechas.includes(n)); if (!quedan.length) return;
-  const n = quedan[Math.floor(Math.random() * quedan.length)];
-  document.querySelectorAll('#tablero .tl[data-id]').forEach(el => { const d = MAPA.get(el.dataset.id); if (d && d.n === n){ el.classList.remove('pista'); void el.offsetWidth; el.classList.add('pista'); setTimeout(() => el.classList.remove('pista'), 2800); } });
+  if (!J || terminado() || J.pi >= MAX_PISTAS) return;
+  const vivos = J.celdas.map((v, i) => v === -1 ? -1 : i).filter(i => i >= 0);
+  if (!vivos.length) return;
+  const n = J.celdas[vivos[Math.floor(Math.random() * vivos.length)]] >> 1;
+  J.celdas.forEach((v, i) => {
+    if (v === -1 || (v >> 1) !== n) return;
+    const el = botonEn(i); if (!el) return;
+    el.classList.remove('pista'); void el.offsetWidth; el.classList.add('pista');
+    setTimeout(() => el.classList.remove('pista'), 2800);
+  });
   J.pi++; jgEscribir(); jgMarcador(); programarGuardado();
 }
-function jgSiguiente(){ ENTRE = false; jgTablero(); jgMarcador(); document.getElementById('tablero').scrollIntoView({ behavior: 'smooth', block: 'start' }); }
 
-// Clics y teclado (los cuadrados son botones: Intro o espacio también sirven)
+// Clics, Intro y espacio (los cuadrados son botones)
 document.addEventListener('click', e => {
-  const el = e.target.closest('#tablero .tl[data-id]');
-  if (el){ if (Date.now() < SUPR) return; ULTACC = Date.now(); jgTocar(el); return; }
+  const el = e.target.closest('#tablero .tl[data-i]');
+  if (el){ if (Date.now() < SUPR) return; ULTACC = Date.now(); jgTocar(+el.dataset.i); return; }
   if (e.target.closest('#jgPista')){ ULTACC = Date.now(); jgPista(); }
-  else if (e.target.closest('#jgSig')){ ULTACC = Date.now(); jgSiguiente(); }
   else if (e.target.closest('#jgPillX')) jgSel(null);
 });
-document.addEventListener('keydown', e => { if (e.key === 'Escape' && SEL) jgSel(null); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape' && SEL !== null) jgSel(null); });
 
 // Arrastrar: con ratón, en cuanto se mueve; con el dedo, tras mantener pulsado un momento (si no, se hace scroll)
 document.addEventListener('pointerdown', e => {
-  const el = e.target.closest('#tablero .tl[data-id]');
-  if (!el || e.button > 0 || ENTRE || terminado()) return;
-  ARR = { el, x0: e.clientX, y0: e.clientY, x: e.clientX, y: e.clientY, pid: e.pointerId, toque: e.pointerType !== 'mouse', activo: false };
+  const el = e.target.closest('#tablero .tl[data-i]');
+  if (!el || e.button > 0 || !J || terminado()) return;
+  ARR = { el, i: +el.dataset.i, x0: e.clientX, y0: e.clientY, x: e.clientX, y: e.clientY, pid: e.pointerId, toque: e.pointerType !== 'mouse', activo: false };
   if (ARR.toque) ARR.lp = setTimeout(() => { if (ARR && !ARR.activo) arrEmpezar(); }, 380);
 });
 document.addEventListener('pointermove', e => {
@@ -1160,10 +1179,10 @@ document.addEventListener('contextmenu', e => { if (e.target.closest('#tablero .
 function arrEmpezar(){
   const el = ARR.el, r = el.getBoundingClientRect();
   ARR.activo = true; ARR.dx = ARR.x0 - r.left; ARR.dy = ARR.y0 - r.top; ULTACC = Date.now();
-  const g = el.cloneNode(true); g.classList.remove('sel'); g.classList.add('fantasma'); g.removeAttribute('data-id'); g.setAttribute('aria-hidden', 'true');
+  const g = el.cloneNode(true); g.classList.remove('sel', 'origen', 'pista'); g.classList.add('fantasma'); g.removeAttribute('data-i'); g.setAttribute('aria-hidden', 'true');
   g.style.width = r.width + 'px'; g.style.height = r.height + 'px'; g.style.left = '0'; g.style.top = '0';
   document.body.appendChild(g); ARR.g = g;
-  jgSel(el); el.classList.add('origen');
+  jgSel(ARR.i); el.classList.add('origen');
   if (ARR.toque && navigator.vibrate) try { navigator.vibrate(15); } catch(e){}
   arrMover();
 }
@@ -1174,20 +1193,23 @@ function arrMover(){
   ARR.sobre = d; if (d) d.classList.add('diana');
 }
 function arrDiana(){
-  const t = document.elementFromPoint(ARR.x, ARR.y); const d = t && t.closest('#tablero .tl[data-id]');
-  return d && d !== ARR.el && d.dataset.k !== ARR.el.dataset.k ? d : null;
+  const t = document.elementFromPoint(ARR.x, ARR.y), d = t && t.closest('#tablero .tl[data-i]');
+  if (!d || d === ARR.el || !J) return null;
+  const j = +d.dataset.i;
+  if (J.celdas[j] === -1 || (J.celdas[j] & 1) === (J.celdas[ARR.i] & 1)) return null;
+  return d;
 }
 function arrLimpiar(){
   if (ARR.g) ARR.g.remove(); ARR.el.classList.remove('origen'); if (ARR.sobre) ARR.sobre.classList.remove('diana');
   SUPR = Date.now() + 400;
 }
-function arrSoltar(){ const d = arrDiana(), el = ARR.el; arrLimpiar(); if (d) jgProbar(el, d); }
+function arrSoltar(){ const i = ARR.i, d = arrDiana(); arrLimpiar(); if (d) jgProbar(i, +d.dataset.i); }
 
-// Cronómetro: solo cuenta mientras se está jugando (página visible, tarea desbloqueada y con actividad en los últimos 90 s)
+// Cronómetro: solo cuenta mientras se juega (página visible, tarea desbloqueada y actividad en los últimos 90 s)
 document.addEventListener('pointermove', () => { ULTACC = Date.now(); }, { passive: true });
 document.addEventListener('scroll', () => { ULTACC = Date.now(); }, { passive: true });
 setInterval(() => {
-  if (!J || EJEMPLO || terminado() || ENTRE || document.hidden || Date.now() - ULTACC > 90000) return;
+  if (!J || EJEMPLO || terminado() || document.hidden || Date.now() - ULTACC > 90000) return;
   const t = document.getElementById('tarea'), ed = document.getElementById('editor');
   if (!t || t.inert || !ed || ed.classList.contains('hidden')) return;
   J.seg++; jgEscribir(); const e = document.getElementById('jgT'); if (e) e.textContent = mmss(J.seg);
@@ -1212,23 +1234,22 @@ function confeti(n){
 async function pdfTarea(api, C){
   const { banda, P, texto, sitio, separador, COL } = api, s = est();
   banda('Juego · Tecnologías habilitadoras y sus definiciones', [223,243,234], COL.mint);
-  texto([{ t: 'Parejas casadas: ', b: true }, { t: `${s.hechas.length} de ${NT}` }, { t: '     Rondas completas: ', b: true }, { t: `${[0,1,2,3,4].filter(r => hechasRonda(r, s) === POR_RONDA).length} de ${RONDAS}` }], { size: 10.5, tras: 1 });
-  texto([{ t: 'Errores: ', b: true }, { t: String(totalErr(s)) }, { t: '     Precisión: ', b: true }, { t: precision(s) + ' %' }, { t: '     Pistas usadas: ', b: true }, { t: `${s.pi} de ${MAX_PISTAS}` }, { t: '     Tiempo de juego: ', b: true }, { t: mmss(s.seg) }], { size: 10.5, tras: 1 });
-  P('Errores por ronda: ' + [0,1,2,3,4].map(r => `R${r + 1}: ${s.er[r]}`).join('  ·  '), { size: 9.5, color: COL.muted, tras: 2 });
+  texto([{ t: 'Parejas casadas: ', b: true }, { t: `${s.hechas.length} de ${NT}` }, { t: '     Precisión: ', b: true }, { t: precision(s) + ' %' }], { size: 10.5, tras: 1 });
+  texto([{ t: 'Errores: ', b: true }, { t: String(s.er) }, { t: '     Pistas usadas: ', b: true }, { t: `${s.pi} de ${MAX_PISTAS}` }, { t: '     Tiempo de juego: ', b: true }, { t: mmss(s.seg) }], { size: 10.5, tras: 2 });
   separador();
-  for (let r = 0; r < RONDAS; r++){
-    sitio(24); P(`Ronda ${r + 1}  ·  ${hechasRonda(r, s)}/${POR_RONDA} parejas`, { size: 11.5, b: true, color: COL.mint, tras: 2 });
-    const ns = deRonda(r, s), hechas = s.hechas.filter(n => ns.includes(n)), faltan = ns.filter(n => !s.hechas.includes(n));
-    let k = 1;
-    for (const n of hechas) texto([{ t: TEC[n][0] + ': ', b: true }, { t: TEC[n][1] }], { size: 9.6, marca: (k++) + '.', tras: 0.6 });
+  sitio(20); P('Tecnologías casadas, en el orden en que las encontraste', { size: 11.5, b: true, color: COL.mint, tras: 2 });
+  let k = 1;
+  for (const n of s.hechas) texto([{ t: TEC[n][0] + ': ', b: true }, { t: TEC[n][1] }], { size: 9.6, marca: (k++) + '.', tras: 0.6 });
+  const faltan = TEC.map((_, n) => n).filter(n => !s.hechas.includes(n));
+  if (faltan.length){
+    separador(); sitio(20); P('Sin casar', { size: 11.5, b: true, color: COL.muted, tras: 2 });
     for (const n of faltan) texto([{ t: TEC[n][0] + ': ', b: true }, { t: '(pareja sin encontrar)', i: true }], { size: 9.6, marca: (k++) + '.', color: COL.muted, tras: 0.6 });
-    separador();
   }
 }
 
 // ================= ejemplo relleno: juego terminado =================
 function ejemploCampos(){
-  return { juego: JSON.stringify({ v: 1, orden: [...Array(NT).keys()], hechas: [...Array(NT).keys()], er: [1,0,2,0,1], pi: 1, seg: 912, fin: 1 }) };
+  return { juego: JSON.stringify({ v: 2, pool: [], celdas: Array(CELDAS).fill(-1), hechas: [...Array(NT).keys()], er: 6, pi: 2, seg: 912, fin: 1 }) };
 }
 function ejemploRespuesta(){ return ''; }
 
@@ -1420,9 +1441,7 @@ function construir(esp){
     ${COMUN.sinFuentes ? '' : `<section class="fase f4"><header><h2>Fuentes y uso de IA</h2></header><div class="cuerpo">${caja('fuentes', COMUN.numFuentes, 'Fuentes consultadas y declaración de uso de IA', `<div class="pista">${esc(COMUN.fuentes)}</div>`)}</div></section>`}</div>`;
   const siglas = C.siglas || COMUN.siglas || [];
   h += `<section class="card compr"><h2 style="margin-top:0;font-size:1.1rem">Antes de entregar, comprueba</h2><ul class="checks" id="checks"></ul></section>
-    <section class="card">${COMUN.entregaEj ? `<h2 style="margin-top:0;font-size:1.1rem">Entrega</h2><ul>${COMUN.entregaEj.map(e => `<li>${esc(e)}</li>`).join('')}</ul>` : ''}
-    <h2 style="font-size:1.1rem${COMUN.entregaEj ? '' : ';margin-top:0'}">Entrega y criterios generales</h2><ul>${COMUN.entrega.map(e => `<li>${esc(e)}</li>`).join('')}</ul>
-    ${siglas.length ? `<h2 style="font-size:1.1rem">Abreviaturas y siglas empleadas en esta unidad</h2><table class="siglas sg"><thead><tr><th>Sigla</th><th>Significado</th></tr></thead><tbody>${siglas.map(s => `<tr><td>${esc(s[0])}</td><td>${esc(s[1])}</td></tr>`).join('')}</tbody></table>` : ''}</section>
+    ${siglas.length ? `<section class="card"><h2 style="margin-top:0;font-size:1.1rem">Abreviaturas y siglas empleadas en esta unidad</h2><table class="siglas sg"><thead><tr><th>Sigla</th><th>Significado</th></tr></thead><tbody>${siglas.map(s => `<tr><td>${esc(s[0])}</td><td>${esc(s[1])}</td></tr>`).join('')}</tbody></table></section>` : ''}
     <div class="pie-acc"><button class="btn-mint" onclick="guardar(true)">💾 Guardar</button><button class="btn-peach" onclick="intentarPDF()">⬇ Descargar PDF</button></div>`;
   $('#contenido').innerHTML = h;
 }

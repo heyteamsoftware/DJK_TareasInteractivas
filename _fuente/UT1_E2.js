@@ -53,17 +53,6 @@ const COMUN = {
   ],
   numFuentes: '3',
   fuentes: 'Cita todas las fuentes consultadas (webs de productos, artículos, imágenes…) y declara si has usado herramientas de IA: cuál, para qué y cómo has verificado su contenido.',
-  entregaEj: [
-    'Un único archivo PDF con el nombre UT1_E2_Apellido1_Apellido2_Nombre.pdf. Esta página lo genera con ese nombre al pulsar «Descargar PDF».',
-    'El PDF incluye la Fase 1 y, en páginas apaisadas, las diapositivas de tu presentación (Fase 2).',
-    'Entrega por el aula virtual, en la tarea correspondiente. Ni por correo ni en papel.'
-  ],
-  entrega: [
-    'El profesor indica en clase y en el Campus el momento recomendado para entregar cada tarea; es él quien decide cuándo se muestra u oculta cada ejercicio en el aula virtual.',
-    'El alumnado con causa justificada documentalmente conserva la escala completa de 0 a 10 en la nueva fecha acordada.',
-    'Todas las fuentes consultadas deben citarse. El uso de herramientas de IA debe declararse y su contenido verificarse.',
-    'Se valorará la corrección lingüística, la presentación, el rigor técnico y la aplicación real al sector profesional del ciclo.'
-  ],
   criterios: [
     ['Fase 1 · Las 4 tecnologías', 'Cuatro tecnologías habilitadoras que se puedan instalar en el dispositivo, con qué hace cada una y por qué es útil para un usuario de tu ciclo (1 punto por tecnología).', 4],
     ['Fase 1 · Funciones combinadas', 'Cómo se combinan los datos de las cuatro tecnologías y qué aporta esa combinación al usuario.', 2],

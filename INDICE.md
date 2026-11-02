@@ -53,12 +53,12 @@
 
 | Pieza | UT2_E1 · Parejas de tecnologías |
 |---|---|
-| Juego | Las 50 tecnologías y definiciones de UT2_E2 en 5 rondas de 10 parejas. Cuadrados mezclados: tecnología (verde, con icono) y definición (blanco). Orden aleatorio por alumno. |
+| Juego | Las 50 tecnologías y definiciones de UT2_E2. Tablero de 20 cuadrados (10 parejas); cuando queda libre la mitad, se rellena solo con nuevas parejas hasta casar las 50. Cuadrados mezclados: tecnología (verde, con icono) y definición (blanco). Orden aleatorio por alumno. |
 | Cómo se juega | Tocar o hacer clic en una tecnología y luego en su definición (o al revés). Con ratón también se puede arrastrar un cuadrado encima de su pareja; en tablet, mantener pulsado un momento y arrastrar. Funciona con teclado. |
-| Acierto / fallo | Acierto: la pareja brilla, se recoge y pasa a «Tus parejas». Fallo: los dos cuadrados tiemblan en rojo y suma un error. |
-| Extras | Marcador (ronda, parejas, errores, tiempo), 5 pistas para todo el juego, barra por rondas, estrellas por ronda, confeti al terminar cada ronda y pantalla final con trofeo y precisión. |
+| Acierto / fallo | Acierto: la pareja brilla, desaparece del tablero y pasa a «Tus parejas». Fallo: los dos cuadrados tiemblan en rojo y suma un error. |
+| Extras | Marcador (parejas, en tablero, errores, tiempo), 5 pistas para todo el juego, barra de progreso y pantalla final con trofeo y precisión. |
 | Tiempo | Solo cuenta con la página visible, la tarea desbloqueada y actividad en los últimos 90 s. |
-| PDF | Parejas, rondas, errores (total y por ronda), precisión, pistas, tiempo y las 50 tecnologías con su definición. |
+| PDF | Parejas, errores, precisión, pistas, tiempo, las tecnologías casadas en orden y, si las hubiera, las que quedan sin casar. |
 | Definiciones retocadas | 10 definiciones se reescribieron para no repetir el nombre de la tecnología (pizarra digital, documentos compartidos, firma electrónica, huella dactilar, tarjeta de acceso, detector de humo, iluminación LED, persianas, riego automático, gestor de contraseñas). |
 
 ## Planos de UT2_E2 por especialidad
@@ -111,7 +111,7 @@ Todos los ejercicios muestran una tabla «Cómo se califica» con esta forma, de
 |---|---|
 | UT1_E1 | Parte 1 → 4 (1 por revolución) · Parte 2 → 3 (2 preguntas, 1,5 cada una) · Parte 3 → 3 (1 por pregunta) |
 | UT1_E3 | Fase 1 → 5 (1 por producto) · Fase 2 → 5 (5 preguntas, 1 cada una) · Fase 3 eliminada |
-| UT2_E1 | Juego → 10 (2 por ronda completa; errores, pistas y tiempo informativos) |
+| UT2_E1 | Juego → 10 (las 50 parejas casadas; errores, pistas y tiempo informativos) |
 
 ## Normas acordadas
 
@@ -136,6 +136,7 @@ Todos los ejercicios muestran una tabla «Cómo se califica» con esta forma, de
 | 12 | Los ejercicios nuevos se crean en `_fuente/` (archivo de datos `UTn_Em.js`) con el motor común; no se editan los HTML a mano. |
 | 13 | Todos los ejercicios tienen versión para ordenador y para móvil/tablet, adaptada para que el alumno trabaje cómodo en cada dispositivo (ver «Versión por dispositivo»). |
 | 14 | El resultado de aprendizaje y sus criterios se muestran en la pantalla de inicio (junto al nombre, apellidos y ciclo), no dentro del ejercicio. En el PDF se mantienen. |
+| 21 | No hay bloque «Entrega» en la página: la entrega (formato, plazo, aula virtual) la comunica el profesor en clase. La página solo tiene Objetivo, Cómo se califica, la tarea, «Antes de entregar, comprueba» y las siglas. |
 | 15 | Cada unidad tiene su color (UT1 lavanda · UT2 menta · UT3 melocotón · UT4 cielo · UT5 rosa) en la administración, el ejercicio y el PDF. |
 
 ## Versión por dispositivo

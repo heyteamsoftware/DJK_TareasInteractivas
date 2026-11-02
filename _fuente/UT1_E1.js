@@ -60,18 +60,6 @@ const COMUN = {
   },
   numFuentes: '4',
   fuentes: 'Cita todas las fuentes consultadas (título, medio o institución, fecha y enlace) y declara si has usado alguna herramienta de inteligencia artificial: cuál, para qué y cómo has verificado lo que te ha dicho (en historia local se inventa con soltura).',
-  entregaEj: [
-    'Un único archivo PDF con el nombre UT1_E1_Apellido1_Apellido2_Nombre.pdf. Esta página lo genera con ese nombre al pulsar «Descargar PDF».',
-    'Entrega por el aula virtual, en la tarea correspondiente. Ni por correo ni en papel.',
-    'Todas las fuentes citadas: título, medio o institución, fecha y enlace.',
-    'Si has usado alguna herramienta de inteligencia artificial, decláralo: qué herramienta y para qué. Y verifica lo que te haya dicho.'
-  ],
-  entrega: [
-    'El profesor indica en clase y en el Campus el momento recomendado para entregar cada tarea; es él quien decide cuándo se muestra u oculta cada ejercicio en el aula virtual.',
-    'El alumnado con causa justificada documentalmente conserva la escala completa de 0 a 10 en la nueva fecha acordada.',
-    'Todas las fuentes consultadas deben citarse. El uso de herramientas de IA debe declararse y su contenido verificarse.',
-    'Se valorará la corrección lingüística, la presentación, el rigor técnico y la aplicación real al sector profesional del ciclo.'
-  ],
   criterios: [
     ['Parte 1 · Las revoluciones industriales en Canarias', 'Un ejemplo canario, real y verificable para cada revolución, con fecha, fuente y qué cambió en la vida de la gente (1 punto por revolución).', 4],
     ['Parte 2 · La quinta revolución industrial', 'Respuestas razonadas a las dos preguntas, con información del vídeo o con conclusiones propias (1,5 puntos por pregunta).', 3],

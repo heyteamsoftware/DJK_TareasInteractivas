@@ -813,18 +813,6 @@ const COMUN = {
   },
   numFuentes: '4',
   fuentes: 'Cita todas las fuentes consultadas (título, medio o institución, fecha y enlace) y declara si has usado alguna herramienta de inteligencia artificial: cuál, para qué y cómo has verificado lo que te ha dicho (en historia local se inventa con soltura).',
-  entregaEj: [
-    'Un único archivo PDF con el nombre UT1_E1_Apellido1_Apellido2_Nombre.pdf. Esta página lo genera con ese nombre al pulsar «Descargar PDF».',
-    'Entrega por el aula virtual, en la tarea correspondiente. Ni por correo ni en papel.',
-    'Todas las fuentes citadas: título, medio o institución, fecha y enlace.',
-    'Si has usado alguna herramienta de inteligencia artificial, decláralo: qué herramienta y para qué. Y verifica lo que te haya dicho.'
-  ],
-  entrega: [
-    'El profesor indica en clase y en el Campus el momento recomendado para entregar cada tarea; es él quien decide cuándo se muestra u oculta cada ejercicio en el aula virtual.',
-    'El alumnado con causa justificada documentalmente conserva la escala completa de 0 a 10 en la nueva fecha acordada.',
-    'Todas las fuentes consultadas deben citarse. El uso de herramientas de IA debe declararse y su contenido verificarse.',
-    'Se valorará la corrección lingüística, la presentación, el rigor técnico y la aplicación real al sector profesional del ciclo.'
-  ],
   criterios: [
     ['Parte 1 · Las revoluciones industriales en Canarias', 'Un ejemplo canario, real y verificable para cada revolución, con fecha, fuente y qué cambió en la vida de la gente (1 punto por revolución).', 4],
     ['Parte 2 · La quinta revolución industrial', 'Respuestas razonadas a las dos preguntas, con información del vídeo o con conclusiones propias (1,5 puntos por pregunta).', 3],
@@ -1118,9 +1106,7 @@ function construir(esp){
     ${COMUN.sinFuentes ? '' : `<section class="fase f4"><header><h2>Fuentes y uso de IA</h2></header><div class="cuerpo">${caja('fuentes', COMUN.numFuentes, 'Fuentes consultadas y declaración de uso de IA', `<div class="pista">${esc(COMUN.fuentes)}</div>`)}</div></section>`}</div>`;
   const siglas = C.siglas || COMUN.siglas || [];
   h += `<section class="card compr"><h2 style="margin-top:0;font-size:1.1rem">Antes de entregar, comprueba</h2><ul class="checks" id="checks"></ul></section>
-    <section class="card">${COMUN.entregaEj ? `<h2 style="margin-top:0;font-size:1.1rem">Entrega</h2><ul>${COMUN.entregaEj.map(e => `<li>${esc(e)}</li>`).join('')}</ul>` : ''}
-    <h2 style="font-size:1.1rem${COMUN.entregaEj ? '' : ';margin-top:0'}">Entrega y criterios generales</h2><ul>${COMUN.entrega.map(e => `<li>${esc(e)}</li>`).join('')}</ul>
-    ${siglas.length ? `<h2 style="font-size:1.1rem">Abreviaturas y siglas empleadas en esta unidad</h2><table class="siglas sg"><thead><tr><th>Sigla</th><th>Significado</th></tr></thead><tbody>${siglas.map(s => `<tr><td>${esc(s[0])}</td><td>${esc(s[1])}</td></tr>`).join('')}</tbody></table>` : ''}</section>
+    ${siglas.length ? `<section class="card"><h2 style="margin-top:0;font-size:1.1rem">Abreviaturas y siglas empleadas en esta unidad</h2><table class="siglas sg"><thead><tr><th>Sigla</th><th>Significado</th></tr></thead><tbody>${siglas.map(s => `<tr><td>${esc(s[0])}</td><td>${esc(s[1])}</td></tr>`).join('')}</tbody></table></section>` : ''}
     <div class="pie-acc"><button class="btn-mint" onclick="guardar(true)">💾 Guardar</button><button class="btn-peach" onclick="intentarPDF()">⬇ Descargar PDF</button></div>`;
   $('#contenido').innerHTML = h;
 }
