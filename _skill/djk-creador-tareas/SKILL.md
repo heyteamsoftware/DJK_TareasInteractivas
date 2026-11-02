@@ -28,7 +28,7 @@ Proyecto: `C:\Users\ferna\OneDrive\Documentos\DJK_Ejercicios_interactivos`
 
 ## Semipresencial (un ejercicio por unidad)
 
-- En semipresencial (EI SP, IS SP, MC SP) hay **un solo ejercicio por unidad**: `UTn_SP`, un «remix» de los ejercicios de la unidad con la mitad de elementos, en la carpeta `SEMI/` (`SEMI/UTn_SP_Remix_UTn.html`).
+- En semipresencial (EI SP, IS SP, MC SP) hay **un solo ejercicio por unidad**: `UTn_SP`, un «remix» de los ejercicios de la unidad con la mitad de elementos, en la carpeta `SEMI/` (`SEMI/UTn_SP_Nombre_De_La_Unidad.html`). Se llama como la unidad (p. ej. «UT1 · Digitalización de los sectores productivos») y al alumno no se le presenta como recopilación: nada de «Remix» ni de referencias a los ejercicios originales en la página, el PDF o la dirección.
 - Se hace con el motor: `_fuente/UTn_SP.js` (con `const D = __DATOS__;`) + `_fuente/remix_UTn_SP.js`, que saca el contenido de los ejercicios originales en cada construcción. En `construir.js`: `dir: 'SEMI', img: 'UTn_Em' (si usa sus imágenes), remix: 'remix_UTn_SP.js'`.
 - `CICLOS`/`ORDEN` solo con los 3 semipresenciales. En los ejercicios normales de esa unidad se quitan de `ORDEN` (pero se dejan en `CICLOS` para abrir borradores antiguos).
 - En la administración va en el bloque «Semipresencial» (`semi: true` en `LISTA`). Las API aceptan `UTn_SP`.

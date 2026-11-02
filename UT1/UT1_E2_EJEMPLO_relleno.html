@@ -772,7 +772,7 @@ const COMUN = {
   objetivo: 'Crear un producto basado en tecnologías que se puedan instalar y sean útiles.',
   pasos: [
     'Lee el contexto, el objetivo y la tabla «Cómo se califica».',
-    'Si eres de un ciclo presencial, escribe el nombre de tu compañero/a de pareja (en semipresencial el trabajo es individual). Elige el <b>dispositivo</b> que te han asignado.',
+    'Si eres de un ciclo presencial, escribe el nombre de tu compañero/a de pareja (en semipresencial el trabajo es individual). Mira el <b>dispositivo</b> que te ha tocado: se asigna al azar al empezar.',
     '<b>Fase 1:</b> escribe en cada bocadillo una tecnología habilitadora del dispositivo y explica qué hace y por qué es útil; después explica cómo se combinan sus datos, propón 4 actividades con usuarios y completa las ventajas e inconvenientes.',
     '<b>Fase 2:</b> prepara tu presentación en las 6 diapositivas, con texto, imágenes y ejemplos. Cada diapositiva saldrá en el PDF en una página apaisada, lista para presentar.',
     'Cita tus fuentes y declara si has usado inteligencia artificial.',
@@ -859,6 +859,10 @@ function construirTarea(C){
     .lienzo .bb{position:absolute;display:flex;align-items:center;justify-content:center;text-align:center;font-weight:800;color:#2f2d3a;font-size:clamp(.7rem,2.3vw,1.2rem);line-height:1.15;padding:1.5%;overflow:hidden;overflow-wrap:anywhere}
     .lienzo .bb.vacio{color:#8b8698;font-weight:600}
     .lienzo .sin{position:absolute;inset:0;display:grid;place-items:center;background:rgba(251,248,243,.85);font-weight:700;color:var(--muted);padding:1rem;text-align:center}
+    .disp-asig{display:flex;gap:.9rem;align-items:center;border:2px solid var(--lav3);background:var(--lav);border-radius:12px;padding:.5rem;margin:.6rem 0 1rem;max-width:520px}
+    .disp-asig img{width:150px;max-width:40%;border-radius:8px;display:block;flex:none}
+    .disp-asig b{display:block;font-size:1.05rem}
+    .disp-asig small{color:var(--muted)}
     .tecno{border-radius:12px;padding:.2rem .9rem .1rem;margin:.9rem 0;border:2px solid}
     .tecno h3{margin:.6rem 0 0;font-size:1.02rem}
     .diapo{border:2px solid var(--lav2);border-radius:14px;padding:.2rem .9rem .3rem;margin:1rem 0;background:#fcfbff}
@@ -868,11 +872,11 @@ function construirTarea(C){
   h += `<section class="fase f1"><header><h2>Fase 1 · El dispositivo y sus tecnologías</h2></header><div class="cuerpo">`;
   if (C.semipresencial) h += '<div class="caja"><div class="et"><span class="n">1.1</span>Modalidad</div><div class="nota">Ciclo semipresencial: este trabajo es <b>individual</b>.</div></div>';
   else h += caja('pareja', '1.1', 'Compañero/a de grupo', '<div class="pista">Nombre y apellidos de tu compañero/a de pareja.</div>', { corta: true, ph: 'Nombre y apellidos…' });
-  h += `<div class="caja"><div class="et"><span class="n">1.2</span>Dispositivo asignado</div><div class="pista">Elige el dispositivo que os ha asignado el profesor.</div>
-    <div class="disps" role="radiogroup" aria-label="Dispositivo asignado">${COMUN.dispositivos.map(d => `<label class="disp-op"><img src="${IMAGENES[d.k]}" alt=""><span><input type="radio" name="dispositivo" data-campo="dispositivo" value="${d.k}">${esc(d.n)}</span></label>`).join('')}</div></div>`;
+  h += `<div class="caja"><div class="et"><span class="n">1.2</span>Dispositivo asignado al azar</div><div class="pista">El dispositivo se asigna al azar al empezar la tarea. Este es el tuyo:</div>
+    <input type="hidden" id="dispDato" data-campo="dispositivo"><div class="disp-asig" id="dispAsig" aria-live="polite"></div></div>`;
   h += `<div class="caja"><div class="et"><span class="n">1.3</span>Las 4 tecnologías habilitadoras</div>
     <div class="pista">Escribe en cada tarjeta de color una tecnología que tendría el dispositivo (aparecerá en su bocadillo) y explica qué hace por separado y por qué sería útil para ${esc(C.usuario)}.</div>
-    <div class="lienzo" id="lienzo"><img id="lienzoImg" alt="Dispositivo con cuatro bocadillos">${B.map((b, i) => `<div class="bb" id="bb${i}" style="left:${b.x}%;top:${b.y}%;width:${b.w}%;height:${b.h}%"></div>`).join('')}<div class="sin" id="lienzoSin">Elige primero el dispositivo (1.2)</div></div>`;
+    <div class="lienzo" id="lienzo"><img id="lienzoImg" alt="Dispositivo con cuatro bocadillos">${B.map((b, i) => `<div class="bb" id="bb${i}" style="left:${b.x}%;top:${b.y}%;width:${b.w}%;height:${b.h}%"></div>`).join('')}<div class="sin" id="lienzoSin">Asignando el dispositivo…</div></div>`;
   B.forEach((b, i) => {
     h += `<div class="tecno" style="background:${b.color}33;border-color:${b.borde}"><h3 style="color:${b.borde}">Bocadillo ${i + 1}</h3>
       ${caja(`t${i}_nom`, '', 'Tecnología habilitadora', '', { corta: true, ph: 'Nombre de la tecnología (por ejemplo, un sensor)…' })}
@@ -894,10 +898,23 @@ function construirTarea(C){
   return h;
 }
 
+// El dispositivo se asigna al azar la primera vez y queda guardado con el trabajo
+function asegurarDispositivo(){
+  const inp = document.getElementById('dispDato'); if (!inp || inp.value) return;
+  inp.value = COMUN.dispositivos[Math.floor(Math.random() * COMUN.dispositivos.length)].k;
+  programarGuardado();
+}
+function pintarDispositivo(d){
+  const box = document.getElementById('dispAsig'); if (!box || !d || box.dataset.k === d.k) return;
+  box.dataset.k = d.k;
+  box.innerHTML = `<img src="${IMAGENES[d.k]}" alt=""><div><b>${esc(d.n)}</b><small>🎲 Asignado al azar</small></div>`;
+}
+
 // Refresca la imagen del dispositivo y los nombres de los bocadillos
 function alActualizar(){
   const img = document.getElementById('lienzoImg'); if (!img) return;
-  const d = dispositivoElegido();
+  asegurarDispositivo();
+  const d = dispositivoElegido(); pintarDispositivo(d);
   document.getElementById('lienzoSin').style.display = d ? 'none' : '';
   img.src = IMAGENES[(d || COMUN.dispositivos[0]).k];
   COMUN.bocadillos.forEach((b, i) => { const t = textoDe(`t${i}_nom`), el = document.getElementById('bb' + i); el.textContent = t || `Tecnología ${i + 1}`; el.classList.toggle('vacio', !t); });
@@ -909,7 +926,7 @@ async function pdfTarea(api, C){
   banda('Fase 1 · El dispositivo y sus tecnologías', [223,243,234], COL.mint);
   if (C.semipresencial) P('Modalidad: individual (ciclo semipresencial)', { size: 10.5, b: true, color: COL.muted, tras: 2 });
   else await caja('pareja', '1.1', 'Compañero/a de grupo', { compacta: true });
-  P('Dispositivo asignado: ' + (d ? d.n : '(sin elegir)'), { size: 11, b: true, color: COL.lav, tras: 2 });
+  P('Dispositivo asignado al azar: ' + (d ? d.n : '(sin asignar)'), { size: 11, b: true, color: COL.lav, tras: 2 });
   if (d){
     const pr = doc.getImageProperties(IMAGENES[d.k]); const w = api.CW, h = w * pr.height / pr.width;
     sitio(h + 4); const x0 = 18, y0 = api.y;
@@ -941,7 +958,6 @@ function listaChecks(C){
   const dia = COMUN.diapositivas.filter((_, i) => llena(`d${i}_txt`)).length;
   return [
     ...(C.semipresencial ? [] : [{ ok: llena('pareja'), t: 'Compañero/a de grupo', falta: 'Escribe el nombre de tu compañero/a de pareja.' }]),
-    { ok: !!dispositivoElegido(), t: 'Dispositivo elegido', falta: 'Elige el dispositivo asignado en 1.2.' },
     { ok: tec === 4, t: 'Las 4 tecnologías', cuenta: `${tec}/4`, falta: 'Escribe el nombre y la explicación de cada tecnología.' },
     { ok: llena('combinadas'), t: 'Funciones combinadas', falta: 'Explica cómo se combinan los datos (1.4).' },
     { ok: act === 4, t: 'Las 4 actividades', cuenta: `${act}/4`, falta: 'Propón las cuatro actividades con usuarios.' },

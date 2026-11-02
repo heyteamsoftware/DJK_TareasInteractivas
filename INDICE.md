@@ -21,7 +21,7 @@
 | UT1_E1 | Revoluciones industriales canarias y quinta revolución industrial | RA1 | a, b | AF, AS, EI, HB, IS + EI SP, IS SP, MC SP | A | [UT1_E1](UT1/UT1_E1_Revoluciones_Industriales_Canarias.html) | [Ejemplo](UT1/UT1_E1_EJEMPLO_relleno.html) | Sí | Sí | Hecho |
 | UT1_E2 | Combinación de sistemas ciberfísicos | RA1 | e, f, g | AF, AS, EI, HB, IS + EI SP, IS SP, MC SP | A (bocadillos + diapositivas) | [UT1_E2](UT1/UT1_E2_Combinacion_Sistemas_Ciberfisicos.html) | [Ejemplo](UT1/UT1_E2_EJEMPLO_relleno.html) | Sí (4·2·2·1·1) | Sí | Hecho |
 | UT1_E3 | Sistemas ciberfísicos y digitalización del sector | RA1 | c, d, e, f | AF, AS, EI, HB, IS + EI SP, IS SP, MC SP | A | [UT1_E3](UT1/UT1_E3_Digitalizacion_Sistemas_CiberFisicos.html) | [Ejemplo](UT1/UT1_E3_EJEMPLO_relleno.html) | Sí | Sí | Hecho |
-| UT1_SP | Remix semipresencial de la UT1 (E1 + E2 + E3, versión corta) | RA1 | a, b, c, d, e, f, g | Solo EI SP, IS SP y MC SP | A (remix) | [UT1_SP](SEMI/UT1_SP_Remix_UT1.html) | [Ejemplo](SEMI/UT1_SP_EJEMPLO_relleno.html) | Sí (1·1·1·1,5·1,5·1·1,5·1,5) | Sí | Hecho |
+| UT1_SP | Digitalización de los sectores productivos (semipresencial: reúne E1, E2 y E3 en versión corta) | RA1 | a, b, c, d, e, f, g | Solo EI SP, IS SP y MC SP | A (remix) | [UT1_SP](SEMI/UT1_SP_Digitalizacion_Sectores_Productivos.html) | [Ejemplo](SEMI/UT1_SP_EJEMPLO_relleno.html) | Sí (1·1·1·1,5·1,5·1·1,5·1,5) | Sí | Hecho |
 | UT2_E1 | Parejas de tecnologías habilitadoras (juego) | RA2 | a | AF, AS, EI, HB, IS + EI SP, IS SP, MC SP | C (juego en el motor común) | [UT2_E1](UT2/UT2_E1_Parejas_Tecnologias_Habilitadoras.html) | [Ejemplo](UT2/UT2_E1_EJEMPLO_relleno.html) | Sí (5 rondas × 2) | Sí | Hecho |
 | UT2_E2 | Tecnologías habilitadoras en tu centro (plano) | RA2 | a, c, d, e | Los 8 · plano y banco de 20 adaptados a cada especialidad | B | [UT2_E2](UT2/UT2_E2_Tecnologias_Habilitadoras.html) | `?ejemplo` | Sí (otro reparto) | Sí (original) | Hecho (antes era UT2_E1) |
 
@@ -82,7 +82,8 @@ En semipresencial solo hay un ejercicio por unidad: un «remix» de los ejercici
 
 | Pieza | Cómo es |
 |---|---|
-| Código y archivo | `UTn_SP` en `SEMI/UTn_SP_Remix_UTn.html` + `SEMI/UTn_SP_EJEMPLO_relleno.html` |
+| Código y archivo | `UTn_SP` en `SEMI/UTn_SP_Nombre_De_La_Unidad.html` + `SEMI/UTn_SP_EJEMPLO_relleno.html` |
+| Nombre | El de la unidad (p. ej. «UT1 · Digitalización de los sectores productivos»). Al alumno **no se le dice que es un remix**: sin «Remix» ni referencias a E1/E2/E3 en la página, el título, el PDF ni la dirección |
 | Ciclos | Solo EI SP, IS SP y MC SP (individual) |
 | Contenido | Los ejercicios de la unidad enteros, con la mitad de elementos. Se saca de los originales en cada construcción (`_fuente/remix_UTn_SP.js`): si cambias UTn_Em, el remix se actualiza solo |
 | Color | El de la unidad |
@@ -92,7 +93,7 @@ En semipresencial solo hay un ejercicio por unidad: un «remix» de los ejercici
 | UT1_SP | De dónde sale | Qué tiene (antes → ahora) | Puntos |
 |---|---|---|---|
 | Bloque 1 | UT1_E1 | Revoluciones en Canarias 4 → 2 (3ª y 4ª) · debate de la 5ª revolución 2 preguntas → 1 · mi profesión 3 → 2 | 1 · 1 · 1 |
-| Bloque 2 | UT1_E2 | Dispositivo (mismas imágenes) · tecnologías 4 → 2 (bocadillos de arriba) · funciones combinadas · actividades 4 → 2 (bocadillos de abajo) · ventajas e inconvenientes · diapositivas 6 → 3 | 1,5 · 1,5 · 1 |
+| Bloque 2 | UT1_E2 | Dispositivo asignado al azar (mismas imágenes) · tecnologías 4 → 2 (bocadillos de arriba) · funciones combinadas · actividades 4 → 2 (bocadillos de abajo) · ventajas e inconvenientes · diapositivas 6 → 3 | 1,5 · 1,5 · 1 |
 | Bloque 3 | UT1_E3 | Productos reales 5 → 3 · preguntas frecuentes 5 → 3 | 1,5 · 1,5 |
 | Checks | — | 2 pasos, 2 normas y 2 comprobaciones por bloque | — |
 
