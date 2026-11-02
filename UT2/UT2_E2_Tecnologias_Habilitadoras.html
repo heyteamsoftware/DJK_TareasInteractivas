@@ -470,8 +470,6 @@ section.card{background:var(--card);border:1px solid var(--line);border-radius:1
 #enunciado.collapsed #enunBody{max-height:0!important;opacity:0}
 #enunciado.collapsed{padding-top:16px;padding-bottom:16px}
 .enun-lead{margin:10px 0 14px}
-.brief .box.resumen{grid-column:1/-1;background:var(--ink);color:#fff}
-.brief .box.resumen h3{font-size:17px;margin-bottom:12px}
 ol.pasos3{list-style:none;padding:0!important;margin:0;display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
 @media (max-width:760px){ol.pasos3{grid-template-columns:1fr}}
 ol.pasos3 li{display:flex;gap:12px;align-items:flex-start;background:rgba(255,255,255,.08);border-radius:12px;padding:12px;margin:0!important}
@@ -574,6 +572,9 @@ table.crit td:last-child{text-align:right;font-weight:700;white-space:nowrap;pad
 .checks li{font-size:13px;display:flex;gap:8px;align-items:center;color:var(--muted)}
 .checks li i{width:18px;height:18px;border-radius:50%;border:1.5px solid #c9c2cd;flex:none;display:grid;place-items:center;font-style:normal;font-size:11px;color:#fff}
 .checks li.ok{color:var(--ink)}
+.bloques-chk{display:grid;gap:10px;margin-top:14px}
+.bloque-chk b{display:block;font-size:13px;margin-bottom:4px}
+.bloque-chk .checks{margin-top:0}
 .checks li.ok i{background:var(--mint-ink);border-color:var(--mint-ink)}
 .ghost{position:fixed;z-index:100;pointer-events:none;background:var(--ink);color:#fff;border-radius:999px;padding:6px 12px;font-size:13px;font-weight:600;transform:translate(-50%,-130%);box-shadow:0 8px 24px rgba(0,0,0,.18);white-space:nowrap}
 
@@ -814,11 +815,11 @@ ul.cod-info li{margin:5px 0}
     <div class="sec-title">Tu plano del centro</div>
     <p class="lead"><b>Elegir tecnologías habilitadoras en diferentes espacios.</b><br>
       Tienes 4 espacios: <span id="espaciosTxt"><b>Patio</b>, <b>Aula Grande</b>, <b>Despacho</b> y <b>Cancha de Fútbol</b></span>.<br>
-      Entre las 50 tecnologías que se te ofrecen, elige <b>10</b> de la lista y arrástralas donde las vas a querer usar. Justifica <b>¿Por qué la has instalado en este espacio?</b> y <b>¿Quién la usaría y en qué momento?</b></p>
+      Entre las 20 tecnologías de tu banco, elige <b>10</b> de la lista y arrástralas donde las vas a querer usar. Justifica <b>¿Por qué la has instalado en este espacio?</b> y <b>¿Quién la usaría y en qué momento?</b></p>
     <p class="hint" style="margin-top:6px">En el móvil o la tableta: toca una tecnología de «Mis 10» y después toca el sitio del plano. Puedes mover los pines cuando quieras.</p>
     <div class="work">
       <div class="panel">
-        <h3>Banco de tecnologías <span class="count" id="bankCount">50</span></h3>
+        <h3>Banco de tecnologías <span class="count" id="bankCount">20</span></h3>
         <input class="search" id="search" type="search" placeholder="Buscar en la lista…" aria-label="Buscar tecnología">
         <div class="bank" id="bank"></div>
         <p class="hint">Pasa el ratón por encima (o elige una) para ver para qué sirve.</p>
@@ -831,7 +832,7 @@ ul.cod-info li{margin:5px 0}
           <div id="mapHolder"></div>
         </div>
         <div class="legend" id="legend"></div>
-        <ul class="checks" id="checks"></ul>
+        <div class="bloques-chk" id="checks"></div>
       </div>
     </div>
   </section>
@@ -974,6 +975,16 @@ const TECH_DATA = [
 ];
 const TECHS = TECH_DATA.map(t=>t[0]);
 const PARA = TECH_DATA.map(t=>t[1]);
+// Banco de cada especialidad: 20 tecnologías de las 50, elegidas por su relación con el sector (índices de TECH_DATA)
+const BANCO = {
+  ei:[7,8,29,15,16,39,30,33,45,47,22,21,24,27,32,28,10,11,13,1],
+  af:[46,47,45,2,3,35,5,4,6,1,13,14,10,17,18,19,22,25,26,30],
+  as:[45,46,48,44,43,13,14,11,10,9,8,2,3,1,5,4,6,47,25,33],
+  hb:[49,0,39,40,41,42,16,15,38,35,3,2,25,29,19,17,10,4,11,28],
+  is:[10,11,12,13,14,15,16,38,37,39,40,42,21,22,20,17,18,24,25,28],
+  mc:[8,9,10,11,12,14,13,7,43,47,1,4,6,5,44,15,16,38,40,41]
+};
+const bancoDe = ciclo => BANCO[temaDe(ciclo)] || BANCO.ei;
 
 const ZONES = {
   aula:     {name:'Aula Grande',      x0:0.4,  x1:17.8, y0:0.4, y1:12.6, rgb:[235,230,253], ink:[90,74,181]},
@@ -1006,7 +1017,7 @@ const RA = {
 
 // Instrucciones comunes de la tarea
 const COMUN = {
-  contexto: 'Las tecnologías habilitadoras son muchas y muy variadas. Además de las que aparecen en los apuntes de la UT2, hay otras que usamos a diario y que también se podrían estudiar en clase. En este ejercicio tienes 50 de ellas.',
+  contexto: 'Las tecnologías habilitadoras son muchas y muy variadas. Además de las que aparecen en los apuntes de la UT2, hay otras que usamos a diario y que también se podrían estudiar en clase. En este ejercicio trabajarás con 20 de ellas, elegidas para tu ciclo.',
   objetivo: 'Elegir tecnologías habilitadoras del día a día, decidir dónde instalarlas y justificar por qué mejoran ese espacio.',
   pasos: [
     'Revisa el banco de 50 tecnologías. Pasa el ratón por encima para ver para qué sirve cada una.',
@@ -1044,7 +1055,7 @@ const DEMO = new URLSearchParams(location.search).has('ejemplo');
 /* =========================================================
    ESTADO Y GUARDADO (IndexedDB + respaldo localStorage)
    ========================================================= */
-function newState(alumno){ return {v:1, alumno, orden:shuffle(TECHS.map((_,i)=>i)), sel:[], textos:{}, updated:null}; }
+function newState(alumno){ return {v:1, alumno, orden:shuffle(bancoDe(alumno.ciclo)), sel:[], textos:{}, updated:null}; }
 let state = null;
 
 const DB_NAME='DJK_'+EJERCICIO+'_v2', STORE='borradores', KEY='actual', LS_KEY='DJK_'+EJERCICIO+'_v2_borrador';
@@ -1460,12 +1471,13 @@ function selIndex(id){ return state.sel.findIndex(s=>s.id===id); }
 function renderBank(){
   const q=$('#search').value.trim().toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'');
   const full = state.sel.length>=MAX;
-  $('#bank').innerHTML = state.orden.map(id=>{
+  const banco = BANCO[TEMA] || BANCO.ei;
+  $('#bank').innerHTML = state.orden.filter(id=>banco.includes(id)).map(id=>{
     const i=selIndex(id), on=i>=0;
     const nm=TECHS[id]; const hit=!q || nm.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').includes(q);
     return `<button type="button" class="chip${on?' on':''}${!on&&full?' off':''}" data-id="${id}" ${hit?'':'hidden'} aria-pressed="${on}" title="${esc(PARA[id])}">${on?`<span class="n">${i+1}</span>`:''}${esc(nm)}</button>`;
   }).join('');
-  $('#bankCount').textContent = TECHS.length;
+  $('#bankCount').textContent = banco.length;
 }
 function renderTray(){
   $('#selCount').textContent = state.sel.length+'/'+MAX;
@@ -1485,14 +1497,15 @@ function renderLegend(){
   const {cnt,placed}=zoneCounts();
   $('#legend').innerHTML = ZONE_ORDER.map(k=>`<span class="lg zt ${k}${cnt[k]<MIN_ZONA?' low':''}" title="Mínimo ${MIN_ZONA}">${ZONES[k].name}<b>${cnt[k]}/${MIN_ZONA}</b>${cnt[k]<MIN_ZONA?`<em>falta${MIN_ZONA-cnt[k]>1?'n':''} ${MIN_ZONA-cnt[k]}</em>`:''}</span>`).join('');
   const fichasOk = state.sel.filter(s=>PREGUNTAS.every(p=>hasContent(state.textos[s.id+'_'+p.k]))).length;
-  const checks=[
-    [state.sel.length===MAX, `10 tecnologías elegidas (${state.sel.length}/10)`],
-    [placed===MAX, `Todas colocadas en el plano (${placed}/10)`],
-    [ZONE_ORDER.every(k=>cnt[k]>=MIN_ZONA), 'Al menos 2 en cada espacio (obligatorio)'],
-    [fichasOk===MAX, `Fichas completas (${fichasOk}/10)`],
-    [hasContent(state.textos.conclusion), 'Reflexión final escrita']
+  const bloques=[
+    ['1 · Elige y coloca', [
+      [state.sel.length===MAX && placed===MAX, `10 tecnologías elegidas y colocadas en el plano (${placed}/${MAX})`],
+      [ZONE_ORDER.every(k=>cnt[k]>=MIN_ZONA), 'Al menos 2 en cada espacio (obligatorio)']]],
+    ['2 · Justifica', [
+      [fichasOk===MAX, `Fichas completas (${fichasOk}/${MAX})`],
+      [hasContent(state.textos.conclusion), 'Reflexión final escrita']]]
   ];
-  $('#checks').innerHTML = checks.map(([ok,t])=>`<li class="${ok?'ok':''}"><i>${ok?'✓':''}</i>${t}</li>`).join('');
+  $('#checks').innerHTML = bloques.map(([t,items])=>`<div class="bloque-chk"><b>${t}</b><ul class="checks">${items.map(([ok,x])=>`<li class="${ok?'ok':''}"><i>${ok?'✓':''}</i>${x}</li>`).join('')}</ul></div>`).join('');
 }
 function hasContent(html){ if(!html) return false; const d=document.createElement('div'); d.innerHTML=html; return d.textContent.replace(/\s+/g,' ').trim().length>=10 || !!d.querySelector('img'); }
 function refreshAll(){ renderBank(); renderTray(); renderPins(); renderLegend(); }
@@ -1925,11 +1938,6 @@ $('#brief').addEventListener('click', e=>{
 });
 function renderBrief(){
   $('#brief').innerHTML = `
-    <div class="box resumen"><h3>¿En qué consiste este ejercicio?</h3><ol class="pasos3">
-      <li><span class="n">1</span><div><b>Elige 10 tecnologías</b><p>Del banco de 50. Te decimos para qué sirve cada una.</p></div></li>
-      <li><span class="n">2</span><div><b>Instálalas en el plano</b><p>Arrástralas a: ${listaEspacios()}. Mínimo 2 en cada espacio.</p></div></li>
-      <li><span class="n">3</span><div><b>Justifica cada una</b><p>Explica por qué la has puesto ahí y quién la usaría. Al final, descarga el PDF y entrégalo.</p></div></li>
-    </ol></div>
     <div class="box b-lav"><h3>Contexto</h3><p>${COMUN.contexto}</p><p style="margin-top:8px"><b>Objetivo:</b> ${COMUN.objetivo}</p></div>
     <div class="box b-mint"><h3>Pasos</h3><ul class="ticks">${COMUN.pasos.map((p,i)=>tickItem('p'+i,p,i+1)).join('')}</ul></div>
     <div class="box b-peach"><h3>Normas</h3><ul class="ticks">${COMUN.normas.map((p,i)=>tickItem('n'+i,p,'')).join('')}</ul></div>

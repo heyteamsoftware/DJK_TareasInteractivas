@@ -22,7 +22,7 @@
 | UT1_E2 | Combinación de sistemas ciberfísicos | RA1 | e, f, g | AF, AS, EI, HB, IS + EI SP, IS SP, MC SP | A (bocadillos + diapositivas) | [UT1_E2](UT1/UT1_E2_Combinacion_Sistemas_Ciberfisicos.html) | [Ejemplo](UT1/UT1_E2_EJEMPLO_relleno.html) | Sí (4·2·2·1·1) | Sí | Hecho |
 | UT1_E3 | Sistemas ciberfísicos y digitalización del sector | RA1 | c, d, e, f | AF, AS, EI, HB, IS + EI SP, IS SP, MC SP | A | [UT1_E3](UT1/UT1_E3_Digitalizacion_Sistemas_CiberFisicos.html) | [Ejemplo](UT1/UT1_E3_EJEMPLO_relleno.html) | Sí | Sí | Hecho |
 | UT2_E1 | Parejas de tecnologías habilitadoras (juego) | RA2 | a | AF, AS, EI, HB, IS + EI SP, IS SP, MC SP | C (juego en el motor común) | [UT2_E1](UT2/UT2_E1_Parejas_Tecnologias_Habilitadoras.html) | [Ejemplo](UT2/UT2_E1_EJEMPLO_relleno.html) | Sí (5 rondas × 2) | Sí | Hecho |
-| UT2_E2 | Tecnologías habilitadoras en tu centro (plano) | RA2 | a, c, d, e | Los 8 · plano adaptado a cada especialidad | B | [UT2_E2](UT2/UT2_E2_Tecnologias_Habilitadoras.html) | `?ejemplo` | Sí (otro reparto) | Sí (original) | Hecho (antes era UT2_E1) |
+| UT2_E2 | Tecnologías habilitadoras en tu centro (plano) | RA2 | a, c, d, e | Los 8 · plano y banco de 20 adaptados a cada especialidad | B | [UT2_E2](UT2/UT2_E2_Tecnologias_Habilitadoras.html) | `?ejemplo` | Sí (otro reparto) | Sí (original) | Hecho (antes era UT2_E1) |
 
 ## Ciclos
 
@@ -60,6 +60,20 @@
 | Tiempo | Solo cuenta con la página visible, la tarea desbloqueada y actividad en los últimos 90 s. |
 | PDF | Parejas, errores, precisión, pistas, tiempo, las tecnologías casadas en orden y, si las hubiera, las que quedan sin casar. |
 | Definiciones retocadas | 10 definiciones se reescribieron para no repetir el nombre de la tecnología (pizarra digital, documentos compartidos, firma electrónica, huella dactilar, tarjeta de acceso, detector de humo, iluminación LED, persianas, riego automático, gestor de contraseñas). |
+
+## Banco de tecnologías de UT2_E2 por especialidad
+
+Cada especialidad ve 20 de las 50 tecnologías (las que más se relacionan con su sector). El alumnado elige 10 de su banco.
+
+| Especialidad | Tecnologías del banco (20 de las 50) |
+|---|---|
+| Educación Infantil (y SP) | Pizarra digital interactiva · Tablets · Medidor de CO2 · Firma electrónica · Certificado digital · Copias de seguridad · Placas solares · Riego automático · Marcador electrónico · Reloj inteligente · Cámaras de videovigilancia · Videoportero · Detector de humo · Iluminación LED · Persianas motorizadas · Termostato programable · Videoconferencia · Aula virtual · Calendario compartido · Códigos QR |
+| Acondicionamiento Físico | Cámara deportiva · Reloj inteligente · Marcador electrónico · Pago con el móvil · Datáfono (TPV) · Lector de código de barras · Fibra óptica · Wi-Fi · Bluetooth · Códigos QR · Calendario compartido · Mensajería instantánea de grupo · Videoconferencia · Lector de huella dactilar · Tarjeta de acceso · Control horario digital · Cámaras de videovigilancia · Desfibrilador (DEA) · Sensor de presencia · Placas solares |
+| Animación Sociodeportiva | Marcador electrónico · Cámara deportiva · Drones · Megafonía · Pantalla de avisos digital · Calendario compartido · Mensajería instantánea de grupo · Aula virtual · Videoconferencia · Ordenadores portátiles · Tablets · Pago con el móvil · Datáfono (TPV) · Códigos QR · Fibra óptica · Wi-Fi · Bluetooth · Reloj inteligente · Desfibrilador (DEA) · Riego automático |
+| Higiene Bucodental | Microscopio digital · Impresión 3D · Copias de seguridad · Antivirus · Verificación en dos pasos · Gestor de contraseñas · Certificado digital · Firma electrónica · Escáner de documentos · Lector de código de barras · Datáfono (TPV) · Pago con el móvil · Desfibrilador (DEA) · Medidor de CO2 · Control horario digital · Lector de huella dactilar · Videoconferencia · Wi-Fi · Aula virtual · Termostato programable |
+| Integración Social (y SP) | Videoconferencia · Aula virtual · Documentos compartidos en línea · Calendario compartido · Mensajería instantánea de grupo · Firma electrónica · Certificado digital · Escáner de documentos · Impresora multifunción · Copias de seguridad · Antivirus · Gestor de contraseñas · Videoportero · Cámaras de videovigilancia · Cerradura electrónica · Lector de huella dactilar · Tarjeta de acceso · Detector de humo · Desfibrilador (DEA) · Termostato programable |
+| Mediación Comunicativa SP | Tablets · Ordenadores portátiles · Videoconferencia · Aula virtual · Documentos compartidos en línea · Mensajería instantánea de grupo · Calendario compartido · Pizarra digital interactiva · Pantalla de avisos digital · Reloj inteligente · Códigos QR · Wi-Fi · Bluetooth · Fibra óptica · Megafonía · Firma electrónica · Certificado digital · Escáner de documentos · Antivirus · Verificación en dos pasos |
+
 
 ## Planos de UT2_E2 por especialidad
 
