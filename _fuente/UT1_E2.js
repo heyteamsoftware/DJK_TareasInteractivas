@@ -108,7 +108,7 @@ function construirTarea(C){
     .disp-op:has(input:checked){border-color:var(--lav3);background:var(--lav)}
     .lienzo{position:relative;border-radius:12px;overflow:hidden;margin:.8rem 0;border:1px solid var(--line)}
     .lienzo img{width:100%;display:block}
-    .lienzo .bb{position:absolute;display:flex;align-items:center;justify-content:center;text-align:center;font-weight:800;color:#2f2d3a;font-size:clamp(.62rem,2.3vw,1.2rem);line-height:1.15;padding:1.5%;overflow:hidden;overflow-wrap:anywhere}
+    .lienzo .bb{position:absolute;display:flex;align-items:center;justify-content:center;text-align:center;font-weight:800;color:#2f2d3a;font-size:clamp(.7rem,2.3vw,1.2rem);line-height:1.15;padding:1.5%;overflow:hidden;overflow-wrap:anywhere}
     .lienzo .bb.vacio{color:#8b8698;font-weight:600}
     .lienzo .sin{position:absolute;inset:0;display:grid;place-items:center;background:rgba(251,248,243,.85);font-weight:700;color:var(--muted);padding:1rem;text-align:center}
     .tecno{border-radius:12px;padding:.2rem .9rem .1rem;margin:.9rem 0;border:2px solid}

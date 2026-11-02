@@ -1600,8 +1600,8 @@ async function descargarPDF(){
     doc.setFillColor(233,226,251); doc.roundedRect(M - 6, M - 8, CW + 12, 16, 4, 4, 'F');
     doc.setFontSize(9); fuente(true, false); doc.setTextColor(...COL.lav); doc.text(pdfTxt('Diapositiva ' + num), M, M - 3, { baseline: 'top' });
     y = M + 12;
-    texto([{ t: titulo || ('Diapositiva ' + num), b: true }], { size: 22, color: COL.ink, tras: 5 });
-    await respuesta(id, 15);
+    texto([{ t: titulo || ('Diapositiva ' + num), b: true }], { size: 26, color: COL.ink, tras: 6 });
+    await respuesta(id, 18);
   }
 
   // Partes del ejercicio
