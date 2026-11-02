@@ -6,6 +6,7 @@
 | Organización | Una carpeta por unidad (`UT1` … `UT5`) |
 | Nombre de archivo | `UTn_Em_Titulo_Corto.html` (un HTML por ejercicio) + `UTn_Em_EJEMPLO_relleno.html` |
 | Código fuente | `_fuente/`: piezas comunes + un archivo de datos por ejercicio. Se genera con `node _fuente/construir.js` |
+| Skill | `_skill/djk-creador-tareas/SKILL.md` (actualizada con las normas 1–20). Para que sea permanente hay que subir `_skill/djk-creador-tareas.zip` en claude.ai → Skills. |
 | Repositorio | https://github.com/heyteamsoftware/DJK_TareasInteractivas |
 | Acceso del alumnado | Solo por el enlace directo de cada ejercicio (el que se pone en el aula virtual). No hay portada pública. |
 | Servidor | CIFP Tony Gallardo · Apache · `/var/www/html/DJK/DJK_EjerciciosInteractivos` (usuario `ubuntu`, clave en `Documentos\Oracle`) |
