@@ -7,11 +7,11 @@
 | Nombre de archivo | `UTn_Em_Titulo_Corto.html` (un HTML por ejercicio) + `UTn_Em_EJEMPLO_relleno.html` |
 | Código fuente | `_fuente/`: piezas comunes + un archivo de datos por ejercicio. Se genera con `node _fuente/construir.js` |
 | Repositorio | https://github.com/heyteamsoftware/DJK_TareasInteractivas |
-| Web publicada | https://myappsserver.duckdns.org/DJK/DJK_EjerciciosInteractivos/ |
+| Portada del alumnado | https://myappsserver.duckdns.org/DJK/DJK_EjerciciosInteractivos/alumnado/ |
 | Servidor | CIFP Tony Gallardo · Apache · `/var/www/html/DJK/DJK_EjerciciosInteractivos` (usuario `ubuntu`, clave en `Documentos\Oracle`) |
-| Portada | `index.html` con enlaces a cada ejercicio, aviso de privacidad y contador discreto de visitantes; `.htaccess` desactiva el listado de carpetas |
+| Portada | `alumnado/index.html` con enlaces a cada ejercicio, aviso de privacidad y contador discreto de visitantes; `.htaccess` desactiva el listado de carpetas |
 | Analítica | `api/visitas.php` (anónima, sin cookies) · base de datos en `/var/www/djk_datos/visitas.db`, fuera de la web · panel en `estadisticas.html` (no enlazado, sin indexar) |
-| Administración | https://myappsserver.duckdns.org/DJK/DJK_EjerciciosInteractivos/admin/ · solo contraseña (guardada cifrada en `/var/www/djk_datos/admin.json`) |
+| Administración | https://myappsserver.duckdns.org/DJK/DJK_EjerciciosInteractivos/ (dirección principal; la antigua `/admin/` redirige aquí) · solo contraseña (guardada cifrada en `/var/www/djk_datos/admin.json`) |
 
 ## Registro de ejercicios
 
@@ -78,7 +78,7 @@ Todos los ejercicios muestran una tabla «Cómo se califica» con esta forma, y 
 | 5 | Nombre del PDF: `UTn_Em_Apellido1_Apellido2_Nombre.pdf`. |
 | 6 | El ejemplo relleno usa solo texto de muestra entre corchetes, nunca respuestas reales que el alumnado pueda copiar. |
 | 7 | Cada ejercicio nuevo se sube al repositorio de GitHub. |
-| 8 | Cada ejercicio nuevo se despliega en el servidor y se añade a la portada (`index.html`). |
+| 8 | Cada ejercicio nuevo se despliega en el servidor y se añade a la portada del alumnado (`alumnado/index.html`). |
 | 9 | Antes de publicar se repasa la lista de la skill `rematadorweb` (sin claves expuestas, HTTPS, metadatos, favicon, móvil). |
 | 10 | Todos los ejercicios llevan el sistema de checks (ver arriba): el alumno sabe lo que tiene que hacer y lo confirma. |
 | 11 | Datos iniciales unificados: Nombre, Apellidos y Ciclo a elegir entre los 5. |
@@ -119,14 +119,14 @@ Todos los ejercicios muestran una tabla «Cómo se califica» con esta forma, y 
 
 | Pieza | Qué hace |
 |---|---|
-| Acceso | `admin/` pide la contraseña. Máximo 10 intentos cada 15 minutos por IP. La sesión dura hasta cerrar el navegador o pulsar «Salir». |
+| Acceso | La dirección principal pide la contraseña. Máximo 10 intentos cada 15 minutos por IP. La sesión dura hasta cerrar el navegador o pulsar «Salir». |
 | Disponibilidad | Tabla ciclo × ejercicio con interruptores «✓ Abierto / 🔒 Bloqueado». Un ejercicio bloqueado no se puede empezar ni cargar desde un borrador en ese ciclo (aparece con candado en la pantalla de inicio). |
 | Entregas | Se registra cuando el alumno descarga el PDF: nombre, apellidos, ciclo, ejercicio, primera y última descarga y nº de veces. Las respuestas no se envían. |
 | Resumen | Tabla ciclo × ejercicio con el número de personas que han descargado el PDF. |
 | Detalle | Por ciclo (pestañas) y ejercicio: quién lo ha descargado y cuándo; buscador por nombre. |
-| Archivos | `admin/index.html`, `api/admin.php`, `api/entregas.php`, `api/estado.php`, `api/comun.php` (no accesible desde la web) · datos en `/var/www/djk_datos/entregas.db` |
+| Archivos | `index.html` (raíz), `api/admin.php`, `api/entregas.php`, `api/estado.php`, `api/comun.php` (no accesible desde la web) · datos en `/var/www/djk_datos/entregas.db` |
 | Sin conexión | Si el ejercicio se abre sin internet no puede consultar los bloqueos ni registrar la entrega: se puede hacer igualmente. |
-| Ejercicios nuevos | Añadir su código y nombre en `EJERCICIOS` de `admin/index.html` para que salga en las tablas aunque nadie lo haya descargado aún. |
+| Ejercicios nuevos | Añadir su código y nombre en `EJERCICIOS` de `index.html` (raíz) para que salga en las tablas aunque nadie lo haya descargado aún. |
 
 ## Analítica y contador de visitas
 
