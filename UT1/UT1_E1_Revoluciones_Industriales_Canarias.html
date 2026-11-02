@@ -238,6 +238,8 @@ ul.checks li.ok i{background:var(--mint3);border-color:var(--mint3)}
     <div id="listaBor"></div>
   </section>
 
+  <section class="card ra" id="raInicio" aria-label="Resultado de aprendizaje"></section>
+
   <section class="card">
     <div class="nombres">
       <div><label class="lbl" for="nombre">Nombre</label><input type="text" id="nombre" autocomplete="given-name" placeholder="Ej.: Lucía"></div>
@@ -723,7 +725,7 @@ const COMUN = {
   ],
   objetivo: 'El objetivo es comprender cómo han evolucionado las revoluciones industriales y cómo se reflejan hoy, con ejemplos de Canarias, y discutir hacia dónde apunta la siguiente. La tarea consta de tres partes y es individual.',
   pasos: [
-    'Lee el resultado de aprendizaje, el objetivo y la tabla «Cómo se califica».',
+    'Lee el objetivo y la tabla «Cómo se califica».',
     '<b>Parte 1:</b> busca un ejemplo real en Canarias para cada una de las 4 revoluciones industriales y rellena el ejemplo, la fecha, la fuente y qué cambió en la vida de la gente.',
     '<b>Parte 2:</b> mira el debate sobre la quinta revolución industrial y responde a las <b>2 preguntas</b>.',
     '<b>Parte 3:</b> responde a las 3 preguntas pensando en tu futuro trabajo en Canarias (unas 15 líneas en total).',
@@ -1018,7 +1020,6 @@ function construir(esp){
   if (EJEMPLO) h += `<div class="banner-ej">Ejemplo relleno: muestra cómo queda la tarea. Los textos son de muestra y aquí no se guarda nada.</div>`;
   h += `<div class="cab"><small>${esc(COMUN.asignatura)} · ${esc(COMUN.unidad)}</small><h1>${esc(COMUN.ejercicio)}</h1>
     <div class="meta"><span class="chip">CFGS ${esc(C.nombre)}</span><span class="chip">Resultado de aprendizaje: ${COMUN.ra}</span><span class="chip">Criterios de evaluación: ${COMUN.ce}</span>${COMUN.peso ? `<span class="chip">Peso: ${esc(COMUN.peso)}</span>` : ''}${COMUN.modalidad ? `<span class="chip">${esc(COMUN.modalidad)}</span>` : ''}<span class="chip">Alumno/a: ${esc(completo())}</span></div></div>
-    <section class="card ra"><h2 style="margin-top:0;font-size:1.1rem">Resultado de aprendizaje que trabaja este ejercicio</h2><p><b>${COMUN.ra}.</b> ${esc(COMUN.raTexto)}</p><p style="margin-bottom:.2rem"><b>Criterios de evaluación:</b></p><ul style="margin:0">${COMUN.ceTextos.map(c => `<li><b>${c[0]})</b> ${esc(c[1])}</li>`).join('')}</ul></section>
     <section class="card">${introHTML(C)}<h2 style="font-size:1.1rem">Cómo se califica</h2>${tablaCriterios()}</section>`;
   h += enunciadoHTML();
   h += `<div id="tarea">${construirTarea(C)}
@@ -1482,7 +1483,14 @@ $('#btnPDF').addEventListener('click', intentarPDF);
   } catch(e){}
 })();
 
+// Resultado de aprendizaje y criterios: en la pantalla de inicio, junto a los datos del alumno
+function pintarRA(){
+  const s = $('#raInicio'); if (!s) return;
+  s.innerHTML = `<h2 style="margin-top:0;font-size:1.1rem">Resultado de aprendizaje que trabaja este ejercicio</h2><p><b>${COMUN.ra}.</b> ${esc(COMUN.raTexto)}</p><p style="margin-bottom:.2rem"><b>Criterios de evaluación:</b></p><ul style="margin:0">${COMUN.ceTextos.map(c => `<li><b>${c[0]})</b> ${esc(c[1])}</li>`).join('')}</ul>`;
+}
+
 // ================= arranque =================
+pintarRA();
 pintarCiclos();
 if (EJEMPLO){
   abrirEditor('ei', 'Nombre', 'Apellido1 Apellido2', null);

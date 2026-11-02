@@ -15,7 +15,7 @@ const COMUN = {
     ['f', 'Se ha analizado la importancia de la conexión entre entornos IT y OT.']
   ],
   pasos: [
-    'Lee el resultado de aprendizaje, el contexto, el objetivo y la tabla «Cómo se califica».',
+    'Lee el contexto, el objetivo y la tabla «Cómo se califica».',
     '<b>Fase 1:</b> busca un producto real para cada tipo de sistema: nombre y marca, enlace o captura, por qué lo eliges y cómo se usaría en el día a día del centro.',
     '<b>Fase 2:</b> responde a las <b>5 preguntas</b> como si te las hiciera una familia o un usuario del centro: con claridad, sin tecnicismos y de forma tranquilizadora.',
     'Cita tus fuentes y declara si has usado inteligencia artificial.',

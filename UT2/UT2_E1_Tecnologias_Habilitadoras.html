@@ -674,6 +674,11 @@ footer.foot{color:var(--muted);font-size:12px;text-align:center;padding:10px 0 4
 /* fin norma 13 */
 .start .ciclo.bloq{cursor:not-allowed;background:#f3f1f6;border-style:dashed;color:var(--muted)}
 .start .ciclo.bloq em{font-style:normal;font-size:12px;color:#7a3b1b;margin-left:auto}
+.ra-inicio{background:var(--soft);border-radius:14px;padding:14px 16px;margin:14px 0 4px;font-size:14px;text-align:left}
+.ra-inicio h3{font-size:14px;margin:0 0 6px}
+.ra-inicio p{margin:0 0 8px}
+.ra-inicio ul{margin:0;padding-left:18px}
+.ra-inicio li{margin:2px 0}
 /* Color de la unidad UT2 (menta) */
 .top{border-bottom:3px solid var(--mint-ink)}
 .kicker{color:var(--mint-ink)}
@@ -713,6 +718,7 @@ footer.foot{color:var(--muted);font-size:12px;text-align:center;padding:10px 0 4
           <button class="btn small" id="draftDiscard" type="button">Descartar y empezar de cero</button>
         </div>
       </div>
+      <div class="ra-inicio" id="raInicio"></div>
       <form id="startForm" autocomplete="off">
         <div class="row">
           <div><label for="fNombre">Nombre</label><input id="fNombre" required maxlength="60"></div>
@@ -1713,7 +1719,7 @@ function renderBrief(){
     <div class="box b-mint"><h3>Pasos</h3><ul class="ticks">${COMUN.pasos.map((p,i)=>tickItem('p'+i,p,i+1)).join('')}</ul></div>
     <div class="box b-peach"><h3>Normas</h3><ul class="ticks">${COMUN.normas.map((p,i)=>tickItem('n'+i,p,'')).join('')}</ul></div>
     <div class="box b-sky"><h3>Criterios de evaluación (10 puntos)</h3><table class="crit">${COMUN.criterios.map(([t,p])=>`<tr><td>${t}</td><td>${p} pt</td></tr>`).join('')}</table><p style="margin-top:8px;font-size:13px"><b>Entrega:</b> ${COMUN.entrega}</p></div>
-    <details class="box ra"><summary><h3>Resultado de aprendizaje de la unidad</h3><span class="ra-sum">${RA.codigo} · criterios ${RA.ce.filter(c=>c[2]).map(c=>c[0]).join(", ")}</span></summary><p class="ra-txt"><b>${RA.codigo}.</b> ${RA.texto}</p><ul class="ce">${RA.ce.map(([l,t,on])=>`<li class="${on?'on':''}"><span class="l">${l}</span><span class="t">${t}</span>${on?'<span class="tag">Este ejercicio</span>':''}</li>`).join('')}</ul><p class="ra-note">Este ejercicio (E1) trabaja los criterios <b>${RA.ce.filter(c=>c[2]).map(c=>c[0]).join(', ')}</b> y supone el <b>${RA.peso}</b>.</p></details>`;
+  `;
 }
 
 /* =========================================================
@@ -1853,6 +1859,11 @@ $('#draftDiscard').addEventListener('click', async ()=>{ if(!confirm('¿Seguro q
   }, true);
   if (DEMO || !/^https?:$/.test(location.protocol)) return;
   fetch('../api/estado.php?ejercicio=UT2_E1', { cache: 'no-store' }).then(r => r.json()).then(d => { if (d && d.ok){ bloq = d.bloqueados || []; pintar(); } }).catch(() => {});
+})();
+// Resultado de aprendizaje en la pantalla de inicio
+(function(){
+  const ce = RA.ce.filter(c => c[2]);
+  document.getElementById('raInicio').innerHTML = '<h3>Resultado de aprendizaje que trabaja este ejercicio</h3><p><b>' + RA.codigo + '.</b> ' + RA.texto + '</p><b>Criterios de evaluación:</b><ul>' + ce.map(c => '<li><b>' + c[0] + ')</b> ' + c[1] + '</li>').join('') + '</ul>';
 })();
 (async function init(){
   renderBrief();

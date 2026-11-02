@@ -17,7 +17,7 @@ const COMUN = {
   contexto: 'Cada vez se utilizan más sistemas ciberfísicos dentro de los dispositivos, y vamos a ver cómo se combinan.',
   objetivo: 'Crear un producto basado en tecnologías que se puedan instalar y sean útiles.',
   pasos: [
-    'Lee el resultado de aprendizaje, el contexto, el objetivo y la tabla «Cómo se califica».',
+    'Lee el contexto, el objetivo y la tabla «Cómo se califica».',
     'Escribe el nombre de tu compañero/a de grupo (si haces el trabajo individual en semipresencial, escribe «Individual») y elige el <b>dispositivo</b> que os han asignado.',
     '<b>Fase 1:</b> escribe en cada bocadillo una tecnología habilitadora del dispositivo y explica qué hace y por qué es útil; después explica cómo se combinan sus datos, propón 4 actividades con usuarios y completa las ventajas e inconvenientes.',
     '<b>Fase 2:</b> prepara tu presentación en las 6 diapositivas, con texto, imágenes y ejemplos. Cada diapositiva saldrá en el PDF en una página apaisada, lista para presentar.',

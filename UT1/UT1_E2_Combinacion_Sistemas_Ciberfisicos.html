@@ -238,6 +238,8 @@ ul.checks li.ok i{background:var(--mint3);border-color:var(--mint3)}
     <div id="listaBor"></div>
   </section>
 
+  <section class="card ra" id="raInicio" aria-label="Resultado de aprendizaje"></section>
+
   <section class="card">
     <div class="nombres">
       <div><label class="lbl" for="nombre">Nombre</label><input type="text" id="nombre" autocomplete="given-name" placeholder="Ej.: Lucía"></div>
@@ -724,7 +726,7 @@ const COMUN = {
   contexto: 'Cada vez se utilizan más sistemas ciberfísicos dentro de los dispositivos, y vamos a ver cómo se combinan.',
   objetivo: 'Crear un producto basado en tecnologías que se puedan instalar y sean útiles.',
   pasos: [
-    'Lee el resultado de aprendizaje, el contexto, el objetivo y la tabla «Cómo se califica».',
+    'Lee el contexto, el objetivo y la tabla «Cómo se califica».',
     'Escribe el nombre de tu compañero/a de grupo (si haces el trabajo individual en semipresencial, escribe «Individual») y elige el <b>dispositivo</b> que os han asignado.',
     '<b>Fase 1:</b> escribe en cada bocadillo una tecnología habilitadora del dispositivo y explica qué hace y por qué es útil; después explica cómo se combinan sus datos, propón 4 actividades con usuarios y completa las ventajas e inconvenientes.',
     '<b>Fase 2:</b> prepara tu presentación en las 6 diapositivas, con texto, imágenes y ejemplos. Cada diapositiva saldrá en el PDF en una página apaisada, lista para presentar.',
@@ -1063,7 +1065,6 @@ function construir(esp){
   if (EJEMPLO) h += `<div class="banner-ej">Ejemplo relleno: muestra cómo queda la tarea. Los textos son de muestra y aquí no se guarda nada.</div>`;
   h += `<div class="cab"><small>${esc(COMUN.asignatura)} · ${esc(COMUN.unidad)}</small><h1>${esc(COMUN.ejercicio)}</h1>
     <div class="meta"><span class="chip">CFGS ${esc(C.nombre)}</span><span class="chip">Resultado de aprendizaje: ${COMUN.ra}</span><span class="chip">Criterios de evaluación: ${COMUN.ce}</span>${COMUN.peso ? `<span class="chip">Peso: ${esc(COMUN.peso)}</span>` : ''}${COMUN.modalidad ? `<span class="chip">${esc(COMUN.modalidad)}</span>` : ''}<span class="chip">Alumno/a: ${esc(completo())}</span></div></div>
-    <section class="card ra"><h2 style="margin-top:0;font-size:1.1rem">Resultado de aprendizaje que trabaja este ejercicio</h2><p><b>${COMUN.ra}.</b> ${esc(COMUN.raTexto)}</p><p style="margin-bottom:.2rem"><b>Criterios de evaluación:</b></p><ul style="margin:0">${COMUN.ceTextos.map(c => `<li><b>${c[0]})</b> ${esc(c[1])}</li>`).join('')}</ul></section>
     <section class="card">${introHTML(C)}<h2 style="font-size:1.1rem">Cómo se califica</h2>${tablaCriterios()}</section>`;
   h += enunciadoHTML();
   h += `<div id="tarea">${construirTarea(C)}
@@ -1527,7 +1528,14 @@ $('#btnPDF').addEventListener('click', intentarPDF);
   } catch(e){}
 })();
 
+// Resultado de aprendizaje y criterios: en la pantalla de inicio, junto a los datos del alumno
+function pintarRA(){
+  const s = $('#raInicio'); if (!s) return;
+  s.innerHTML = `<h2 style="margin-top:0;font-size:1.1rem">Resultado de aprendizaje que trabaja este ejercicio</h2><p><b>${COMUN.ra}.</b> ${esc(COMUN.raTexto)}</p><p style="margin-bottom:.2rem"><b>Criterios de evaluación:</b></p><ul style="margin:0">${COMUN.ceTextos.map(c => `<li><b>${c[0]})</b> ${esc(c[1])}</li>`).join('')}</ul>`;
+}
+
 // ================= arranque =================
+pintarRA();
 pintarCiclos();
 if (EJEMPLO){
   abrirEditor('ei', 'Nombre', 'Apellido1 Apellido2', null);

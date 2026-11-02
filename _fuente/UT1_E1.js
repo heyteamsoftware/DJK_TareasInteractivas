@@ -16,7 +16,7 @@ const COMUN = {
   ],
   objetivo: 'El objetivo es comprender cómo han evolucionado las revoluciones industriales y cómo se reflejan hoy, con ejemplos de Canarias, y discutir hacia dónde apunta la siguiente. La tarea consta de tres partes y es individual.',
   pasos: [
-    'Lee el resultado de aprendizaje, el objetivo y la tabla «Cómo se califica».',
+    'Lee el objetivo y la tabla «Cómo se califica».',
     '<b>Parte 1:</b> busca un ejemplo real en Canarias para cada una de las 4 revoluciones industriales y rellena el ejemplo, la fecha, la fuente y qué cambió en la vida de la gente.',
     '<b>Parte 2:</b> mira el debate sobre la quinta revolución industrial y responde a las <b>2 preguntas</b>.',
     '<b>Parte 3:</b> responde a las 3 preguntas pensando en tu futuro trabajo en Canarias (unas 15 líneas en total).',
