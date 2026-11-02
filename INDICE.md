@@ -81,6 +81,16 @@ Todos los ejercicios muestran una tabla «Cómo se califica» con esta forma, y 
 | 10 | Todos los ejercicios llevan el sistema de checks (ver arriba): el alumno sabe lo que tiene que hacer y lo confirma. |
 | 11 | Datos iniciales unificados: Nombre, Apellidos y Ciclo a elegir entre los 5. |
 | 12 | Los ejercicios nuevos se crean en `_fuente/` (archivo de datos `UTn_Em.js`) con el motor común; no se editan los HTML a mano. |
+| 13 | Todos los ejercicios tienen versión para ordenador y para móvil/tablet, adaptada para que el alumno trabaje cómodo en cada dispositivo (ver «Versión por dispositivo»). |
+
+## Versión por dispositivo
+
+| Dispositivo | Ancho | Qué debe cumplir |
+|---|---|---|
+| Ordenador | ≥ 1024 px | Diseño completo; barra de formato con texto en los botones; atajos de teclado; arrastrar y soltar imágenes. |
+| Tablet | 600–1023 px | Botones y casillas grandes para tocar (mínimo 44 px); barra de formato compacta; todo lo que se arrastra tiene alternativa tocando. |
+| Móvil | < 600 px | Una sola columna; sin desplazamiento horizontal; barra de formato reducida a iconos; botones Guardar y PDF siempre visibles; textos y casillas legibles sin hacer zoom. |
+| Pruebas | 375 px, 768 px y escritorio | Se prueba cada ejercicio en los tres tamaños antes de publicarlo. |
 
 ## Pendiente de unificar
 
