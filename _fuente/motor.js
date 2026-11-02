@@ -124,11 +124,16 @@ function tablaCriterios(){
 }
 const TICKS = () => [...COMUN.pasos.map((_, i) => 'p' + i), ...COMUN.normas.map((_, i) => 'n' + i)];
 const todoLeido = () => TICKS().every(k => LEIDOS[k]);
+// Aviso de guardado (norma 18): se puede guardar en este navegador y el código sirve para seguir en otro dispositivo
+function avisoGuardado(){
+  return `<div class="aviso-guardado">💾 Puedes guardar tu tarea en este navegador. Si vas a continuar en otro dispositivo, copia el código que se te proporciona para poder recuperarla y no perderla.${enServidor() ? ` <span class="cod-inline">Tu código: <b>${esc(miCodigo())}</b> <button type="button" data-copiar-cod>Copiar</button></span>` : ''}</div>`;
+}
 function enunciadoHTML(){
   const item = (k, txt, num) => `<li><button type="button" class="tk" data-tick="${k}" data-num="${num}" aria-pressed="false"><i>${num}</i><span>${txt}</span></button></li>`;
   return `<section class="card enun" id="enun">
     <button type="button" class="enun-head" id="enunHead" aria-expanded="true" aria-controls="enunBody"><span class="eh"><small>Antes de empezar</small><b>Qué tienes que hacer</b></span><span class="enun-prog" id="enunProg"></span><span class="chev" aria-hidden="true">▾</span></button>
     <div id="enunBody"><p class="pista" style="color:var(--muted);margin:.6rem 0 0">Marca con un tick cada paso y cada norma cuando los hayas leído y entendido. Cuando estén todos, se desbloquea la tarea y esta sección se recoge.</p>
+      ${avisoGuardado()}
       <h3>Pasos</h3><ul class="tks">${COMUN.pasos.map((t, i) => item('p' + i, t, i + 1)).join('')}</ul>
       <h3>Normas</h3><ul class="tks">${COMUN.normas.map((t, i) => item('n' + i, t, '!')).join('')}</ul></div></section>
     <div class="lockmsg" id="lockMsg" role="status"><span aria-hidden="true">🔒</span><div><b>Primero lee qué tienes que hacer.</b> Marca todos los pasos y normas (te faltan <b id="lockN"></b>). Después se desbloquea la tarea.</div><button type="button" id="lockGo">Ir a los pasos</button></div>`;
