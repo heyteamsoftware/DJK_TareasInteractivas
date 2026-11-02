@@ -158,10 +158,15 @@ function ejerciciosConocidos(){
   return [...set].sort();
 }
 const bloqueado = (ej, c) => DATOS.bloqueos.some(b => b.ejercicio === ej && b.ciclo === c);
+// Qué ejercicios son de cada ciclo: UTn_SP solo para semipresencial; si la unidad tiene UTn_SP, sus UTn_Em solo para presencial
+const esSemi = c => /Semipresencial/i.test(c);
+const tieneSP = ej => LISTA.some(e => e.semi && e.cod === ej.split('_')[0] + '_SP');
+const aplica = (ej, c) => /_SP$/.test(ej) ? esSemi(c) : !(esSemi(c) && tieneSP(ej));
+const celdaNo = '<td class="num n0" title="Este ejercicio no es para este ciclo">—</td>';
 function pintarDisponibilidad(){
   const ejs = ejerciciosConocidos();
   $('#tDisp').innerHTML = `<thead><tr><th>Ciclo</th>${ejs.map(ej => `<th class="num" title="${esc(EJERCICIOS[ej] || ej)}">${esc(ej.replace('_', ' · '))}</th>`).join('')}</tr></thead>
-    <tbody>${DATOS.ciclos.map(c => `<tr><td>${esc(c)}</td>${ejs.map(ej => { const b = bloqueado(ej, c); return `<td class="celda"><button class="disp ${b ? 'bloq' : 'abierto'}" data-ej="${esc(ej)}" data-ciclo="${esc(c)}" aria-pressed="${b}" title="${esc((EJERCICIOS[ej] || ej) + ' · ' + c)}">${b ? '🔒 Bloqueado' : '✓ Abierto'}</button></td>`; }).join('')}</tr>`).join('')}</tbody>`;
+    <tbody>${DATOS.ciclos.map(c => `<tr><td>${esc(c)}</td>${ejs.map(ej => { if (!aplica(ej, c)) return celdaNo; const b = bloqueado(ej, c); return `<td class="celda"><button class="disp ${b ? 'bloq' : 'abierto'}" data-ej="${esc(ej)}" data-ciclo="${esc(c)}" aria-pressed="${b}" title="${esc((EJERCICIOS[ej] || ej) + ' · ' + c)}">${b ? '🔒 Bloqueado' : '✓ Abierto'}</button></td>`; }).join('')}</tr>`).join('')}</tbody>`;
 }
 $('#tDisp').addEventListener('click', async e => {
   const b = e.target.closest('button.disp'); if (!b) return;
@@ -202,11 +207,12 @@ function pintar(){
   const ejs = ejerciciosConocidos();
   const de = (c, ej) => PERSONAS.filter(p => p.ciclo === c && (!ej || p.ejercicio === ej));
   $('#tResumen').innerHTML = `<thead><tr><th>Ciclo</th>${ejs.map(ej => `<th class="num" title="${esc(EJERCICIOS[ej] || ej)}">${esc(ej.replace('_', ' · '))}</th>`).join('')}</tr></thead>
-    <tbody>${DATOS.ciclos.map(c => `<tr><td>${esc(c)}</td>${ejs.map(ej => { const l = de(c, ej), pdf = l.filter(p => p.entrega).length; return `<td class="num${l.length ? '' : ' n0'}" title="${pdf} con PDF de ${l.length} que la han empezado">${l.length ? pdf + ' / ' + l.length : '0'}</td>`; }).join('')}</tr>`).join('')}</tbody>`;
+    <tbody>${DATOS.ciclos.map(c => `<tr><td>${esc(c)}</td>${ejs.map(ej => { const l = de(c, ej), pdf = l.filter(p => p.entrega).length; if (!aplica(ej, c) && !l.length) return celdaNo; return `<td class="num${l.length ? '' : ' n0'}" title="${pdf} con PDF de ${l.length} que la han empezado">${l.length ? pdf + ' / ' + l.length : '0'}</td>`; }).join('')}</tr>`).join('')}</tbody>`;
   $('#chipsCiclo').innerHTML = DATOS.ciclos.map(c => `<button class="chip${c === CICLO ? ' on' : ''}" role="tab" aria-selected="${c === CICLO}" data-ciclo="${esc(c)}">${esc(c)}<small>${de(c).length}</small></button>`).join('');
   const q = $('#buscar').value.trim().toLowerCase();
   let h = '';
   for (const ej of ejs){
+    if (!aplica(ej, CICLO) && !de(CICLO, ej).length) continue;   // ejercicio que no es de este ciclo y sin nadie
     const filas = de(CICLO, ej).filter(p => !q || (p.nombre + ' ' + p.apellidos + ' ' + p.codigos.join(' ')).toLowerCase().includes(q));
     const pdf = filas.filter(p => p.entrega).length;
     h += `<h3 class="ej">${esc(EJERCICIOS[ej] || ej)} · ${filas.length} ${filas.length === 1 ? 'persona' : 'personas'} · ${pdf} con PDF</h3>`;
