@@ -103,7 +103,11 @@ ul.puntos{margin:.4rem 0;padding-left:1.2rem}
 table.siglas{width:100%;border-collapse:collapse;font-size:.92rem}
 table.siglas th,table.siglas td{border-bottom:1px solid var(--line);padding:.4rem .5rem;text-align:left;vertical-align:top}
 table.siglas th{background:var(--lav)}
-table.siglas td:first-child{font-weight:700;white-space:nowrap}
+table.siglas td:first-child{font-weight:700}
+table.siglas.sg td:first-child{white-space:nowrap}
+table.siglas td.pts,table.siglas th.pts{text-align:center;white-space:nowrap;font-weight:700}
+table.siglas tfoot td{font-weight:700;background:var(--mint)}
+.banner-ej{background:var(--peach);border:1px solid var(--peach2);color:#7a3b1b;border-radius:12px;padding:.6rem .9rem;margin:1rem 0 0;font-weight:600}
 .pie-acc{display:flex;flex-wrap:wrap;gap:.6rem;justify-content:center;margin:2rem 0 3rem}
 
 /* herramientas de imagen */
@@ -636,8 +640,16 @@ const COMUN = {
     ['Quién lo hace y cuándo', 'el profesional responsable y el momento (primera cita, primera sesión, revisión periódica).'],
     ['Cómo se comprueba', 'que el paciente o usuario (o su tutor) lo ha entendido, que da su consentimiento y que puede decir que no.']
   ],
-  fuentes: 'Cita todas las fuentes consultadas (webs de los productos, normativa, artículos…) y declara si has usado herramientas de IA: cuál, para qué y cómo has verificado su contenido.'
+  fuentes: 'Cita todas las fuentes consultadas (webs de los productos, normativa, artículos…) y declara si has usado herramientas de IA: cuál, para qué y cómo has verificado su contenido.',
+  // Criterios unificados: puntos por parte, total 10
+  criterios: [
+    ['Fase 1 · Productos reales', 'Un producto real para cada tipo de sistema, con nombre y marca, enlace o captura, justificación y aplicación en el día a día del centro (0,8 puntos por producto).', 4],
+    ['Fase 2 · Preguntas frecuentes (FAQ)', 'Respuestas claras, correctas y adaptadas a las familias o usuarios, sin tecnicismos innecesarios (los 3 puntos se reparten por igual entre las preguntas).', 3],
+    ['Fase 3 · Protocolos de presentación', 'Un protocolo por tecnología con los tres puntos: qué se hace, quién lo hace y cuándo, y cómo se comprueba (1 punto por protocolo).', 3]
+  ]
 };
+// Modo ejemplo: muestra la tarea rellena con texto de muestra y no guarda nada
+const EJEMPLO = /[?&]ejemplo\b/.test(location.search) || window.EJEMPLO_FORZADO === true;
 
 const CICLOS = {
   af: {
@@ -990,13 +1002,17 @@ function caja(id, num, etiqueta, extra = ''){
   CAJAS.push(id);
   return `<div class="caja"><div class="et"><span class="n">${num}</span>${etiqueta}</div>${extra}<div class="ed" contenteditable="true" spellcheck="true" data-id="${id}" data-ph="Escribe aquí tu respuesta. Puedes pegar o arrastrar imágenes." role="textbox" aria-multiline="true" aria-label="${esc(num)}"></div></div>`;
 }
+function tablaCriterios(){
+  const tot = COMUN.criterios.reduce((s, c) => s + c[2], 0);
+  return `<table class="siglas"><thead><tr><th>Parte</th><th>Qué se valora</th><th class="pts">Puntos</th></tr></thead><tbody>${COMUN.criterios.map(c => `<tr><td>${esc(c[0])}</td><td>${esc(c[1])}</td><td class="pts">${c[2]}</td></tr>`).join('')}</tbody><tfoot><tr><td colspan="2">Total</td><td class="pts">${tot}</td></tr></tfoot></table>`;
+}
 function construir(esp){
   const C = CICLOS[esp]; CAJAS = [];
   const puntos = C.f3.puntos || COMUN.puntosProtocolo;
-  let h = `<div class="cab"><small>${esc(COMUN.asignatura)} · ${esc(COMUN.unidad)}</small><h1>${esc(COMUN.ejercicio)}</h1>
+  let h = (EJEMPLO ? `<div class="banner-ej">Ejemplo relleno: muestra cómo queda la tarea. Los textos son de muestra y aquí no se guarda nada.</div>` : '') + `<div class="cab"><small>${esc(COMUN.asignatura)} · ${esc(COMUN.unidad)}</small><h1>${esc(COMUN.ejercicio)}</h1>
     <div class="meta"><span class="chip">CFGS ${esc(C.nombre)}</span><span class="chip">Resultado de aprendizaje: ${COMUN.ra}</span><span class="chip">Criterios de evaluación: ${COMUN.ce}</span><span class="chip">Alumno/a: ${esc(NOMBRE)}</span></div></div>
     <section class="card ra"><h2 style="margin-top:0;font-size:1.1rem">Resultado de aprendizaje que trabaja este ejercicio</h2><p><b>${COMUN.ra}.</b> ${esc(COMUN.raTexto)}</p><p style="margin-bottom:.2rem"><b>Criterios de evaluación:</b></p><ul style="margin:0">${COMUN.ceTextos.map(c => `<li><b>${c[0]})</b> ${esc(c[1])}</li>`).join('')}</ul></section>
-    <section class="card"><h2 style="margin-top:0;font-size:1.1rem">Contexto</h2><p>${esc(C.contexto)}</p><h2 style="font-size:1.1rem">Objetivo principal</h2><p style="margin-bottom:0">${esc(C.objetivo)}</p></section>`;
+    <section class="card"><h2 style="margin-top:0;font-size:1.1rem">Contexto</h2><p>${esc(C.contexto)}</p><h2 style="font-size:1.1rem">Objetivo principal</h2><p>${esc(C.objetivo)}</p><h2 style="font-size:1.1rem">Cómo se califica</h2>${tablaCriterios()}</section>`;
   // Fase 1
   h += `<section class="fase f1"><header><h2>Fase 1 · Productos reales</h2></header><div class="cuerpo"><p><b>${esc(C.f1.intro)}</b></p><div class="instr"><b>Instrucciones:</b> ${esc(C.f1.instr)}</div>`;
   C.f1.items.forEach((t, i) => { h += caja(`f1_${i}`, `1.${i+1}`, esc(t), `<div class="pista">Producto (nombre y marca), enlace o captura, justificación y aplicación en el día a día.</div>`); });
@@ -1020,7 +1036,7 @@ function construir(esp){
   h += `</div></section>`;
   // Entrega y siglas
   h += `<section class="card"><h2 style="margin-top:0;font-size:1.1rem">Entrega y criterios generales</h2><ul>${COMUN.entrega.map(e => `<li>${esc(e)}</li>`).join('')}</ul>
-    <h2 style="font-size:1.1rem">Abreviaturas y siglas empleadas en esta unidad</h2><table class="siglas"><thead><tr><th>Sigla</th><th>Significado</th></tr></thead><tbody>${C.siglas.map(s => `<tr><td>${esc(s[0])}</td><td>${esc(s[1])}</td></tr>`).join('')}</tbody></table></section>
+    <h2 style="font-size:1.1rem">Abreviaturas y siglas empleadas en esta unidad</h2><table class="siglas sg"><thead><tr><th>Sigla</th><th>Significado</th></tr></thead><tbody>${C.siglas.map(s => `<tr><td>${esc(s[0])}</td><td>${esc(s[1])}</td></tr>`).join('')}</tbody></table></section>
     <div class="pie-acc"><button class="btn-mint" onclick="guardar(true)">💾 Guardar</button><button class="btn-peach" onclick="descargarPDF()">⬇ Descargar PDF</button></div>`;
   $('#contenido').innerHTML = h;
 }
@@ -1030,12 +1046,12 @@ function abrirEditor(esp, nombre, reg){
   if (reg && reg.cajas) document.querySelectorAll('.ed').forEach(ed => { if (reg.cajas[ed.dataset.id] != null) ed.innerHTML = reg.cajas[ed.dataset.id]; });
   $('#tTitulo').textContent = 'UT1 · E3 · ' + CICLOS[esp].nombre;
   $('#tSub').textContent = NOMBRE;
-  $('#estado').textContent = reg ? 'Borrador cargado (' + fechaTxt(reg.fecha) + ')' : 'Sin guardar todavía';
+  $('#estado').textContent = EJEMPLO ? 'Ejemplo: no se guarda' : (reg ? 'Borrador cargado (' + fechaTxt(reg.fecha) + ')' : 'Sin guardar todavía');
   $('#inicio').classList.add('hidden'); $('#editor').classList.remove('hidden');
   window.scrollTo(0, 0); ultimoEd = null; ultimoRango = null; actualizarProgreso();
-  if (reg) aviso('Borrador cargado');
+  if (reg && !EJEMPLO) aviso('Borrador cargado');
 }
-$('#btnInicio').addEventListener('click', async () => { await guardar(false); deselImg(); $('#editor').classList.add('hidden'); $('#inicio').classList.remove('hidden'); $('#nombre').value = NOMBRE; pintarBorradores(); window.scrollTo(0,0); });
+$('#btnInicio').addEventListener('click', async () => { if (EJEMPLO) return aviso('Esto es un ejemplo. Abre la tarea normal para empezar la tuya.'); await guardar(false); deselImg(); $('#editor').classList.add('hidden'); $('#inicio').classList.remove('hidden'); $('#nombre').value = NOMBRE; pintarBorradores(); window.scrollTo(0,0); });
 
 function tieneContenido(ed){ return ed.textContent.trim().length > 0 || !!ed.querySelector('img'); }
 function actualizarProgreso(){
@@ -1050,6 +1066,7 @@ let tGuardar = null;
 async function guardar(manual){
   if (!ESP) return;
   clearTimeout(tGuardar);
+  if (EJEMPLO){ if (manual) aviso('Esto es un ejemplo: no se guarda nada.'); return true; }
   const cajas = {}; document.querySelectorAll('.ed').forEach(ed => { cajas[ed.dataset.id] = tieneContenido(ed) ? ed.innerHTML : ''; });
   const reg = { clave: PREF + ESP, esp: ESP, nombre: NOMBRE, fecha: Date.now(), cajas };
   const ok = await guardarReg(reg);
@@ -1057,7 +1074,7 @@ async function guardar(manual){
   if (manual) aviso(ok ? 'Guardado en este navegador ✔' : 'No se ha podido guardar. Descarga el PDF para no perder tu trabajo.');
   return ok;
 }
-function programarGuardado(){ clearTimeout(tGuardar); $('#estado').textContent = 'Cambios sin guardar…'; tGuardar = setTimeout(() => guardar(false), 1500); actualizarProgreso(); }
+function programarGuardado(){ clearTimeout(tGuardar); if (!EJEMPLO) $('#estado').textContent = 'Cambios sin guardar…'; tGuardar = setTimeout(() => guardar(false), 1500); actualizarProgreso(); }
 $('#btnGuardar').addEventListener('click', () => guardar(true));
 setInterval(() => { if (ESP && !$('#editor').classList.contains('hidden') && $('#estado').textContent.startsWith('Cambios')) guardar(false); }, 30000);
 window.addEventListener('beforeunload', () => { if (ESP && $('#estado').textContent.startsWith('Cambios')) guardar(false); });
@@ -1350,13 +1367,29 @@ async function descargarPDF(){
     doc.text(`Página ${p} de ${tot}`, W - M, H - M + 5, { baseline: 'top', align: 'right' });
   }
   const limpio = s => s.normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^A-Za-z0-9]+/g, '_').replace(/^_|_$/g, '');
-  doc.save(`UT1_E3_${limpio(C.nombre)}_${limpio(NOMBRE) || 'alumno'}.pdf`);
+  const nombreArchivo = `UT1_E3_${limpio(C.nombre)}_${limpio(NOMBRE) || 'alumno'}.pdf`;
+  if (window.__PDF_PRUEBA) { window.__PDF_PRUEBA(doc, nombreArchivo); return; }
+  doc.save(nombreArchivo);
   aviso('PDF generado. Revisa tu carpeta de descargas.');
 }
 $('#btnPDF').addEventListener('click', descargarPDF);
 
+// ================= ejemplo relleno =================
+function rellenarEjemplo(){
+  const muestra = {
+    f1: '<p><b>[Nombre del producto · Marca]</b></p><p>[Enlace a la web del producto o captura]</p><p>[Texto de muestra] Por qué lo elegirías para el centro y cómo se usaría en el día a día.</p>',
+    f2: '<p>[Texto de muestra] Respuesta clara y tranquilizadora para la familia o el usuario, sin tecnicismos.</p>',
+    f3: '<ol><li><b>Qué se hace:</b> [texto de muestra]</li><li><b>Quién lo hace y cuándo:</b> [texto de muestra]</li><li><b>Cómo se comprueba:</b> [texto de muestra]</li></ol>',
+    fuentes: '<ul><li>[Fuente 1: título · web o institución · fecha · enlace]</li><li>[Fuente 2: título · web o institución · fecha · enlace]</li></ul><p>Uso de IA: [herramienta, para qué la usaste y cómo comprobaste su contenido] o «No he usado IA».</p>'
+  };
+  document.querySelectorAll('.ed').forEach(ed => { const k = ed.dataset.id.split('_')[0]; if (muestra[k]) ed.innerHTML = muestra[k]; });
+  actualizarProgreso();
+}
+
 // ================= arranque =================
-pintarCiclos(); pintarBorradores();
+pintarCiclos();
+if (EJEMPLO){ abrirEditor('ei', 'Nombre Apellido1 Apellido2', null); rellenarEjemplo(); }
+else pintarBorradores();
 </script>
 </body>
 </html>

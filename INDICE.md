@@ -16,7 +16,7 @@
 |---|---|---|---|---|---|---|---|---|---|
 | UT1_E1 | Revoluciones industriales canarias y quinta revolución industrial | RA1 | a, b | AF, AS, EI, HB, IS | A | [UT1_E1](UT1/UT1_E1_Revoluciones_Industriales_Canarias.html) | [Ejemplo](UT1/UT1_E1_EJEMPLO_relleno.html) | Sí | Hecho |
 | UT1_E2 | — | | | | | | | | Pendiente |
-| UT1_E3 | Sistemas ciberfísicos y digitalización del sector | RA1 | c, d, e, f | AF, AS, EI, HB, IS | A | [UT1_E3](UT1/UT1_E3_Digitalizacion_Sistemas_CiberFisicos.html) | — | No | Hecho |
+| UT1_E3 | Sistemas ciberfísicos y digitalización del sector | RA1 | c, d, e, f | AF, AS, EI, HB, IS | A | [UT1_E3](UT1/UT1_E3_Digitalizacion_Sistemas_CiberFisicos.html) | [Ejemplo](UT1/UT1_E3_EJEMPLO_relleno.html) | Sí | Hecho |
 | UT2_E1 | Tecnologías habilitadoras | RA2 | a, c, d, e | Común (el alumno escribe su ciclo) | B | [UT2_E1](UT2/UT2_E1_Tecnologias_Habilitadoras.html) | `?ejemplo` | Sí (otro reparto) | Hecho |
 
 ## Ciclos
@@ -50,7 +50,10 @@ Todos los ejercicios muestran una tabla «Cómo se califica» con esta forma, y 
 | Una fila por parte del ejercicio | Qué tiene que hacer bien el alumno y cómo se reparten los puntos dentro de la parte | n |
 | **Total** | | **10** |
 
-Reparto en UT1_E1: Parte 1 → 4 (1 por revolución) · Parte 2 → 3 (0,5 por pregunta) · Parte 3 → 3 (1 por pregunta).
+| Ejercicio | Reparto |
+|---|---|
+| UT1_E1 | Parte 1 → 4 (1 por revolución) · Parte 2 → 3 (0,5 por pregunta) · Parte 3 → 3 (1 por pregunta) |
+| UT1_E3 | Fase 1 → 4 (0,8 por producto) · Fase 2 → 3 (repartidos por igual; son 8–10 preguntas según el ciclo) · Fase 3 → 3 (1 por protocolo) |
 
 ## Normas acordadas
 
@@ -70,6 +73,5 @@ Reparto en UT1_E1: Parte 1 → 4 (1 por revolución) · Parte 2 → 3 (0,5 por p
 
 | Ejercicio | Qué falta |
 |---|---|
-| UT1_E3 | Añadir la tabla de criterios unificados y su ejemplo relleno |
 | UT2_E1 | Decidir si pasa a jsPDF embebido (ahora necesita conexión para el PDF) |
 | Web | Pendiente de decidir: analítica y contador de visitas (lista `rematadorweb`) |
