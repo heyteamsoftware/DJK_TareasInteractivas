@@ -693,6 +693,7 @@ body:not(.editando) .toolbar{visibility:hidden;pointer-events:none}
 .aviso-guardado{background:var(--sky);border-radius:12px;padding:10px 14px;margin:0 0 14px;font-size:14px}
 .aviso-guardado .cod-inline{display:inline-flex;flex-wrap:wrap;gap:8px;align-items:center;margin-left:6px}
 .aviso-guardado b{font-family:ui-monospace,Consolas,monospace;letter-spacing:.06em}
+.nota-cod{margin:10px 0 0;font-size:13px;color:var(--muted)}
 /* Color de la unidad UT2 (menta) */
 .top{border-bottom:3px solid var(--mint-ink)}
 .kicker{color:var(--mint-ink)}
@@ -735,7 +736,7 @@ body:not(.editando) .toolbar{visibility:hidden;pointer-events:none}
       <div class="ra-inicio" id="raInicio"></div>
       <div class="rec" id="recuperar" hidden>
         <label for="codRec">¿Empezaste en otro ordenador o móvil?</label>
-        <p>Escribe tu código de recuperación (lo ves arriba del ejercicio, por ejemplo K7QF-M2XR-9P).</p>
+        <p>Escribe tu código de recuperación (lo ves arriba del ejercicio, por ejemplo K7QF-M2XR-9P). Si lo has perdido, pídeselo a tu profesor.</p>
         <div class="rec-fila"><input id="codRec" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="XXXX-XXXX-XX" maxlength="14"><button class="btn primary" type="button" id="btnRecuperar">Recuperar mi trabajo</button></div>
       </div>
       <form id="startForm" autocomplete="off">
@@ -821,6 +822,7 @@ body:not(.editando) .toolbar{visibility:hidden;pointer-events:none}
         </div>
         <div class="legend" id="legend"></div>
         <ul class="checks" id="checks"></ul>
+        <p class="nota-cod" id="notaCod" hidden>🔑 ¿Has perdido tu código? Pídeselo a tu profesor.</p>
       </div>
     </div>
   </section>
@@ -1930,6 +1932,8 @@ window.addEventListener('pagehide', subirAlCerrar);
 const _montar = mountApp;
 mountApp = function(){
   _montar();
+  // El profesor ve en la administración quién ha empezado la tarea (con su código)
+  if (enServidor()){ const nc = document.getElementById('notaCod'); if (nc) nc.hidden = false; nubeSucia = true; setTimeout(subirCopia, 1200); }
   let k = document.getElementById('codigoCard');
   if(!enServidor()){ if(k) k.remove(); return; }
   if(!k){ k = document.createElement('div'); k.id='codigoCard'; k.className='codigo-card'; const hero=document.querySelector('#app .hero'); hero.parentNode.insertBefore(k, hero.nextSibling); }

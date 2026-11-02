@@ -31,6 +31,28 @@ function bd(): PDO
     return $db;
 }
 
+// Los ejercicios del motor común mandan la clave del ciclo (hb, is_sp…); UT2_E1 manda el nombre. Se guarda siempre el nombre.
+const CLAVES_CICLO = ['af' => 'Acondicionamiento Físico', 'as' => 'Animación Sociodeportiva', 'ei' => 'Educación Infantil',
+    'hb' => 'Higiene Bucodental', 'is' => 'Integración Social', 'ei_sp' => 'Educación Infantil Semipresencial',
+    'is_sp' => 'Integración Social Semipresencial', 'mc_sp' => 'Mediación Comunicativa Semipresencial'];
+function nombreCiclo(string $c): string { return CLAVES_CICLO[$c] ?? $c; }
+
+// Base de datos de las copias de los borradores (quién ha empezado cada tarea, su código y su trabajo)
+function bdb(): PDO
+{
+    $db = new PDO('sqlite:' . DIR_DATOS . '/borradores.db');
+    $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    $db->exec('PRAGMA busy_timeout = 5000');
+    $db->exec('PRAGMA journal_mode = WAL');
+    $db->exec('CREATE TABLE IF NOT EXISTS borradores (
+        codigo TEXT NOT NULL, ejercicio TEXT NOT NULL, ciclo TEXT NOT NULL, nombre TEXT NOT NULL, apellidos TEXT NOT NULL,
+        datos TEXT NOT NULL, actualizado INTEGER NOT NULL, creado INTEGER NOT NULL DEFAULT 0, PRIMARY KEY (codigo, ejercicio))');
+    // Bases creadas antes de existir la columna «creado»
+    $cols = array_column($db->query('PRAGMA table_info(borradores)')->fetchAll(PDO::FETCH_ASSOC), 'name');
+    if (!in_array('creado', $cols, true)) $db->exec('ALTER TABLE borradores ADD COLUMN creado INTEGER NOT NULL DEFAULT 0');
+    return $db;
+}
+
 // Cuenta un intento de este tipo para esta IP; devuelve false si se ha pasado del tope en la ventana de tiempo.
 function limite(PDO $db, string $tipo, int $tope, int $ventana): bool
 {

@@ -103,6 +103,7 @@ Todos los ejercicios muestran una tabla «Cómo se califica» con esta forma, de
 | 16 | Ciclos semipresenciales: EI SP e IS SP reutilizan el contenido presencial; MC SP lleva contenido adaptado propio. En semipresencial el trabajo es individual (sin compañero/a). |
 | 17 | En «Cómo se califica» se indica siempre, debajo de la tabla, que **todas las partes son obligatorias** (aviso destacado). |
 | 18 | En «Antes de empezar» (Qué tienes que hacer) se indica siempre: «Puedes guardar tu tarea en este navegador. Si vas a continuar en otro dispositivo, copia el código que se te proporciona para poder recuperarla y no perderla.», junto al código del alumno y un botón «Copiar». |
+| 19 | En «Antes de entregar, comprueba» (y en la casilla de recuperar de la pantalla de inicio) se indica siempre: «¿Has perdido tu código? Pídeselo a tu profesor». El profesor lo ve en el Detalle de la administración. |
 | 12 | Los ejercicios nuevos se crean en `_fuente/` (archivo de datos `UTn_Em.js`) con el motor común; no se editan los HTML a mano. |
 | 13 | Todos los ejercicios tienen versión para ordenador y para móvil/tablet, adaptada para que el alumno trabaje cómodo en cada dispositivo (ver «Versión por dispositivo»). |
 | 14 | El resultado de aprendizaje y sus criterios se muestran en la pantalla de inicio (junto al nombre, apellidos y ciclo), no dentro del ejercicio. En el PDF se mantienen. |
@@ -145,10 +146,11 @@ Todos los ejercicios muestran una tabla «Cómo se califica» con esta forma, de
 | Acceso | La dirección principal pide la contraseña. Máximo 10 intentos cada 15 minutos por IP. La sesión dura hasta cerrar el navegador o pulsar «Salir». |
 | Disponibilidad | Tabla ciclo × ejercicio con interruptores «✓ Abierto / 🔒 Bloqueado». Un ejercicio bloqueado no se puede empezar ni cargar desde un borrador en ese ciclo (aparece con candado en la pantalla de inicio). |
 | Entregas | Se registra cuando el alumno descarga el PDF: nombre, apellidos, ciclo, ejercicio, primera y última descarga y nº de veces. |
-| Resumen | Tabla ciclo × ejercicio con el número de personas que han descargado el PDF. |
-| Detalle | Por ciclo (pestañas) y ejercicio: quién lo ha descargado y cuándo; buscador por nombre; botón 🗑 para borrar la descarga de un alumno concreto (pide confirmación). |
+| Resumen | Tabla ciclo × ejercicio: «personas con PDF / personas que han empezado la tarea». |
+| Detalle | Por ciclo (pestañas) y ejercicio, **todas las personas que han empezado la tarea**: apellidos, nombre, **código de recuperación**, cuándo empezó, última actividad y si ha descargado el PDF (fecha y nº de veces). Buscador por nombre, apellidos o código. Botón 🗑 para borrar el registro de un alumno (su descarga y la copia en el servidor; pide confirmación). |
 | Archivos | `index.html` (raíz), `api/admin.php`, `api/entregas.php`, `api/estado.php`, `api/comun.php` (no accesible desde la web) · datos en `/var/www/djk_datos/entregas.db` |
 | Sin conexión | Si el ejercicio se abre sin internet no puede consultar los bloqueos ni registrar la entrega: se puede hacer igualmente. |
+| Inicio de tarea | En cuanto el alumno entra en una tarea (sin esperar a que escriba) se manda una copia al servidor: así aparece en el Detalle con su código. |
 | Ejercicios nuevos | Añadir su código y nombre en `EJERCICIOS` de `index.html` (raíz) para que salga en las tablas aunque nadie lo haya descargado aún. |
 
 ## Analítica y contador de visitas

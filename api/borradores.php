@@ -9,17 +9,6 @@ require __DIR__ . '/comun.php';
 
 const MAX_BYTES = 6 * 1024 * 1024;   // el servidor acepta 8 MB por envío
 
-function bdb(): PDO
-{
-    $db = new PDO('sqlite:' . DIR_DATOS . '/borradores.db');
-    $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    $db->exec('PRAGMA busy_timeout = 5000');
-    $db->exec('PRAGMA journal_mode = WAL');
-    $db->exec('CREATE TABLE IF NOT EXISTS borradores (
-        codigo TEXT NOT NULL, ejercicio TEXT NOT NULL, ciclo TEXT NOT NULL, nombre TEXT NOT NULL, apellidos TEXT NOT NULL,
-        datos TEXT NOT NULL, actualizado INTEGER NOT NULL, PRIMARY KEY (codigo, ejercicio))');
-    return $db;
-}
 $codigoValido = fn(string $c): bool => (bool) preg_match('/^[A-HJ-NP-Z2-9]{4}-[A-HJ-NP-Z2-9]{4}-[A-HJ-NP-Z2-9]{2}$/', $c);
 $ejercicioValido = fn(string $e): bool => (bool) preg_match('/^UT\d{1,2}_E\d{1,2}$/', $e);
 
@@ -43,7 +32,7 @@ try {
     if (!is_array($in)) salir(400, ['ok' => false]);
     $codigo = (string) ($in['codigo'] ?? '');
     $ejercicio = (string) ($in['ejercicio'] ?? '');
-    $ciclo = mb_substr(trim((string) ($in['ciclo'] ?? '')), 0, 60);
+    $ciclo = nombreCiclo(mb_substr(trim((string) ($in['ciclo'] ?? '')), 0, 60));
     $nombre = mb_substr(trim((string) ($in['nombre'] ?? '')), 0, 60);
     $apellidos = mb_substr(trim((string) ($in['apellidos'] ?? '')), 0, 80);
     $datos = (string) ($in['datos'] ?? '');
@@ -52,10 +41,10 @@ try {
     // El centro comparte IP: tope holgado (una clase entera guardando cada minuto)
     if (!limite(bd(), 'copia', 5000, 3600)) salir(429, ['ok' => false]);
     $db = bdb();
-    $db->prepare('INSERT INTO borradores (codigo, ejercicio, ciclo, nombre, apellidos, datos, actualizado) VALUES (?, ?, ?, ?, ?, ?, ?)
+    $db->prepare('INSERT INTO borradores (codigo, ejercicio, ciclo, nombre, apellidos, datos, actualizado, creado) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
         ON CONFLICT(codigo, ejercicio) DO UPDATE SET ciclo = excluded.ciclo, nombre = excluded.nombre, apellidos = excluded.apellidos,
         datos = excluded.datos, actualizado = excluded.actualizado')
-       ->execute([$codigo, $ejercicio, $ciclo, $nombre, $apellidos, $datos, time()]);
+       ->execute([$codigo, $ejercicio, $ciclo, $nombre, $apellidos, $datos, time(), time()]);
     if (random_int(1, 200) === 1) $db->prepare('DELETE FROM borradores WHERE actualizado < ?')->execute([time() - 365 * 86400]);
     salir(200, ['ok' => true]);
 } catch (Throwable $e) {

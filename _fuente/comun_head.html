@@ -89,6 +89,7 @@ input[type=text]{width:100%;font:inherit;padding:.65rem .8rem;border:1px solid v
 .aviso-guardado .cod-inline{display:inline-flex;flex-wrap:wrap;gap:.4rem;align-items:center;margin-top:.3rem}
 .aviso-guardado b{font-family:ui-monospace,Consolas,monospace;letter-spacing:.06em}
 .aviso-guardado button{padding:.25rem .7rem}
+.nota-cod{margin:.8rem 0 0;font-size:.92rem;color:var(--muted)}
 .banner-ej{background:var(--peach);border:1px solid var(--peach2);color:#7a3b1b;border-radius:12px;padding:.6rem .9rem;margin:1rem 0 0;font-weight:600}
 
 .cab{background:linear-gradient(135deg,var(--lav),var(--sky));border-radius:var(--r);padding:1.2rem;margin:1rem 0}
@@ -250,7 +251,7 @@ body:not(.editando) #herr{display:none}
 
   <section class="card hidden" id="recuperar" style="background:var(--sky);border-color:var(--sky2)">
     <label class="lbl" for="codRec">¿Empezaste en otro ordenador o móvil?</label>
-    <p style="margin:0 0 .5rem;font-size:.92rem;color:var(--muted)">Escribe tu código de recuperación (lo ves arriba del ejercicio, por ejemplo K7QF-M2XR-9P) y seguirás donde lo dejaste.</p>
+    <p style="margin:0 0 .5rem;font-size:.92rem;color:var(--muted)">Escribe tu código de recuperación (lo ves arriba del ejercicio, por ejemplo K7QF-M2XR-9P) y seguirás donde lo dejaste. Si lo has perdido, pídeselo a tu profesor.</p>
     <div class="rec-fila"><input type="text" id="codRec" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="XXXX-XXXX-XX" maxlength="14"><button class="btn-main" id="btnRecuperar" type="button">Recuperar mi trabajo</button></div>
     <p class="err" id="errRec"></p>
   </section>

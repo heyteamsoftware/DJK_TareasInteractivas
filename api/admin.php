@@ -37,13 +37,20 @@ try {
     if ($accion === 'datos') {
         $filas = $db->query('SELECT id, ejercicio, ciclo, nombre, apellidos, primera, ultima, veces FROM entregas ORDER BY ciclo, ejercicio, apellidos, nombre')->fetchAll(PDO::FETCH_ASSOC);
         $bloqueos = $db->query('SELECT ejercicio, ciclo FROM bloqueos')->fetchAll(PDO::FETCH_ASSOC);
-        salir(200, ['ok' => true, 'ciclos' => CICLOS, 'entregas' => $filas, 'bloqueos' => $bloqueos]);
+        // Quién ha empezado cada tarea (sin sus respuestas): código, inicio y última actividad
+        $iniciados = bdb()->query('SELECT codigo, ejercicio, ciclo, nombre, apellidos, creado, actualizado FROM borradores ORDER BY ciclo, ejercicio, apellidos, nombre')->fetchAll(PDO::FETCH_ASSOC);
+        salir(200, ['ok' => true, 'ciclos' => CICLOS, 'entregas' => $filas, 'iniciados' => $iniciados, 'bloqueos' => $bloqueos]);
     }
-    // POST {"accion":"borrar","id":123} → borra el registro de descarga de un alumno
+    // POST {"accion":"borrar","id":123,"codigo":"…","ejercicio":"UT1_E1"}
+    // Borra el registro de un alumno en una tarea: su descarga (id) y/o su copia en el servidor (código + ejercicio)
     if ($accion === 'borrar' && $metodo === 'POST') {
         $id = (int) ($in['id'] ?? 0);
-        if ($id <= 0) salir(400, ['ok' => false]);
-        $db->prepare('DELETE FROM entregas WHERE id = ?')->execute([$id]);
+        $codigo = (string) ($in['codigo'] ?? '');
+        $ejercicio = (string) ($in['ejercicio'] ?? '');
+        $hayCopia = preg_match('/^[A-HJ-NP-Z2-9]{4}-[A-HJ-NP-Z2-9]{4}-[A-HJ-NP-Z2-9]{2}$/', $codigo) && preg_match('/^UT\d{1,2}_E\d{1,2}$/', $ejercicio);
+        if ($id <= 0 && !$hayCopia) salir(400, ['ok' => false]);
+        if ($id > 0) $db->prepare('DELETE FROM entregas WHERE id = ?')->execute([$id]);
+        if ($hayCopia) bdb()->prepare('DELETE FROM borradores WHERE codigo = ? AND ejercicio = ?')->execute([$codigo, $ejercicio]);
         salir(200, ['ok' => true]);
     }
     // POST {"accion":"bloqueo","ejercicio":"UT1_E1","ciclo":"…","bloqueado":true|false}

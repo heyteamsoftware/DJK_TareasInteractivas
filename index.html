@@ -44,6 +44,7 @@ td.n0{color:#b0abb9}
 .disp.bloq{background:var(--peach);border-color:#f6bf9e;color:#7a3b1b}
 .disp:disabled{opacity:.5;cursor:wait}
 td.celda{text-align:center}
+td.cod{font-family:ui-monospace,Consolas,monospace;letter-spacing:.04em;white-space:nowrap}
 button.borrar{min-height:36px;min-width:40px;padding:.3rem .5rem;color:var(--rose3);background:#fff}
 button.borrar:hover{background:#fde4ea}
 @media (pointer:coarse){button.borrar{min-height:44px;min-width:44px}}
@@ -93,12 +94,12 @@ a.enlace:hover{background:var(--lav)}
       <div class="tabla"><table id="tDisp"></table></div></section>
 
     <section class="card"><h2>Resumen</h2><div class="tabla"><table id="tResumen"></table></div>
-      <p class="nota">Número de personas distintas que han descargado el PDF de cada ejercicio.</p></section>
+      <p class="nota">En cada casilla: personas que han descargado el PDF / personas que han empezado la tarea.</p></section>
 
     <section class="card">
       <h2>Detalle</h2>
       <div class="chips" id="chipsCiclo" role="tablist" aria-label="Ciclo"></div>
-      <input type="search" id="buscar" placeholder="Buscar por nombre o apellidos…" aria-label="Buscar alumno">
+      <input type="search" id="buscar" placeholder="Buscar por nombre, apellidos o código…" aria-label="Buscar alumno">
       <div id="detalle"></div>
     </section>
   </div>
@@ -167,36 +168,63 @@ $('#tDisp').addEventListener('click', async e => {
     pintarDisponibilidad();
   } catch(_){ alert('No se ha podido guardar el cambio.'); b.disabled = false; }
 });
+// Une en una sola lista a quien ha empezado la tarea (copia en el servidor, con su código) y a quien ha descargado el PDF
+const claveAl = (ej, c, n, a) => ej + '|' + c + '|' + (n + '|' + a).toLowerCase().replace(/\s+/g, ' ').trim();
+let PERSONAS = [];
+function unirPersonas(){
+  const m = new Map();
+  const nueva = x => ({ ejercicio: x.ejercicio, ciclo: x.ciclo, nombre: x.nombre, apellidos: x.apellidos, codigos: [], creado: 0, actualizado: 0, entrega: null });
+  for (const i of (DATOS.iniciados || [])){
+    const k = claveAl(i.ejercicio, i.ciclo, i.nombre, i.apellidos), p = m.get(k) || nueva(i);
+    p.codigos.push(i.codigo);
+    const ini = +i.creado || +i.actualizado; p.creado = p.creado ? Math.min(p.creado, ini) : ini;
+    p.actualizado = Math.max(p.actualizado, +i.actualizado); m.set(k, p);
+  }
+  for (const e of DATOS.entregas){
+    const k = claveAl(e.ejercicio, e.ciclo, e.nombre, e.apellidos), p = m.get(k) || nueva(e);
+    p.entrega = e; p.nombre = e.nombre; p.apellidos = e.apellidos;   // el nombre tal como lo escribió al descargar
+    p.actualizado = Math.max(p.actualizado, +e.ultima); if (!p.creado) p.creado = +e.primera; m.set(k, p);
+  }
+  PERSONAS = [...m.values()].sort((a, b) => (a.apellidos + a.nombre).localeCompare(b.apellidos + b.nombre, 'es'));
+  PERSONAS.forEach((p, i) => p.i = i);
+}
 function pintar(){
   pintarLista(); pintarVisitas();
   pintarDisponibilidad();
-  const ejs = ejerciciosConocidos(), E = DATOS.entregas;
-  const cuenta = (c, ej) => E.filter(e => e.ciclo === c && (!ej || e.ejercicio === ej)).length;
+  unirPersonas();
+  const ejs = ejerciciosConocidos();
+  const de = (c, ej) => PERSONAS.filter(p => p.ciclo === c && (!ej || p.ejercicio === ej));
   $('#tResumen').innerHTML = `<thead><tr><th>Ciclo</th>${ejs.map(ej => `<th class="num" title="${esc(EJERCICIOS[ej] || ej)}">${esc(ej.replace('_', ' · '))}</th>`).join('')}</tr></thead>
-    <tbody>${DATOS.ciclos.map(c => `<tr><td>${esc(c)}</td>${ejs.map(ej => { const n = cuenta(c, ej); return `<td class="num${n ? '' : ' n0'}">${n}</td>`; }).join('')}</tr>`).join('')}</tbody>`;
-  $('#chipsCiclo').innerHTML = DATOS.ciclos.map(c => `<button class="chip${c === CICLO ? ' on' : ''}" role="tab" aria-selected="${c === CICLO}" data-ciclo="${esc(c)}">${esc(c)}<small>${cuenta(c)}</small></button>`).join('');
+    <tbody>${DATOS.ciclos.map(c => `<tr><td>${esc(c)}</td>${ejs.map(ej => { const l = de(c, ej), pdf = l.filter(p => p.entrega).length; return `<td class="num${l.length ? '' : ' n0'}" title="${pdf} con PDF de ${l.length} que la han empezado">${l.length ? pdf + ' / ' + l.length : '0'}</td>`; }).join('')}</tr>`).join('')}</tbody>`;
+  $('#chipsCiclo').innerHTML = DATOS.ciclos.map(c => `<button class="chip${c === CICLO ? ' on' : ''}" role="tab" aria-selected="${c === CICLO}" data-ciclo="${esc(c)}">${esc(c)}<small>${de(c).length}</small></button>`).join('');
   const q = $('#buscar').value.trim().toLowerCase();
   let h = '';
   for (const ej of ejs){
-    const filas = E.filter(e => e.ciclo === CICLO && e.ejercicio === ej && (!q || (e.nombre + ' ' + e.apellidos).toLowerCase().includes(q)));
-    h += `<h3 class="ej">${esc(EJERCICIOS[ej] || ej)} · ${filas.length}</h3>`;
-    h += filas.length ? `<div class="tabla"><table><thead><tr><th>Apellidos</th><th>Nombre</th><th>Primera descarga</th><th>Última descarga</th><th class="num">Veces</th><th></th></tr></thead><tbody>${filas.map(e => `<tr><td>${esc(e.apellidos)}</td><td>${esc(e.nombre)}</td><td>${fecha(e.primera)}</td><td>${fecha(e.ultima)}</td><td class="num">${e.veces}</td><td class="num"><button class="borrar" data-borrar="${e.id}" title="Borrar la descarga de ${esc(e.nombre + ' ' + e.apellidos)}" aria-label="Borrar la descarga de ${esc(e.nombre + ' ' + e.apellidos)}">🗑</button></td></tr>`).join('')}</tbody></table></div>`
-      : `<p class="vacio">${q ? 'Nadie coincide con la búsqueda.' : 'Todavía nadie de este ciclo ha descargado el PDF.'}</p>`;
+    const filas = de(CICLO, ej).filter(p => !q || (p.nombre + ' ' + p.apellidos + ' ' + p.codigos.join(' ')).toLowerCase().includes(q));
+    const pdf = filas.filter(p => p.entrega).length;
+    h += `<h3 class="ej">${esc(EJERCICIOS[ej] || ej)} · ${filas.length} ${filas.length === 1 ? 'persona' : 'personas'} · ${pdf} con PDF</h3>`;
+    h += filas.length ? `<div class="tabla"><table><thead><tr><th>Apellidos</th><th>Nombre</th><th>Código</th><th>Empezó</th><th>Última actividad</th><th>PDF descargado</th><th></th></tr></thead><tbody>${filas.map(p => `<tr><td>${esc(p.apellidos)}</td><td>${esc(p.nombre)}</td><td class="cod">${p.codigos.length ? p.codigos.map(esc).join('<br>') : '<span class="n0">—</span>'}</td><td>${p.creado ? fecha(p.creado) : '—'}</td><td>${p.actualizado ? fecha(p.actualizado) : '—'}</td><td>${p.entrega ? `✓ ${fecha(p.entrega.ultima)}${+p.entrega.veces > 1 ? ` (${p.entrega.veces} veces)` : ''}` : '<span class="n0">No</span>'}</td><td class="num"><button class="borrar" data-borrar="${p.i}" title="Borrar el registro de ${esc(p.nombre + ' ' + p.apellidos)}" aria-label="Borrar el registro de ${esc(p.nombre + ' ' + p.apellidos)}">🗑</button></td></tr>`).join('')}</tbody></table></div>`
+      : `<p class="vacio">${q ? 'Nadie coincide con la búsqueda.' : 'Todavía nadie de este ciclo ha empezado esta tarea.'}</p>`;
   }
   $('#detalle').innerHTML = h;
 }
 $('#chipsCiclo').addEventListener('click', e => { const b = e.target.closest('[data-ciclo]'); if (b){ CICLO = b.dataset.ciclo; pintar(); } });
-// Borrar el registro de descarga de un alumno concreto
+// Borrar el registro de un alumno en una tarea: su descarga del PDF y la copia de su trabajo en el servidor
 $('#detalle').addEventListener('click', async e => {
   const b = e.target.closest('[data-borrar]'); if (!b) return;
-  const id = +b.dataset.borrar, f = DATOS.entregas.find(x => +x.id === id); if (!f) return;
-  if (!confirm(`¿Borrar la descarga de ${f.nombre} ${f.apellidos} en ${EJERCICIOS[f.ejercicio] || f.ejercicio} (${f.ciclo})?\n\nNo se puede deshacer. Si vuelve a descargar el PDF, aparecerá de nuevo.`)) return;
+  const p = PERSONAS[+b.dataset.borrar]; if (!p) return;
+  if (!confirm(`¿Borrar el registro de ${p.nombre} ${p.apellidos} en ${EJERCICIOS[p.ejercicio] || p.ejercicio} (${p.ciclo})?\n\nSe borran su descarga del PDF y la copia de su trabajo en el servidor (no podrá recuperarla con el código). Lo guardado en su propio navegador no se toca.\n\nNo se puede deshacer.`)) return;
   b.disabled = true;
   try {
-    const r = await fetch(API, { method: 'POST', credentials: 'same-origin', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ accion: 'borrar', id }) });
-    if (r.status === 401) return mostrarLogin();
-    if (!(await r.json()).ok) throw new Error();
-    DATOS.entregas = DATOS.entregas.filter(x => +x.id !== id); pintar();
+    const peticiones = p.codigos.length ? p.codigos.map((c, i) => ({ accion: 'borrar', id: i === 0 && p.entrega ? +p.entrega.id : 0, codigo: c, ejercicio: p.ejercicio })) : [{ accion: 'borrar', id: +p.entrega.id }];
+    for (const cuerpo of peticiones){
+      const r = await fetch(API, { method: 'POST', credentials: 'same-origin', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(cuerpo) });
+      if (r.status === 401) return mostrarLogin();
+      if (!(await r.json()).ok) throw new Error();
+    }
+    if (p.entrega) DATOS.entregas = DATOS.entregas.filter(x => +x.id !== +p.entrega.id);
+    DATOS.iniciados = (DATOS.iniciados || []).filter(x => !(x.ejercicio === p.ejercicio && p.codigos.includes(x.codigo)));
+    pintar();
   } catch(_){ alert('No se ha podido borrar.'); b.disabled = false; }
 });
 $('#buscar').addEventListener('input', () => DATOS && pintar());
