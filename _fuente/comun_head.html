@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light only">
+<title>{{TITULO}}</title>
+<meta name="description" content="{{TITULO}} · Ejercicios Interactivos DJK">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%236a54b8'/%3E%3Ctext x='32' y='42' font-family='Arial' font-weight='700' font-size='26' fill='white' text-anchor='middle'%3EDJK%3C/text%3E%3C/svg%3E">
+<style>
+:root{
+  color-scheme: light;
+  --bg:#fbf8f3; --card:#ffffff; --ink:#2f2d3a; --muted:#6c6878; --line:#e7e1ef;
+  --lav:#e9e2fb; --lav2:#c9b8f0; --lav3:#6a54b8;
+  --mint:#dff3ea; --mint2:#9fd8bd; --mint3:#2f7d5c;
+  --peach:#ffe9dc; --peach2:#f6bf9e; --peach3:#a3532a;
+  --sky:#e2eefc; --sky2:#a9c8ef; --sky3:#2f5f98;
+  --rose:#fde4ea; --rose3:#a33c58;
+  --r:14px;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);font:16px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;overflow-x:hidden}
+h1,h2,h3{line-height:1.25}
+button{font:inherit;cursor:pointer;border:1px solid var(--line);background:#fff;color:var(--ink);border-radius:10px;padding:.45rem .8rem}
+button:hover{background:var(--lav)}
+button:focus-visible,input:focus-visible,.ed:focus-visible{outline:3px solid var(--lav2);outline-offset:2px}
+.btn-main{background:var(--lav3);border-color:var(--lav3);color:#fff;font-weight:600}
+.btn-main:hover{background:#5a45a4}
+.btn-mint{background:var(--mint);border-color:var(--mint2);color:#1f5a41;font-weight:600}
+.btn-mint:hover{background:#cdeedf}
+.btn-peach{background:var(--peach);border-color:var(--peach2);color:#7a3b1b;font-weight:600}
+.btn-peach:hover{background:#ffdcc8}
+.btn-danger{color:var(--rose3)}
+.btn-danger:hover{background:var(--rose)}
+.hidden{display:none!important}
+.wrap{max-width:900px;margin:0 auto;padding:1rem}
+
+/* ---------- Inicio ---------- */
+#inicio .hero{background:linear-gradient(135deg,var(--lav),var(--sky));border-radius:var(--r);padding:1.4rem 1.3rem;margin:1rem 0}
+#inicio .hero small{display:block;color:var(--lav3);font-weight:600;letter-spacing:.02em}
+#inicio .hero h1{margin:.3rem 0 .4rem;font-size:1.55rem}
+#inicio .hero p{margin:0;color:var(--muted)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:1.1rem;margin:1rem 0}
+label.lbl{display:block;font-weight:600;margin-bottom:.35rem}
+input[type=text]{width:100%;font:inherit;padding:.65rem .8rem;border:1px solid var(--line);border-radius:10px;background:#fff;color:var(--ink)}
+.nombres{display:grid;grid-template-columns:1fr 1.4fr;gap:.8rem}
+.ciclos{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:.7rem}
+.ciclo{position:relative;border:2px solid var(--line);border-radius:12px;padding:.85rem .9rem;background:#fff;cursor:pointer;display:flex;gap:.6rem;align-items:center}
+.ciclo input{accent-color:var(--lav3);width:1.1rem;height:1.1rem;flex:none}
+.ciclo:has(input:checked){border-color:var(--lav3);background:var(--lav)}
+.ciclo span b{display:block}
+.ciclo span small{color:var(--muted)}
+#borradores{background:var(--peach);border-color:var(--peach2)}
+#borradores h2{margin:.1rem 0 .6rem;font-size:1.1rem}
+.bor{display:flex;flex-wrap:wrap;gap:.5rem;align-items:center;justify-content:space-between;padding:.6rem 0;border-top:1px dashed var(--peach2)}
+.bor:first-of-type{border-top:0}
+.bor .acc{display:flex;gap:.4rem}
+.err{color:var(--rose3);font-weight:600;min-height:1.4em;margin:.5rem 0 0}
+
+/* ---------- Editor ---------- */
+#barra{position:sticky;top:0;z-index:20;background:rgba(251,248,243,.97);border-bottom:1px solid var(--line);box-shadow:0 2px 10px rgba(80,60,120,.06)}
+#barra .fila1{max-width:900px;margin:0 auto;padding:.55rem 1rem .35rem;display:flex;flex-wrap:wrap;gap:.5rem;align-items:center;justify-content:space-between}
+#barra .tit{font-weight:700;font-size:.95rem;min-width:0}
+#barra .tit small{display:block;font-weight:400;color:var(--muted)}
+#barra .acciones{display:flex;gap:.4rem;flex-wrap:wrap}
+#estado{font-size:.82rem;color:var(--muted)}
+#herr{max-width:900px;margin:0 auto;padding:0 1rem .5rem;display:flex;flex-wrap:wrap;gap:.3rem}
+#herr button{padding:.3rem .55rem;min-width:2.2rem;font-size:.9rem;background:#fff}
+#herr button:hover{background:var(--lav)}
+#herr .sep{width:1px;background:var(--line);margin:0 .15rem}
+.progreso{font-size:.85rem;color:var(--muted);margin-top:.2rem}
+.prog-bar{height:6px;background:var(--line);border-radius:6px;overflow:hidden;margin-top:.25rem}
+.prog-bar i{display:block;height:100%;background:var(--mint2);width:0;transition:width .3s}
+.banner-ej{background:var(--peach);border:1px solid var(--peach2);color:#7a3b1b;border-radius:12px;padding:.6rem .9rem;margin:1rem 0 0;font-weight:600}
+
+.cab{background:linear-gradient(135deg,var(--lav),var(--sky));border-radius:var(--r);padding:1.2rem;margin:1rem 0}
+.cab small{color:var(--lav3);font-weight:600}
+.cab h1{font-size:1.4rem;margin:.25rem 0}
+.cab .meta{display:flex;flex-wrap:wrap;gap:.4rem;margin-top:.6rem}
+.chip{background:#fff;border-radius:999px;padding:.2rem .7rem;font-size:.85rem;border:1px solid var(--line)}
+.fase{border-radius:var(--r);margin:1.4rem 0;overflow:hidden;border:1px solid var(--line);background:#fff}
+.fase>header{padding:.8rem 1.1rem}
+.fase>header h2{margin:0;font-size:1.2rem}
+.fase>.cuerpo{padding:.4rem 1.1rem 1.1rem}
+.f1>header{background:var(--mint)} .f2>header{background:var(--sky)} .f3>header{background:var(--peach)} .f4>header{background:var(--lav)}
+.card.ra{background:var(--sky);border-color:var(--sky2)}
+.instr{background:#faf9fd;border-left:4px solid var(--lav2);padding:.6rem .8rem;border-radius:0 10px 10px 0;margin:.7rem 0}
+.nota{background:var(--mint);border-radius:10px;padding:.55rem .8rem;margin:.7rem 0;font-size:.94rem}
+.prohibido{background:var(--rose);border-radius:10px;padding:.55rem .8rem;margin:.7rem 0;font-size:.94rem;color:#6e2236}
+.grupo{margin:1.2rem 0 .3rem;font-size:1rem;color:var(--sky3)}
+.caja{margin:1rem 0 1.3rem}
+.caja .et{font-weight:700;margin-bottom:.25rem}
+.caja .et .n{display:inline-block;background:var(--lav);color:var(--lav3);border-radius:8px;padding:0 .45rem;margin-right:.35rem;font-size:.9rem}
+.caja .pista{font-size:.88rem;color:var(--muted);margin:.1rem 0 .4rem}
+.ed{min-height:120px;border:1.5px dashed var(--lav2);border-radius:12px;padding:.7rem .85rem;background:#fff;overflow-wrap:anywhere;word-break:break-word}
+.ed.corta{min-height:52px}
+.ed:focus{border-style:solid;border-color:var(--lav3);background:#fffefc}
+.ed.lleno{border-style:solid;border-color:var(--mint2)}
+.ed:empty::before{content:attr(data-ph);color:#a7a2b3}
+.ed p{margin:.35rem 0}
+.ed h1{font-size:1.35rem;margin:.5rem 0}.ed h2{font-size:1.18rem;margin:.5rem 0}.ed h3{font-size:1.05rem;margin:.45rem 0}
+.ed img{max-width:100%;height:auto;display:block;margin:.4rem 0;border-radius:6px;cursor:pointer}
+.ed a{color:var(--sky3)}
+.ed.drop{background:var(--mint)}
+.rev{border:1px solid var(--mint2);border-radius:12px;padding:.6rem .9rem .2rem;margin:1.1rem 0;background:#fbfefc}
+.rev h3{margin:.2rem 0 .1rem;font-size:1.08rem;color:var(--mint3)}
+.campos{display:grid;grid-template-columns:1fr 1fr;gap:0 .9rem}
+.campos .caja{margin:.6rem 0 .7rem;min-width:0}
+.campos .ancha{grid-column:1/-1}
+.video{display:flex;flex-wrap:wrap;gap:.6rem;align-items:center;background:var(--sky);border-radius:12px;padding:.7rem .9rem;margin:.7rem 0}
+.video a{display:inline-block;background:var(--sky3);color:#fff;text-decoration:none;font-weight:600;border-radius:10px;padding:.45rem .9rem}
+.video small{color:var(--muted);overflow-wrap:anywhere}
+.centro{background:var(--peach);border-radius:12px;padding:.7rem .9rem;margin:.7rem 0}
+ul.puntos{margin:.4rem 0;padding-left:1.2rem}
+table.siglas{width:100%;border-collapse:collapse;font-size:.92rem}
+table.siglas th,table.siglas td{border-bottom:1px solid var(--line);padding:.4rem .5rem;text-align:left;vertical-align:top}
+table.siglas th{background:var(--lav)}
+table.siglas td:first-child{font-weight:700}
+table.siglas.sg td:first-child{white-space:nowrap}
+table.siglas td.pts,table.siglas th.pts{text-align:center;white-space:nowrap;font-weight:700}
+table.siglas tfoot td{font-weight:700;background:var(--mint)}
+.pie-acc{display:flex;flex-wrap:wrap;gap:.6rem;justify-content:center;margin:2rem 0 3rem}
+
+/* herramientas de imagen */
+#imgMarco{position:absolute;z-index:30;border:2px solid var(--lav3);border-radius:6px;pointer-events:none}
+#imgAsa{position:absolute;right:-9px;bottom:-9px;width:18px;height:18px;border-radius:5px;background:var(--lav3);border:2px solid #fff;pointer-events:auto;cursor:nwse-resize;touch-action:none}
+#imgHerr{position:absolute;z-index:31;display:flex;gap:.25rem;background:#fff;border:1px solid var(--line);border-radius:10px;padding:.25rem;box-shadow:0 4px 14px rgba(80,60,120,.15)}
+#imgHerr button{padding:.2rem .5rem;font-size:.85rem}
+
+/* avisos y modal */
+#aviso{position:fixed;left:50%;bottom:1.2rem;transform:translateX(-50%);z-index:60;background:var(--ink);color:#fff;padding:.7rem 1rem;border-radius:12px;max-width:min(92vw,520px);font-size:.95rem;box-shadow:0 6px 20px rgba(0,0,0,.2);opacity:0;pointer-events:none;transition:opacity .25s}
+#aviso.ver{opacity:1}
+#modal,#pendModal{position:fixed;inset:0;z-index:70;background:rgba(47,45,58,.35);display:flex;align-items:center;justify-content:center;padding:1rem}
+#modal .box,#pendModal .box{background:#fff;border-radius:var(--r);padding:1.2rem;max-width:440px;width:100%;max-height:calc(100vh - 2rem);overflow:auto}
+#pendModal .box{max-width:520px}
+#pendModal h2{margin:0 0 .3rem;font-size:1.2rem}
+#modal .box p,#pendModal .box p{margin:0 0 1rem}
+#modal .bts,#pendModal .bts{display:flex;flex-wrap:wrap;gap:.5rem;justify-content:flex-end}
+ul.pend{list-style:none;margin:0 0 1rem;padding:0;display:grid;gap:.4rem}
+ul.pend li{background:var(--peach);border-radius:10px;padding:.5rem .75rem;font-size:.93rem;font-weight:600}
+ul.pend li small{display:block;color:var(--muted);font-weight:400}
+
+/* ---------- Qué tienes que hacer (checks) ---------- */
+.enun{border-color:var(--lav2)}
+.enun-head{width:100%;display:flex;align-items:center;gap:.8rem;background:none;border:0;padding:0;text-align:left;border-radius:0}
+.enun-head:hover{background:none}
+.enun-head .eh{flex:1;min-width:0}
+.enun-head small{display:block;color:var(--lav3);font-weight:700}
+.enun-head b{font-size:1.15rem}
+.enun-prog{font-size:.85rem;font-weight:700;background:var(--peach);color:#7a3b1b;border-radius:999px;padding:.2rem .7rem;white-space:nowrap}
+.enun-prog.ok{background:var(--mint);color:var(--mint3)}
+.chev{transition:transform .2s;color:var(--muted)}
+.enun.recogido .chev{transform:rotate(-90deg)}
+.enun.recogido #enunBody{display:none}
+.enun h3{font-size:1rem;margin:1rem 0 .45rem;color:var(--sky3)}
+ul.tks{list-style:none;margin:0;padding:0;display:grid;gap:.4rem}
+.tk{width:100%;display:flex;gap:.7rem;align-items:flex-start;text-align:left;border:1.5px solid var(--line);border-radius:12px;padding:.55rem .75rem;background:#fff}
+.tk i{flex:none;width:1.6rem;height:1.6rem;border-radius:50%;border:2px solid var(--lav2);display:grid;place-items:center;font-style:normal;font-weight:700;font-size:.85rem;color:var(--lav3)}
+.tk:hover{background:var(--lav)}
+.tk.on{border-color:var(--mint2);background:#f6fcf9}
+.tk.on:hover{background:var(--mint)}
+.tk.on i{background:var(--mint3);border-color:var(--mint3);color:#fff}
+.lockmsg{display:flex;gap:.8rem;align-items:center;flex-wrap:wrap;background:var(--peach);border:1px solid var(--peach2);border-radius:var(--r);padding:.8rem 1rem;margin:1rem 0}
+.lockmsg div{flex:1;min-width:200px}
+#tarea.locked{opacity:.45;filter:grayscale(.4);pointer-events:none;user-select:none}
+ul.checks{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:.5rem}
+ul.checks li{display:flex;gap:.55rem;align-items:center;color:var(--muted);font-size:.93rem}
+ul.checks li i{flex:none;width:1.3rem;height:1.3rem;border-radius:50%;border:1.5px solid #c9c2cd;display:grid;place-items:center;font-style:normal;font-size:.75rem;color:#fff}
+ul.checks li.ok{color:var(--ink)}
+ul.checks li.ok i{background:var(--mint3);border-color:var(--mint3)}
+.card.compr{border-color:var(--mint2)}
+
+@media (max-width:600px){
+  .wrap{padding:.7rem}
+  .nombres,.campos{grid-template-columns:1fr}
+  #barra .fila1{padding:.45rem .7rem .3rem}
+  #herr{padding:0 .7rem .45rem}
+  #barra .acciones button{padding:.35rem .6rem;font-size:.88rem}
+  .fase>.cuerpo{padding:.3rem .8rem .9rem}
+  .fase>header{padding:.7rem .8rem}
+  .rev{padding:.5rem .7rem .1rem}
+  #inicio .hero h1{font-size:1.3rem}
+  #barra .tx,#barra .tit small{display:none}
+  #barra .fila1{flex-wrap:nowrap}
+  #barra .tit{font-size:.85rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  #barra .acciones{flex-wrap:nowrap}
+  #herr{gap:.2rem}
+  #herr button{padding:.2rem .35rem;min-width:1.9rem;font-size:.82rem}
+  #herr .sep{display:none}
+  .progreso{font-size:.75rem}
+  table.siglas{font-size:.86rem}
+}
+</style>
+</head>
+<body>
+
+<!-- =============== INICIO =============== -->
+<main id="inicio" class="wrap">
+  <div class="hero">
+    <small>Digitalización aplicada a los sectores productivos (DJK)</small>
+    <h1>{{TITULO}}</h1>
+    <p>Escribe tu nombre, elige tu ciclo y empieza a trabajar. Lo que escribas se guarda en este navegador y al final podrás descargar tu tarea en PDF.</p>
+  </div>
+
+  <section id="borradores" class="card hidden" aria-live="polite">
+    <h2>Tienes borradores guardados en este navegador</h2>
+    <div id="listaBor"></div>
+  </section>
+
+  <section class="card">
+    <div class="nombres">
+      <div><label class="lbl" for="nombre">Nombre</label><input type="text" id="nombre" autocomplete="given-name" placeholder="Ej.: Lucía"></div>
+      <div><label class="lbl" for="apellidos">Apellidos</label><input type="text" id="apellidos" autocomplete="family-name" placeholder="Ej.: García Pérez"></div>
+    </div>
+  </section>
+
+  <section class="card">
+    <div class="lbl" id="lblCiclo">Elige tu ciclo (CFGS)</div>
+    <div class="ciclos" role="radiogroup" aria-labelledby="lblCiclo" id="ciclos"></div>
+    <p class="err" id="errInicio"></p>
+    <div style="text-align:right"><button class="btn-main" id="btnEmpezar">Empezar la tarea →</button></div>
+  </section>
+</main>
+
+<!-- =============== EDITOR =============== -->
+<div id="editor" class="hidden">
+  <div id="barra">
+    <div class="fila1">
+      <div class="tit"><span id="tTitulo"></span><small id="tSub"></small></div>
+      <div class="acciones">
+        <button class="btn-mint" id="btnGuardar" title="Guardar en este navegador">💾<span class="tx"> Guardar</span></button>
+        <button class="btn-peach" id="btnPDF" title="Descargar la tarea en PDF">⬇ PDF</button>
+        <button id="btnInicio" title="Volver a la pantalla de inicio">⌂<span class="tx"> Inicio</span></button>
+      </div>
+    </div>
+    <div id="herr" role="toolbar" aria-label="Formato del texto">
+      <button data-cmd="bold" title="Negrita"><b>N</b></button>
+      <button data-cmd="italic" title="Cursiva"><i>C</i></button>
+      <button data-cmd="underline" title="Subrayado"><u>S</u></button>
+      <span class="sep"></span>
+      <button data-blk="H1" title="Título 1">H1</button>
+      <button data-blk="H2" title="Título 2">H2</button>
+      <button data-blk="H3" title="Título 3">H3</button>
+      <button data-blk="P" title="Texto normal">¶</button>
+      <span class="sep"></span>
+      <button data-cmd="insertUnorderedList" title="Lista con viñetas">•<span class="tx"> Lista</span></button>
+      <button data-cmd="insertOrderedList" title="Lista numerada">1.<span class="tx"> Lista</span></button>
+      <span class="sep"></span>
+      <button id="bEnlace" title="Insertar enlace">🔗<span class="tx"> Enlace</span></button>
+      <button id="bImagen" title="Insertar imagen">🖼<span class="tx"> Imagen</span></button>
+      <input type="file" id="fImagen" accept="image/*" multiple class="hidden">
+    </div>
+    <div style="max-width:900px;margin:0 auto;padding:0 1rem .45rem">
+      <div class="progreso"><span id="estado">Sin guardar todavía</span> · <span id="progTxt"></span></div>
+      <div class="prog-bar"><i id="progBar"></i></div>
+    </div>
+  </div>
+  <main class="wrap" id="contenido"></main>
+</div>
+
+<div id="imgMarco" class="hidden"><div id="imgAsa" title="Arrastra para cambiar el tamaño"></div></div>
+<div id="imgHerr" class="hidden">
+  <button data-w="25">25 %</button><button data-w="50">50 %</button><button data-w="75">75 %</button><button data-w="100">100 %</button>
+  <button data-quitar="1" class="btn-danger">Quitar</button>
+</div>
+<div id="aviso" role="status"></div>
+<div id="modal" class="hidden"><div class="box"><p id="mTxt"></p><div class="bts" id="mBts"></div></div></div>
+<div id="pendModal" class="hidden" role="dialog" aria-modal="true" aria-labelledby="pendTit"><div class="box">
+  <h2 id="pendTit">Tu ejercicio aún no está completo</h2>
+  <p>Puedes descargar el PDF igualmente, pero esto es lo que te falta:</p>
+  <ul class="pend" id="pendList"></ul>
+  <div class="bts"><button id="pendGo">Descargar igualmente</button><button class="btn-main" id="pendBack">Seguir trabajando</button></div>
+</div></div>
+
