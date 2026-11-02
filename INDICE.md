@@ -78,7 +78,7 @@ Cada especialidad ve 20 de las 50 tecnologías (las que más se relacionan con s
 
 ## Semipresencial: un ejercicio por unidad (carpeta SEMI)
 
-En semipresencial solo hay un ejercicio por unidad: un «remix» de los ejercicios de esa unidad. Los ciclos semipresenciales ya no aparecen en la lista de ciclos de los ejercicios normales de esa unidad (siguen pudiendo abrir sus borradores antiguos y recuperarlos con su código).
+En semipresencial solo hay un ejercicio por unidad: un «remix» de los ejercicios de esa unidad. Los ciclos semipresenciales ya no aparecen en la lista de ciclos de ningún ejercicio normal (siguen pudiendo abrir sus borradores antiguos y recuperarlos con su código).
 
 | Pieza | Cómo es |
 |---|---|
@@ -173,7 +173,7 @@ Todos los ejercicios muestran una tabla «Cómo se califica» con esta forma, de
 | 13 | Todos los ejercicios tienen versión para ordenador y para móvil/tablet, adaptada para que el alumno trabaje cómodo en cada dispositivo (ver «Versión por dispositivo»). |
 | 14 | El resultado de aprendizaje y sus criterios se muestran en la pantalla de inicio (junto al nombre, apellidos y ciclo), no dentro del ejercicio. En el PDF se mantienen. |
 | 21 | No hay bloque «Entrega» en la página: la entrega (formato, plazo, aula virtual) la comunica el profesor en clase. La página solo tiene Objetivo, Cómo se califica, la tarea, «Antes de entregar, comprueba» y las siglas. |
-| 22 | Semipresencial: un solo ejercicio por unidad (`UTn_SP`, carpeta `SEMI`), remix de los ejercicios de la unidad con la mitad de elementos. Los ciclos semipresenciales se quitan de la lista de ciclos de los ejercicios normales de esa unidad. |
+| 22 | Semipresencial: un solo ejercicio por unidad (`UTn_SP`, carpeta `SEMI`), remix de los ejercicios de la unidad con la mitad de elementos. Los ciclos semipresenciales se quitan de la lista de ciclos de **todos** los ejercicios normales (UTn_Em), haya o no ya un UTn_SP de esa unidad; siguen pudiendo abrir sus borradores antiguos. En la administración, sus filas solo muestran UTn_SP. |
 | 15 | Cada unidad tiene su color (UT1 lavanda · UT2 menta · UT3 melocotón · UT4 cielo · UT5 rosa) en la administración, el ejercicio y el PDF. |
 
 ## Versión por dispositivo

@@ -106,7 +106,8 @@ const CICLOS = {
 CICLOS.ei_sp = Object.assign(structuredClone(CICLOS.ei), { nombre: 'Educación Infantil Semipresencial', semipresencial: true });
 CICLOS.is_sp = Object.assign(structuredClone(CICLOS.is), { nombre: 'Integración Social Semipresencial', semipresencial: true });
 CICLOS.mc_sp = { nombre: 'Mediación Comunicativa Semipresencial', semipresencial: true, centro: 'un servicio de mediación comunicativa' };
-const ORDEN = ['af','as','ei','hb','is','ei_sp','is_sp','mc_sp'];
+// Los semipresenciales no hacen los ejercicios normales (tienen UTn_SP); siguen en CICLOS para abrir borradores antiguos
+const ORDEN = ['af','as','ei','hb','is'];
 
 // ================= estilos del juego =================
 document.head.insertAdjacentHTML('beforeend', `<style>

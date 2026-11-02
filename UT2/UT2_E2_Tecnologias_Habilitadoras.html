@@ -759,9 +759,9 @@ ul.cod-info li{margin:5px 0}
           <label class="ciclo"><input type="radio" name="fCiclo" value="Educación Infantil">Educación Infantil</label>
           <label class="ciclo"><input type="radio" name="fCiclo" value="Higiene Bucodental">Higiene Bucodental</label>
           <label class="ciclo"><input type="radio" name="fCiclo" value="Integración Social">Integración Social</label>
-          <label class="ciclo"><input type="radio" name="fCiclo" value="Educación Infantil Semipresencial">Educación Infantil Semipresencial</label>
-          <label class="ciclo"><input type="radio" name="fCiclo" value="Integración Social Semipresencial">Integración Social Semipresencial</label>
-          <label class="ciclo"><input type="radio" name="fCiclo" value="Mediación Comunicativa Semipresencial">Mediación Comunicativa Semipresencial</label>
+          <label class="ciclo ciclo-sp" style="display:none"><input type="radio" name="fCiclo" value="Educación Infantil Semipresencial">Educación Infantil Semipresencial</label>
+          <label class="ciclo ciclo-sp" style="display:none"><input type="radio" name="fCiclo" value="Integración Social Semipresencial">Integración Social Semipresencial</label>
+          <label class="ciclo ciclo-sp" style="display:none"><input type="radio" name="fCiclo" value="Mediación Comunicativa Semipresencial">Mediación Comunicativa Semipresencial</label>
         </div>
         <button class="btn primary go" type="submit" id="startGo">Empezar</button>
       </form>
@@ -2045,6 +2045,8 @@ function showStart(edit){
   $('#startGo').textContent = editing ? 'Guardar datos' : (draft ? 'Empezar un trabajo nuevo' : 'Empezar');
   const a = editing ? state.alumno : (draft?.alumno || {});
   $('#fNombre').value=a.nombre||''; $('#fApellidos').value=a.apellidos||''; document.querySelectorAll('input[name=fCiclo]').forEach(r=>{ r.checked = r.value===a.ciclo; });
+  // Los semipresenciales no hacen este ejercicio: su ciclo solo se muestra a quien ya lo había empezado
+  document.querySelectorAll('label.ciclo-sp').forEach(l=>{ l.style.display = l.querySelector('input').value === a.ciclo ? '' : 'none'; });
 }
 $('#startForm').addEventListener('submit', async e=>{
   e.preventDefault();
