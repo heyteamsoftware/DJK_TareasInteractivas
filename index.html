@@ -46,6 +46,18 @@ td.n0{color:#b0abb9}
 td.celda{text-align:center}
 a.enlace{display:inline-flex;align-items:center;min-height:44px;padding:.5rem .9rem;border:1px solid var(--line);border-radius:10px;background:#fff;color:var(--lav3);font-weight:600;text-decoration:none}
 a.enlace:hover{background:var(--lav)}
+/* Lista de ejercicios por unidad, con el color de cada unidad */
+.ut{--u:#e9e2fb;--u2:#c9b8f0;--u3:#6a54b8;border:1px solid var(--line);border-left:6px solid var(--u2);border-radius:12px;margin:.8rem 0;overflow:hidden}
+.ut2{--u:#dff3ea;--u2:#9fd8bd;--u3:#2f7d5c} .ut3{--u:#ffe9dc;--u2:#f6bf9e;--u3:#a3532a} .ut4{--u:#e2eefc;--u2:#a9c8ef;--u3:#2f5f98} .ut5{--u:#fde4ea;--u2:#f1b3c3;--u3:#a33c58}
+.ut h3{margin:0;padding:.6rem 1rem;background:var(--u);color:var(--u3);font-size:1rem}
+.ut ul{list-style:none;margin:0;padding:.2rem 1rem .6rem}
+.ut li{display:flex;flex-wrap:wrap;gap:.4rem .8rem;align-items:center;justify-content:space-between;padding:.55rem 0;border-top:1px dashed var(--line)}
+.ut li:first-child{border-top:0}
+.ut li b{display:block}
+.ut li small{color:var(--muted)}
+.ut .acc{display:flex;flex-wrap:wrap;gap:.4rem}
+.ut .enlace{color:var(--u3)}
+.ut .vacio{padding:.3rem 1rem .7rem;margin:0}
 @media (max-width:600px){.wrap{padding:.7rem}table{font-size:.86rem}}
 </style>
 </head>
@@ -65,9 +77,13 @@ a.enlace:hover{background:var(--lav)}
 
   <div id="vPanel" class="hidden">
     <div class="barra">
-      <div><h1>Entregas por ciclo</h1><p class="sub">Alumnado que ha descargado el PDF de cada ejercicio.</p></div>
-      <div style="display:flex;gap:.5rem;flex-wrap:wrap"><a class="enlace" href="alumnado/" target="_blank" rel="noopener">Portada del alumnado ↗</a><a class="enlace" href="estadisticas.html" target="_blank" rel="noopener">Estadísticas ↗</a><button id="bRecargar">↻ Actualizar</button><button id="bSalir">Salir</button></div>
+      <div><h1>Ejercicios Interactivos · DJK</h1><p class="sub">Administración · <span id="nVisitas">–</span> visitantes distintos</p></div>
+      <div style="display:flex;gap:.5rem;flex-wrap:wrap"><a class="enlace" href="estadisticas.html" target="_blank" rel="noopener">Estadísticas ↗</a><button id="bRecargar">↻ Actualizar</button><button id="bSalir">Salir</button></div>
     </div>
+
+    <section class="card"><h2>Ejercicios</h2>
+      <p class="nota" style="margin-top:0">El alumnado entra solo por el enlace directo de cada ejercicio. Usa «Copiar enlace» para ponerlo en el aula virtual.</p>
+      <div id="listaEj"></div></section>
 
     <section class="card"><h2>Disponibilidad</h2>
       <p class="nota" style="margin-top:0">Pulsa para abrir o bloquear un ejercicio a un ciclo. Si está bloqueado, el alumnado de ese ciclo no puede abrirlo (ni cargar un borrador suyo) hasta que lo abras.</p>
@@ -85,10 +101,32 @@ a.enlace:hover{background:var(--lav)}
   </div>
 </main>
 <script>
-const EJERCICIOS = {
-  UT1_E1: 'UT1 · E1 · Revoluciones industriales canarias', UT1_E2: 'UT1 · E2 · Combinación de sistemas ciberfísicos',
-  UT1_E3: 'UT1 · E3 · Sistemas ciberfísicos', UT2_E1: 'UT2 · E1 · Tecnologías habilitadoras'
+// Lista de ejercicios publicados (al añadir uno nuevo, se añade aquí)
+const UNIDADES = {
+  UT1: 'Digitalización de los sectores productivos', UT2: 'Tecnologías habilitadoras', UT3: '', UT4: '', UT5: ''
 };
+const LISTA = [
+  { cod: 'UT1_E1', titulo: 'Revoluciones industriales canarias y quinta revolución industrial', ra: 'RA1 · CE a, b', url: 'UT1/UT1_E1_Revoluciones_Industriales_Canarias.html', ejemplo: 'UT1/UT1_E1_EJEMPLO_relleno.html' },
+  { cod: 'UT1_E2', titulo: 'Combinación de sistemas ciberfísicos', ra: 'RA1 · CE e, f, g', url: 'UT1/UT1_E2_Combinacion_Sistemas_Ciberfisicos.html', ejemplo: 'UT1/UT1_E2_EJEMPLO_relleno.html' },
+  { cod: 'UT1_E3', titulo: 'Sistemas ciberfísicos y digitalización del sector', ra: 'RA1 · CE c, d, e, f', url: 'UT1/UT1_E3_Digitalizacion_Sistemas_CiberFisicos.html', ejemplo: 'UT1/UT1_E3_EJEMPLO_relleno.html' },
+  { cod: 'UT2_E1', titulo: 'Tecnologías habilitadoras', ra: 'RA2 · CE a, c, d, e', url: 'UT2/UT2_E1_Tecnologias_Habilitadoras.html', ejemplo: 'UT2/UT2_E1_Tecnologias_Habilitadoras.html?ejemplo' }
+];
+const EJERCICIOS = Object.fromEntries(LISTA.map(e => [e.cod, e.cod.replace('_', ' · ') + ' · ' + e.titulo]));
+function pintarLista(){
+  $('#listaEj').innerHTML = Object.keys(UNIDADES).map(u => {
+    const ejs = LISTA.filter(e => e.cod.startsWith(u + '_'));
+    return `<div class="ut ${u.toLowerCase()}"><h3>${u}${UNIDADES[u] ? ' · ' + esc(UNIDADES[u]) : ''}</h3>${ejs.length ? `<ul>${ejs.map(e => {
+      const abs = new URL(e.url, location.href).href;
+      return `<li><div><b>${esc(e.cod.split('_')[1])} · ${esc(e.titulo)}</b><small>${esc(e.ra)}</small></div><div class="acc"><a class="enlace" href="${esc(e.url)}" target="_blank" rel="noopener">Abrir ↗</a><a class="enlace" href="${esc(e.ejemplo)}" target="_blank" rel="noopener">Ejemplo ↗</a><button data-copiar="${esc(abs)}">📋 Copiar enlace</button></div></li>`; }).join('')}</ul>` : '<p class="vacio">Próximamente</p>'}</div>`;
+  }).join('');
+}
+document.addEventListener('click', async e => {
+  const b = e.target.closest('[data-copiar]'); if (!b) return;
+  try { await navigator.clipboard.writeText(b.dataset.copiar); b.textContent = '✓ Copiado'; }
+  catch(_){ prompt('Copia el enlace:', b.dataset.copiar); }
+  setTimeout(() => { b.textContent = '📋 Copiar enlace'; }, 1800);
+});
+function pintarVisitas(){ fetch('api/visitas.php', { cache: 'no-store' }).then(r => r.json()).then(d => { if (d.ok) $('#nVisitas').textContent = d.total.toLocaleString('es-ES'); }).catch(() => {}); }
 const API = 'api/admin.php';
 const $ = s => document.querySelector(s);
 const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
@@ -127,6 +165,7 @@ $('#tDisp').addEventListener('click', async e => {
   } catch(_){ alert('No se ha podido guardar el cambio.'); b.disabled = false; }
 });
 function pintar(){
+  pintarLista(); pintarVisitas();
   pintarDisponibilidad();
   const ejs = ejerciciosConocidos(), E = DATOS.entregas;
   const cuenta = (c, ej) => E.filter(e => e.ciclo === c && (!ej || e.ejercicio === ej)).length;

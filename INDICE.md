@@ -7,9 +7,9 @@
 | Nombre de archivo | `UTn_Em_Titulo_Corto.html` (un HTML por ejercicio) + `UTn_Em_EJEMPLO_relleno.html` |
 | Código fuente | `_fuente/`: piezas comunes + un archivo de datos por ejercicio. Se genera con `node _fuente/construir.js` |
 | Repositorio | https://github.com/heyteamsoftware/DJK_TareasInteractivas |
-| Portada del alumnado | https://myappsserver.duckdns.org/DJK/DJK_EjerciciosInteractivos/alumnado/ |
+| Acceso del alumnado | Solo por el enlace directo de cada ejercicio (el que se pone en el aula virtual). No hay portada pública. |
 | Servidor | CIFP Tony Gallardo · Apache · `/var/www/html/DJK/DJK_EjerciciosInteractivos` (usuario `ubuntu`, clave en `Documentos\Oracle`) |
-| Portada | `alumnado/index.html` con enlaces a cada ejercicio, aviso de privacidad y contador discreto de visitantes; `.htaccess` desactiva el listado de carpetas |
+| Lista de ejercicios | Dentro de la administración: por unidad y con su color, con «Abrir», «Ejemplo» y «Copiar enlace» · `.htaccess` desactiva el listado de carpetas |
 | Analítica | `api/visitas.php` (anónima, sin cookies) · base de datos en `/var/www/djk_datos/visitas.db`, fuera de la web · panel en `estadisticas.html` (no enlazado, sin indexar) |
 | Administración | https://myappsserver.duckdns.org/DJK/DJK_EjerciciosInteractivos/ (dirección principal; la antigua `/admin/` redirige aquí) · solo contraseña (guardada cifrada en `/var/www/djk_datos/admin.json`) |
 
@@ -78,14 +78,14 @@ Todos los ejercicios muestran una tabla «Cómo se califica» con esta forma, y 
 | 5 | Nombre del PDF: `UTn_Em_Apellido1_Apellido2_Nombre.pdf`. |
 | 6 | El ejemplo relleno usa solo texto de muestra entre corchetes, nunca respuestas reales que el alumnado pueda copiar. |
 | 7 | Cada ejercicio nuevo se sube al repositorio de GitHub. |
-| 8 | Cada ejercicio nuevo se despliega en el servidor y se añade a la portada del alumnado (`alumnado/index.html`). |
+| 8 | Cada ejercicio nuevo se despliega en el servidor y se añade a la lista `LISTA` de la administración (`index.html` de la raíz). |
 | 9 | Antes de publicar se repasa la lista de la skill `rematadorweb` (sin claves expuestas, HTTPS, metadatos, favicon, móvil). |
 | 10 | Todos los ejercicios llevan el sistema de checks (ver arriba): el alumno sabe lo que tiene que hacer y lo confirma. |
 | 11 | Datos iniciales unificados: Nombre, Apellidos y Ciclo a elegir entre los 5. |
 | 12 | Los ejercicios nuevos se crean en `_fuente/` (archivo de datos `UTn_Em.js`) con el motor común; no se editan los HTML a mano. |
 | 13 | Todos los ejercicios tienen versión para ordenador y para móvil/tablet, adaptada para que el alumno trabaje cómodo en cada dispositivo (ver «Versión por dispositivo»). |
 | 14 | El resultado de aprendizaje y sus criterios se muestran en la pantalla de inicio (junto al nombre, apellidos y ciclo), no dentro del ejercicio. En el PDF se mantienen. |
-| 15 | Cada unidad tiene su color (UT1 lavanda · UT2 menta · UT3 melocotón · UT4 cielo · UT5 rosa) en la portada, el ejercicio y el PDF. |
+| 15 | Cada unidad tiene su color (UT1 lavanda · UT2 menta · UT3 melocotón · UT4 cielo · UT5 rosa) en la administración, el ejercicio y el PDF. |
 
 ## Versión por dispositivo
 
@@ -135,7 +135,7 @@ Todos los ejercicios muestran una tabla «Cómo se califica» con esta forma, y 
 | Pieza | Qué hace |
 |---|---|
 | Identificador | Cada navegador guarda un número aleatorio (`djk_visitante`). Sin cookies, sin nombre, sin respuestas y sin IP guardada (solo una huella cifrada temporal para frenar abusos). |
-| Qué se registra | Qué página se abre y qué día: `portada`, `UT1_E1`, `UT1_E1_ejemplo`… |
-| Contador | En el pie de la portada: «👁 N visitantes» (personas distintas). |
+| Qué se registra | Qué página se abre y qué día: `UT1_E1`, `UT1_E1_ejemplo`… |
+| Contador | En la cabecera de la administración: «N visitantes distintos». El aviso de privacidad está en la pantalla de inicio de cada ejercicio. |
 | Estadísticas | `estadisticas.html`: visitantes distintos, visitas totales y de los últimos 7 días, visitas por página y por día (30 días). |
 | Ejercicios nuevos | El motor común registra la visita solo; en la página de estadísticas hay que añadir el nombre del ejercicio en `NOMBRES`. |
