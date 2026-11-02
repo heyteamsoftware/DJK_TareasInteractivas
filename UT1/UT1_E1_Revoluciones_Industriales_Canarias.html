@@ -933,8 +933,9 @@ function abrirDB(){
 function tx(modo, fn){ return abrirDB().then(db => new Promise((res, rej) => { const t = db.transaction('borradores', modo); const st = t.objectStore('borradores'); const r = fn(st); t.oncomplete = () => res(r && r.result); t.onerror = () => rej(t.error); })); }
 async function guardarReg(reg){
   let ok = false;
-  try { await tx('readwrite', st => st.put(reg)); ok = true; } catch(e){}
+  // Primero la copia instantánea (localStorage) y después IndexedDB, que tarda más pero admite más imágenes
   try { localStorage.setItem(PREF + reg.esp, JSON.stringify(reg)); ok = true; } catch(e){ try { localStorage.removeItem(PREF + reg.esp); } catch(_){} }
+  try { await tx('readwrite', st => st.put(reg)); ok = true; } catch(e){}
   return ok;
 }
 async function leerReg(esp){
@@ -1140,21 +1141,36 @@ function actualizarProgreso(){
 
 // ================= guardado =================
 let tGuardar = null;
+function regActual(){
+  const cajas = {}; document.querySelectorAll('.ed').forEach(ed => { cajas[ed.dataset.id] = tieneContenido(ed) ? ed.innerHTML : ''; });
+  return { clave: PREF + ESP, esp: ESP, nombre: NOMBRE, apellidos: APELLIDOS, fecha: Date.now(), leidos: LEIDOS, campos: leerCampos(), cajas };
+}
 async function guardar(manual){
   if (!ESP) return;
   clearTimeout(tGuardar);
   if (EJEMPLO){ if (manual) aviso('Esto es un ejemplo: no se guarda nada.'); return true; }
-  const cajas = {}; document.querySelectorAll('.ed').forEach(ed => { cajas[ed.dataset.id] = tieneContenido(ed) ? ed.innerHTML : ''; });
-  const reg = { clave: PREF + ESP, esp: ESP, nombre: NOMBRE, apellidos: APELLIDOS, fecha: Date.now(), leidos: LEIDOS, campos: leerCampos(), cajas };
-  const ok = await guardarReg(reg);
-  $('#estado').textContent = ok ? 'Guardado a las ' + new Date().toLocaleTimeString('es-ES', { hour:'2-digit', minute:'2-digit', second:'2-digit' }) : '⚠ No se ha podido guardar en este navegador';
+  const ok = await guardarReg(regActual());
+  $('#estado').textContent = ok ? '✓ Guardado automáticamente · ' + new Date().toLocaleTimeString('es-ES', { hour:'2-digit', minute:'2-digit', second:'2-digit' }) : '⚠ No se ha podido guardar en este navegador';
   if (manual) aviso(ok ? 'Guardado en este navegador ✔' : 'No se ha podido guardar. Descarga el PDF para no perder tu trabajo.');
   return ok;
 }
+// Guardado inmediato (sin esperas) para cuando la página se cierra, se oculta o el móvil cambia de app
+function guardarYa(){
+  if (!ESP || EJEMPLO || $('#editor').classList.contains('hidden')) return;
+  clearTimeout(tGuardar);
+  const reg = regActual();
+  try { localStorage.setItem(PREF + ESP, JSON.stringify(reg)); } catch(e){}
+  tx('readwrite', st => st.put(reg)).catch(() => {});
+}
 function programarGuardado(){ clearTimeout(tGuardar); if (!EJEMPLO) $('#estado').textContent = 'Cambios sin guardar…'; tGuardar = setTimeout(() => guardar(false), 1500); actualizarProgreso(); }
 $('#btnGuardar').addEventListener('click', () => guardar(true));
-setInterval(() => { if (ESP && !$('#editor').classList.contains('hidden') && $('#estado').textContent.startsWith('Cambios')) guardar(false); }, 30000);
-window.addEventListener('beforeunload', () => { if (ESP && $('#estado').textContent.startsWith('Cambios')) guardar(false); });
+// Copia de seguridad cada 30 s aunque no se detecte ningún cambio (por ejemplo, tras redimensionar una imagen)
+setInterval(() => { if (ESP && !EJEMPLO && !$('#editor').classList.contains('hidden')) guardar(false); }, 30000);
+document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden') guardarYa(); });
+window.addEventListener('pagehide', guardarYa);
+window.addEventListener('beforeunload', guardarYa);
+// Pedir al navegador que no borre los borradores aunque le falte espacio
+try { if (navigator.storage && navigator.storage.persist) navigator.storage.persist().catch(() => {}); } catch(e){}
 
 // ================= cursor y barra de formato =================
 let ultimoEd = null, ultimoRango = null;

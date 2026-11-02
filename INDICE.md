@@ -47,6 +47,18 @@
 | PDF | jsPDF embebido (funciona sin conexión), generado desde el DOM | jsPDF embebido (funciona sin conexión) |
 | Ejemplo | Archivo `_EJEMPLO_relleno.html` aparte | Modo `?ejemplo` en la URL |
 
+## Autoguardado
+
+| Cuándo | Qué hace |
+|---|---|
+| Al escribir | Guarda 1,5 s después de cada cambio (0,9 s en UT2_E1). |
+| Cada 30 s | Copia de seguridad aunque no se detecte ningún cambio. |
+| Al cerrar, ocultar la pestaña o cambiar de app en el móvil | Guardado inmediato, sin esperas, antes de que el navegador cierre la página. |
+| Al volver a abrir | Avisa del borrador y carga la copia más reciente (Cargar / Descartar). |
+| Almacenamiento | Primero copia instantánea (localStorage) y después IndexedDB (admite más imágenes). Se pide al navegador que no borre los datos. |
+| Indicador | «✓ Guardado automáticamente · hh:mm:ss» en la barra superior. |
+| Límite | Se guarda en el navegador de ese dispositivo: si el alumno cambia de ordenador o borra los datos del navegador, el borrador no estará. |
+
 ## Sistema de checks
 
 | Pieza | Qué hace |

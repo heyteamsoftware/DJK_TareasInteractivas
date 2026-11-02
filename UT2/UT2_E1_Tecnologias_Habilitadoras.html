@@ -1004,13 +1004,16 @@ let state = null;
 const DB_NAME='DJK_'+EJERCICIO+'_v2', STORE='borradores', KEY='actual', LS_KEY='DJK_'+EJERCICIO+'_v2_borrador';
 function idb(){ return new Promise((res,rej)=>{ if(!('indexedDB' in window)) return rej('no idb'); const r=indexedDB.open(DB_NAME,1); r.onupgradeneeded=()=>r.result.createObjectStore(STORE); r.onsuccess=()=>res(r.result); r.onerror=()=>rej(r.error); }); }
 async function dbGet(){
-  try{ const db=await idb(); const v=await new Promise((res,rej)=>{const t=db.transaction(STORE).objectStore(STORE).get(KEY); t.onsuccess=()=>res(t.result); t.onerror=()=>rej(t.error);}); if(v) return v; }catch(e){}
-  try{ const s=localStorage.getItem(LS_KEY); return s?JSON.parse(s):null; }catch(e){ return null; }
+  let a=null, b=null;
+  try{ const db=await idb(); a=await new Promise((res,rej)=>{const t=db.transaction(STORE).objectStore(STORE).get(KEY); t.onsuccess=()=>res(t.result||null); t.onerror=()=>rej(t.error);}); }catch(e){}
+  try{ const s=localStorage.getItem(LS_KEY); b=s?JSON.parse(s):null; }catch(e){}
+  if(a && b) return String(b.updated||'') > String(a.updated||'') ? b : a;   // la copia más reciente
+  return a || b;
 }
 async function dbSet(v){
   let ok=false;
-  try{ const db=await idb(); await new Promise((res,rej)=>{const t=db.transaction(STORE,'readwrite'); t.objectStore(STORE).put(v,KEY); t.oncomplete=res; t.onerror=()=>rej(t.error);}); ok=true; }catch(e){}
   try{ localStorage.setItem(LS_KEY, JSON.stringify(v)); ok=true; }catch(e){ /* localStorage lleno (imágenes): IndexedDB basta */ }
+  try{ const db=await idb(); await new Promise((res,rej)=>{const t=db.transaction(STORE,'readwrite'); t.objectStore(STORE).put(v,KEY); t.oncomplete=res; t.onerror=()=>rej(t.error);}); ok=true; }catch(e){}
   return ok;
 }
 async function dbDel(){
@@ -1026,7 +1029,7 @@ async function saveNow(manual){
   state.updated = new Date().toISOString();
   const ok = await dbSet(JSON.parse(JSON.stringify(state)));
   const h = new Date().toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit'});
-  $('#saveStatus').textContent = ok ? 'Guardado '+h : 'No se ha podido guardar';
+  $('#saveStatus').textContent = ok ? '✓ Guardado automáticamente '+h : 'No se ha podido guardar';
   if(manual) toast(ok ? 'Guardado en este navegador' : 'No se ha podido guardar');
 }
 
@@ -1805,7 +1808,20 @@ $('#pendBack').addEventListener('click', cerrarPend);
 $('#pendGo').addEventListener('click', ()=>{ cerrarPend(); descargarPDF(); });
 $('#pendModal').addEventListener('click', e=>{ if(e.target.id==='pendModal') cerrarPend(); });
 document.addEventListener('keydown', e=>{ if(e.key==='Escape' && !$('#pendModal').hidden) cerrarPend(); });
-window.addEventListener('beforeunload', ()=>{ if(saveT) saveNow(); });
+// Guardado inmediato (sin esperas) cuando la página se cierra, se oculta o el móvil cambia de app
+function guardarYa(){
+  if(!state || DEMO) return;
+  clearTimeout(saveT); saveT=null;
+  state.updated = new Date().toISOString();
+  const v = JSON.parse(JSON.stringify(state));
+  try{ localStorage.setItem(LS_KEY, JSON.stringify(v)); }catch(e){}
+  idb().then(db=>{ const t=db.transaction(STORE,'readwrite'); t.objectStore(STORE).put(v,KEY); }).catch(()=>{});
+}
+document.addEventListener('visibilitychange', ()=>{ if(document.visibilityState==='hidden') guardarYa(); });
+window.addEventListener('pagehide', guardarYa);
+window.addEventListener('beforeunload', guardarYa);
+setInterval(()=>{ if(state && !DEMO && $('#start').hidden) saveNow(); }, 30000);
+try{ if(navigator.storage && navigator.storage.persist) navigator.storage.persist().catch(()=>{}); }catch(e){}
 document.addEventListener('keydown', e=>{ if(e.key==='Escape' && armed!==null) disarm(); if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='s'){ e.preventDefault(); saveNow(true); } });
 
 // Pantalla de inicio
