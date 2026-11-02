@@ -183,7 +183,7 @@ function construir(esp){
   h += `<div id="tarea">${construirTarea(C)}
     <section class="fase f4"><header><h2>Fuentes y uso de IA</h2></header><div class="cuerpo">${caja('fuentes', COMUN.numFuentes, 'Fuentes consultadas y declaración de uso de IA', `<div class="pista">${esc(COMUN.fuentes)}</div>`)}</div></section></div>`;
   const siglas = C.siglas || COMUN.siglas || [];
-  h += `<section class="card compr"><h2 style="margin-top:0;font-size:1.1rem">Antes de entregar, comprueba</h2><ul class="checks" id="checks"></ul>${enServidor() ? `<p class="nota-cod">🔑 ¿Has perdido tu código? Pídeselo a tu profesor.</p>` : ''}</section>
+  h += `<section class="card compr"><h2 style="margin-top:0;font-size:1.1rem">Antes de entregar, comprueba</h2><ul class="checks" id="checks"></ul></section>
     <section class="card">${COMUN.entregaEj ? `<h2 style="margin-top:0;font-size:1.1rem">Entrega</h2><ul>${COMUN.entregaEj.map(e => `<li>${esc(e)}</li>`).join('')}</ul>` : ''}
     <h2 style="font-size:1.1rem${COMUN.entregaEj ? '' : ';margin-top:0'}">Entrega y criterios generales</h2><ul>${COMUN.entrega.map(e => `<li>${esc(e)}</li>`).join('')}</ul>
     ${siglas.length ? `<h2 style="font-size:1.1rem">Abreviaturas y siglas empleadas en esta unidad</h2><table class="siglas sg"><thead><tr><th>Sigla</th><th>Significado</th></tr></thead><tbody>${siglas.map(s => `<tr><td>${esc(s[0])}</td><td>${esc(s[1])}</td></tr>`).join('')}</tbody></table>` : ''}</section>

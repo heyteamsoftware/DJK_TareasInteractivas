@@ -695,6 +695,8 @@ body:not(.editando) .toolbar{visibility:hidden;pointer-events:none}
 .cod-grande b{font-family:ui-monospace,Consolas,monospace;font-size:24px;letter-spacing:.08em}
 ul.cod-info{margin:0 0 12px;padding-left:20px;font-size:14px}
 ul.cod-info li{margin:5px 0}
+#btnCodigo[hidden]{display:none}
+.cod-perdido{background:var(--peach);border-radius:10px;padding:8px 12px;margin:0 0 12px;font-weight:600;font-size:14px}
 .cod-nube{font-size:13px;color:var(--muted);margin:0 0 12px}
 .top .brand>div{min-width:0}
 .top .brand b{overflow-wrap:anywhere}
@@ -810,7 +812,10 @@ ul.cod-info li{margin:5px 0}
   <section class="card" id="plano">
     <div class="kicker">2 · Elige y coloca</div>
     <div class="sec-title">Tu plano del centro</div>
-    <p class="lead">Elige 10 tecnologías de la lista e instálalas en el plano arrastrándolas. En el móvil o la tableta: toca una tecnología de «Mis 10» y después toca el sitio del plano. Puedes mover los pines cuando quieras.</p>
+    <p class="lead"><b>Elegir tecnologías habilitadoras en diferentes espacios.</b><br>
+      Tienes 4 espacios: <b>Patio</b>, <b>Aula Grande</b>, <b>Despacho</b> y <b>Cancha de Fútbol</b>.<br>
+      Entre las 50 tecnologías que se te ofrecen, elige <b>10</b> de la lista y arrástralas donde las vas a querer usar. Justifica <b>¿Por qué la has instalado en este espacio?</b> y <b>¿Quién la usaría y en qué momento?</b></p>
+    <p class="hint" style="margin-top:6px">En el móvil o la tableta: toca una tecnología de «Mis 10» y después toca el sitio del plano. Puedes mover los pines cuando quieras.</p>
     <div class="work">
       <div class="panel">
         <h3>Banco de tecnologías <span class="count" id="bankCount">50</span></h3>
@@ -827,7 +832,6 @@ ul.cod-info li{margin:5px 0}
         </div>
         <div class="legend" id="legend"></div>
         <ul class="checks" id="checks"></ul>
-        <p class="nota-cod" id="notaCod" hidden>🔑 ¿Has perdido tu código? Pídeselo a tu profesor.</p>
       </div>
     </div>
   </section>
@@ -885,8 +889,8 @@ ul.cod-info li{margin:5px 0}
       <li>Tu tarea se guarda sola en este navegador.</li>
       <li>Con este código puedes <b>seguir en otro ordenador o móvil</b>: en la pantalla de inicio, escríbelo en «¿Empezaste en otro ordenador o móvil?» y recuperarás tu trabajo.</li>
       <li>Es tuyo y sirve para todos los ejercicios. Apúntalo y no se lo des a nadie.</li>
-      <li>Si lo pierdes, pídeselo a tu profesor.</li>
     </ul>
+    <p class="cod-perdido">🔑 ¿Has perdido tu código? Pídeselo a tu profesor.</p>
     <p class="cod-nube" id="nube"></p>
     <div class="modal-acts"><button type="button" class="btn primary" id="codCerrar">Entendido</button></div>
   </div>
@@ -971,10 +975,10 @@ const TECHS = TECH_DATA.map(t=>t[0]);
 const PARA = TECH_DATA.map(t=>t[1]);
 
 const ZONES = {
-  aula:     {name:'Aula grande',      x0:0.4,  x1:17.8, y0:0.4, y1:12.6, rgb:[235,230,253], ink:[90,74,181]},
+  aula:     {name:'Aula Grande',      x0:0.4,  x1:17.8, y0:0.4, y1:12.6, rgb:[235,230,253], ink:[90,74,181]},
   despacho: {name:'Despacho',         x0:18.2, x1:26.6, y0:0.4, y1:12.6, rgb:[253,231,218], ink:[163,84,42]},
-  patio:    {name:'Patio de juegos',  x0:0,    x1:27,   y0:16,  y1:30,   rgb:[220,242,230], ink:[46,119,82]},
-  cancha:   {name:'Cancha de fútbol', x0:30,   x1:46,   y0:0,   y1:30,   rgb:[220,236,251], ink:[43,104,158]}
+  patio:    {name:'Patio',  x0:0,    x1:27,   y0:16,  y1:30,   rgb:[220,242,230], ink:[46,119,82]},
+  cancha:   {name:'Cancha de Fútbol', x0:30,   x1:46,   y0:0,   y1:30,   rgb:[220,236,251], ink:[43,104,158]}
 };
 const ZONE_ORDER = ['aula','despacho','patio','cancha'];
 
@@ -1149,7 +1153,7 @@ function buildMap(){
   // Rótulos en el suelo
   out.push(floorText('AULA GRANDE',1.2,15.3));
   out.push(floorText('DESPACHO',18.6,15.3));
-  out.push(floorText('PATIO DE JUEGOS',1.2,31.5));
+  out.push(floorText('PATIO',1.2,31.5));
   out.push(floorText('CANCHA DE FÚTBOL',31,31.5));
 
   // ===== Edificio =====
@@ -1250,7 +1254,7 @@ function buildMap(){
   const pad=24, top=70;
   const vb=[Math.floor(BB.x0-pad), Math.floor(BB.y0-top), Math.ceil(BB.x1-BB.x0+pad*2), Math.ceil(BB.y1-BB.y0+top+pad)];
   const title=`<text x="${vb[0]+22}" y="${vb[1]+34}" font-size="13" font-weight="800" letter-spacing="2.5" fill="${INK}">PLANO DEL CENTRO</text><text x="${vb[0]+22}" y="${vb[1]+52}" font-size="11" fill="#777" letter-spacing="1">UT2 · E1 · TECNOLOGÍAS HABILITADORAS</text>`;
-  return `<svg id="map" xmlns="http://www.w3.org/2000/svg" viewBox="${vb.join(' ')}" font-family="Inter, 'Segoe UI', Arial, sans-serif" role="img" aria-label="Plano isométrico: aula grande, despacho, patio de juegos con columpios y cancha de fútbol">
+  return `<svg id="map" xmlns="http://www.w3.org/2000/svg" viewBox="${vb.join(' ')}" font-family="Inter, 'Segoe UI', Arial, sans-serif" role="img" aria-label="Plano isométrico: aula grande, despacho, patio con columpios y cancha de fútbol">
 <defs>
 <pattern id="dots" width="7" height="7" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="0.9" fill="#111"/></pattern>
 <pattern id="dots2" width="4" height="4" patternUnits="userSpaceOnUse"><rect width="4" height="4" fill="#fff"/><circle cx="1" cy="1" r="0.6" fill="#999"/><circle cx="3" cy="3" r="0.5" fill="#bbb"/></pattern>
@@ -1759,7 +1763,7 @@ function renderBrief(){
   $('#brief').innerHTML = `
     <div class="box resumen"><h3>¿En qué consiste este ejercicio?</h3><ol class="pasos3">
       <li><span class="n">1</span><div><b>Elige 10 tecnologías</b><p>Del banco de 50. Te decimos para qué sirve cada una.</p></div></li>
-      <li><span class="n">2</span><div><b>Instálalas en el plano</b><p>Arrástralas al aula, el despacho, el patio o la cancha. Mínimo 2 en cada espacio.</p></div></li>
+      <li><span class="n">2</span><div><b>Instálalas en el plano</b><p>Arrástralas al patio, el aula grande, el despacho o la cancha de fútbol. Mínimo 2 en cada espacio.</p></div></li>
       <li><span class="n">3</span><div><b>Justifica cada una</b><p>Explica por qué la has puesto ahí y quién la usaría. Al final, descarga el PDF y entrégalo.</p></div></li>
     </ol></div>
     <div class="box b-lav"><h3>Contexto</h3><p>${COMUN.contexto}</p><p style="margin-top:8px"><b>Objetivo:</b> ${COMUN.objetivo}</p></div>
@@ -1998,7 +2002,7 @@ const _montar = mountApp;
 mountApp = function(){
   _montar();
   // El profesor ve en la administración quién ha empezado la tarea (con su código)
-  if (enServidor()){ const nc = document.getElementById('notaCod'); if (nc) nc.hidden = false; nubeSucia = true; setTimeout(subirCopia, 1200); }
+  if (enServidor()){ nubeSucia = true; setTimeout(subirCopia, 1200); }
   document.getElementById('btnCodigo').hidden = !enServidor();
   const ca = document.getElementById('codAviso');
   if (ca){ ca.hidden = !enServidor(); ca.className = ''; ca.innerHTML = ' Lo tienes en el botón <b>🔑 Código</b> de la barra de arriba.'; }

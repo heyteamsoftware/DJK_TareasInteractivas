@@ -167,6 +167,7 @@ table.siglas tfoot td{font-weight:700;background:var(--mint)}
 .cod-grande b{font-family:ui-monospace,Consolas,monospace;font-size:1.45rem;letter-spacing:.08em}
 ul.cod-info{margin:0 0 .8rem;padding-left:1.2rem;font-size:.95rem}
 ul.cod-info li{margin:.3rem 0}
+.cod-perdido{background:var(--peach);border:1px solid var(--peach2);border-radius:10px;padding:.55rem .8rem;margin:0 0 .8rem!important;font-weight:600}
 .cod-nube{font-size:.85rem;color:var(--muted);margin:0 0 .8rem!important}
 #modal .box p,#pendModal .box p{margin:0 0 1rem}
 #modal .bts,#pendModal .bts,#codModal .bts{display:flex;flex-wrap:wrap;gap:.5rem;justify-content:flex-end}
@@ -336,8 +337,8 @@ body:not(.editando) #herr{display:none}
     <li>Tu tarea se guarda sola en este navegador.</li>
     <li>Con este código puedes <b>seguir en otro ordenador o móvil</b>: en la pantalla de inicio, escríbelo en «¿Empezaste en otro ordenador o móvil?» y recuperarás tu trabajo.</li>
     <li>Es tuyo y sirve para todos los ejercicios. Apúntalo y no se lo des a nadie.</li>
-    <li>Si lo pierdes, pídeselo a tu profesor.</li>
   </ul>
+  <p class="cod-perdido">🔑 ¿Has perdido tu código? Pídeselo a tu profesor.</p>
   <p class="cod-nube" id="nube"></p>
   <div class="bts"><button class="btn-main" id="codCerrar" type="button">Entendido</button></div>
 </div></div>
@@ -1352,7 +1353,7 @@ function construir(esp){
   h += `<div id="tarea">${construirTarea(C)}
     <section class="fase f4"><header><h2>Fuentes y uso de IA</h2></header><div class="cuerpo">${caja('fuentes', COMUN.numFuentes, 'Fuentes consultadas y declaración de uso de IA', `<div class="pista">${esc(COMUN.fuentes)}</div>`)}</div></section></div>`;
   const siglas = C.siglas || COMUN.siglas || [];
-  h += `<section class="card compr"><h2 style="margin-top:0;font-size:1.1rem">Antes de entregar, comprueba</h2><ul class="checks" id="checks"></ul>${enServidor() ? `<p class="nota-cod">🔑 ¿Has perdido tu código? Pídeselo a tu profesor.</p>` : ''}</section>
+  h += `<section class="card compr"><h2 style="margin-top:0;font-size:1.1rem">Antes de entregar, comprueba</h2><ul class="checks" id="checks"></ul></section>
     <section class="card">${COMUN.entregaEj ? `<h2 style="margin-top:0;font-size:1.1rem">Entrega</h2><ul>${COMUN.entregaEj.map(e => `<li>${esc(e)}</li>`).join('')}</ul>` : ''}
     <h2 style="font-size:1.1rem${COMUN.entregaEj ? '' : ';margin-top:0'}">Entrega y criterios generales</h2><ul>${COMUN.entrega.map(e => `<li>${esc(e)}</li>`).join('')}</ul>
     ${siglas.length ? `<h2 style="font-size:1.1rem">Abreviaturas y siglas empleadas en esta unidad</h2><table class="siglas sg"><thead><tr><th>Sigla</th><th>Significado</th></tr></thead><tbody>${siglas.map(s => `<tr><td>${esc(s[0])}</td><td>${esc(s[1])}</td></tr>`).join('')}</tbody></table>` : ''}</section>
