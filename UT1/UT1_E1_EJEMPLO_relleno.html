@@ -66,17 +66,30 @@ input[type=text]{width:100%;font:inherit;padding:.65rem .8rem;border:1px solid v
 .err{color:var(--rose3);font-weight:600;min-height:1.4em;margin:.5rem 0 0}
 
 /* ---------- Editor ---------- */
-#barra{position:sticky;top:0;z-index:20;background:rgba(251,248,243,.97);border-bottom:1px solid var(--line);box-shadow:0 2px 10px rgba(80,60,120,.06)}
-#barra .fila1{max-width:900px;margin:0 auto;padding:.55rem 1rem .35rem;display:flex;flex-wrap:wrap;gap:.5rem;align-items:center;justify-content:space-between}
-#barra .tit{font-weight:700;font-size:.95rem;min-width:0}
-#barra .tit small{display:block;font-weight:400;color:var(--muted)}
-#barra .acciones{display:flex;gap:.4rem;flex-wrap:wrap}
-#estado{font-size:.82rem;color:var(--muted)}
+/* Barra superior (mismo diseño que UT2_E1): logo, título, alumno, estado y botones; línea inferior del color de la unidad */
+#barra{position:sticky;top:0;z-index:20;background:rgba(251,248,243,.92);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);border-bottom:3px solid var(--lav3)}
+#barra .top-in{max-width:1100px;margin:0 auto;padding:6px 1rem;min-height:58px;display:flex;align-items:center;gap:12px;flex-wrap:nowrap}
+#barra .brand{display:flex;align-items:center;gap:10px;min-width:0;flex:1}
+#barra .logo{width:32px;height:32px;flex:none}
+#barra .brand b{display:block;font-weight:800;letter-spacing:-.01em;font-size:.98rem;line-height:1.25}
+#barra .brand small{display:block;color:var(--muted);font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:46vw}
+#barra .lnk{all:unset;cursor:pointer;text-decoration:underline;color:inherit}
+#barra .lnk:focus-visible{outline:2px solid var(--lav2)}
+#barra .spacer{display:none}
+#barra .btn{flex:none;white-space:nowrap}
+@media (max-width:1023px){#barra .status{display:none}}
+#barra .status{font-size:12px;color:var(--muted);white-space:nowrap}
+.btn{border:1px solid var(--line);background:#fff;border-radius:10px;padding:8px 14px;font-weight:600;font-size:14px;display:inline-flex;align-items:center;gap:6px;color:var(--ink)}
+.btn:hover{background:var(--lav)}
+.btn:active{transform:translateY(1px)}
+.btn.primary{background:var(--lav3);border-color:var(--lav3);color:#fff}
+.btn.primary:hover{background:var(--lav3);filter:brightness(.9)}
+.prog-fila{max-width:1100px;margin:0 auto;padding:0 1rem 6px}
 #herr{max-width:900px;margin:0 auto;padding:0 1rem .5rem;display:flex;flex-wrap:wrap;gap:.3rem}
 #herr button{padding:.3rem .55rem;min-width:2.2rem;font-size:.9rem;background:#fff}
 #herr button:hover{background:var(--lav)}
 #herr .sep{width:1px;background:var(--line);margin:0 .15rem}
-.progreso{font-size:.85rem;color:var(--muted);margin-top:.2rem}
+.progreso{font-size:.8rem;color:var(--muted)}
 .prog-bar{height:6px;background:var(--line);border-radius:6px;overflow:hidden;margin-top:.25rem}
 .prog-bar i{display:block;height:100%;background:var(--mint2);width:0;transition:width .3s}
 .codigo-card{display:flex;flex-wrap:wrap;gap:.4rem .8rem;align-items:center;background:var(--sky);border:1px solid var(--sky2);border-radius:12px;padding:.7rem .9rem;margin:1rem 0}
@@ -149,12 +162,18 @@ table.siglas tfoot td{font-weight:700;background:var(--mint)}
 /* avisos y modal */
 #aviso{position:fixed;left:50%;bottom:1.2rem;transform:translateX(-50%);z-index:60;background:var(--ink);color:#fff;padding:.7rem 1rem;border-radius:12px;max-width:min(92vw,520px);font-size:.95rem;box-shadow:0 6px 20px rgba(0,0,0,.2);opacity:0;pointer-events:none;transition:opacity .25s}
 #aviso.ver{opacity:1}
-#modal,#pendModal{position:fixed;inset:0;z-index:70;background:rgba(47,45,58,.35);display:flex;align-items:center;justify-content:center;padding:1rem}
-#modal .box,#pendModal .box{background:#fff;border-radius:var(--r);padding:1.2rem;max-width:440px;width:100%;max-height:calc(100vh - 2rem);overflow:auto}
+#modal,#pendModal,#codModal{position:fixed;inset:0;z-index:70;background:rgba(47,45,58,.35);display:flex;align-items:center;justify-content:center;padding:1rem}
+#modal .box,#pendModal .box,#codModal .box{background:#fff;border-radius:var(--r);padding:1.2rem;max-width:440px;width:100%;max-height:calc(100vh - 2rem);overflow:auto}
 #pendModal .box{max-width:520px}
-#pendModal h2{margin:0 0 .3rem;font-size:1.2rem}
+#pendModal h2,#codModal h2{margin:0 0 .3rem;font-size:1.2rem}
+#codModal .box{max-width:480px}
+.cod-grande{display:flex;flex-wrap:wrap;gap:.6rem;align-items:center;justify-content:space-between;background:var(--sky);border:1px solid var(--sky2);border-radius:12px;padding:.7rem .9rem;margin:.8rem 0}
+.cod-grande b{font-family:ui-monospace,Consolas,monospace;font-size:1.45rem;letter-spacing:.08em}
+ul.cod-info{margin:0 0 .8rem;padding-left:1.2rem;font-size:.95rem}
+ul.cod-info li{margin:.3rem 0}
+.cod-nube{font-size:.85rem;color:var(--muted);margin:0 0 .8rem!important}
 #modal .box p,#pendModal .box p{margin:0 0 1rem}
-#modal .bts,#pendModal .bts{display:flex;flex-wrap:wrap;gap:.5rem;justify-content:flex-end}
+#modal .bts,#pendModal .bts,#codModal .bts{display:flex;flex-wrap:wrap;gap:.5rem;justify-content:flex-end}
 ul.pend{list-style:none;margin:0 0 1rem;padding:0;display:grid;gap:.4rem}
 ul.pend li{background:var(--peach);border-radius:10px;padding:.5rem .75rem;font-size:.93rem;font-weight:600}
 ul.pend li small{display:block;color:var(--muted);font-weight:400}
@@ -192,17 +211,18 @@ ul.checks li.ok i{background:var(--mint3);border-color:var(--mint3)}
 @media (max-width:600px){
   .wrap{padding:.7rem}
   .nombres,.campos{grid-template-columns:1fr}
-  #barra .fila1{padding:.45rem .7rem .3rem}
   #herr{padding:0 .7rem .45rem}
-  #barra .acciones button{padding:.35rem .6rem;font-size:.88rem}
   .fase>.cuerpo{padding:.3rem .8rem .9rem}
   .fase>header{padding:.7rem .8rem}
   .rev{padding:.5rem .7rem .1rem}
   #inicio .hero h1{font-size:1.3rem}
-  #barra .tx,#barra .tit small{display:none}
-  #barra .fila1{flex-wrap:nowrap}
-  #barra .tit{font-size:.85rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-  #barra .acciones{flex-wrap:nowrap}
+  #barra .top-in{flex-wrap:nowrap;gap:8px;padding:6px .7rem}
+  #barra .logo,#barra .status,#barra .tx{display:none}
+  #barra .brand b{font-size:13px;line-height:1.2}
+  #barra .brand small{max-width:none}
+  #barra .who-txt{display:none}
+  #barra .btn{padding:8px 10px;font-size:13px}
+  .prog-fila{padding:0 .7rem 6px}
   #herr{gap:.2rem}
   #herr button{padding:.2rem .35rem;min-width:1.9rem;font-size:.82rem}
   #herr .sep{display:none}
@@ -213,7 +233,7 @@ ul.checks li.ok i{background:var(--mint3);border-color:var(--mint3)}
 /* ---------- Tablet y móvil: todo pensado para el dedo (mínimo 44 px) ---------- */
 @media (max-width:1023px), (pointer:coarse){
   button{min-height:44px}
-  #barra .acciones button{min-width:44px;min-height:44px}
+  #barra .btn{min-width:44px;min-height:44px;justify-content:center}
   #herr{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch}
   #herr::-webkit-scrollbar{display:none}
   #herr button{min-width:44px;min-height:44px;flex:none}
@@ -228,9 +248,6 @@ ul.checks li.ok i{background:var(--mint3);border-color:var(--mint3)}
 }
 /* La barra de formato solo aparece mientras se escribe en una caja (ordenador, tablet y móvil) */
 body:not(.editando) #herr{display:none}
-@media (max-width:600px){
-  #barra .acciones{gap:.3rem}
-}
 </style>
 <script>window.EJEMPLO_FORZADO = true;</script>
 </head>
@@ -252,7 +269,7 @@ body:not(.editando) #herr{display:none}
 
   <section class="card hidden" id="recuperar" style="background:var(--sky);border-color:var(--sky2)">
     <label class="lbl" for="codRec">¿Empezaste en otro ordenador o móvil?</label>
-    <p style="margin:0 0 .5rem;font-size:.92rem;color:var(--muted)">Escribe tu código de recuperación (lo ves arriba del ejercicio, por ejemplo K7QF-M2XR-9P) y seguirás donde lo dejaste. Si lo has perdido, pídeselo a tu profesor.</p>
+    <p style="margin:0 0 .5rem;font-size:.92rem;color:var(--muted)">Escribe tu código de recuperación (lo ves en el botón 🔑 Código de la barra de arriba del ejercicio; por ejemplo K7QF-M2XR-9P) y seguirás donde lo dejaste. Si lo has perdido, pídeselo a tu profesor.</p>
     <div class="rec-fila"><input type="text" id="codRec" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="XXXX-XXXX-XX" maxlength="14"><button class="btn-main" id="btnRecuperar" type="button">Recuperar mi trabajo</button></div>
     <p class="err" id="errRec"></p>
   </section>
@@ -277,13 +294,13 @@ body:not(.editando) #herr{display:none}
 <!-- =============== EDITOR =============== -->
 <div id="editor" class="hidden">
   <div id="barra">
-    <div class="fila1">
-      <div class="tit"><span id="tTitulo"></span><small id="tSub"></small></div>
-      <div class="acciones">
-        <button class="btn-mint" id="btnGuardar" title="Guardar en este navegador">💾<span class="tx"> Guardar</span></button>
-        <button class="btn-peach" id="btnPDF" title="Descargar la tarea en PDF">⬇ PDF</button>
-        <button id="btnInicio" title="Volver a la pantalla de inicio">⌂<span class="tx"> Inicio</span></button>
-      </div>
+    <div class="top-in">
+      <div class="brand"><svg class="logo" viewBox="0 0 32 32" aria-hidden="true"><g stroke="#111" stroke-width="1.5" stroke-linejoin="round"><polygon points="16,4 28,10 16,16 4,10" fill="#fff"/><polygon points="4,10 16,16 16,28 4,22" fill="#f4f4f4"/><polygon points="16,16 28,10 28,22 16,28" fill="#e6e6e6"/></g></svg><div><b id="tTitulo"></b><small><span class="who-txt"><span id="tSub"></span> · </span><button type="button" class="lnk" id="btnInicio" title="Volver a la pantalla de inicio">cambiar datos</button></small></div></div>
+      <div class="spacer"></div>
+      <span class="status" id="estado">Sin guardar todavía</span>
+      <button class="btn" id="btnGuardar" type="button" title="Guardar en este navegador">Guardar</button>
+      <button class="btn hidden" id="btnCodigo" type="button" title="Tu código para seguir en otro ordenador o móvil">🔑<span class="tx"> Código</span></button>
+      <button class="btn primary" id="btnPDF" type="button" title="Descargar la tarea en PDF"><span class="tx">Descargar </span>PDF</button>
     </div>
     <div id="herr" role="toolbar" aria-label="Formato del texto">
       <button data-cmd="bold" title="Negrita"><b>N</b></button>
@@ -302,8 +319,8 @@ body:not(.editando) #herr{display:none}
       <button id="bImagen" title="Insertar imagen">🖼<span class="tx"> Imagen</span></button>
       <input type="file" id="fImagen" accept="image/*" multiple class="hidden">
     </div>
-    <div style="max-width:900px;margin:0 auto;padding:0 1rem .45rem">
-      <div class="progreso"><span id="estado">Sin guardar todavía</span><span id="nube"></span> · <span id="progTxt"></span></div>
+    <div class="prog-fila">
+      <div class="progreso"><span id="progTxt"></span></div>
       <div class="prog-bar"><i id="progBar"></i></div>
     </div>
   </div>
@@ -317,6 +334,18 @@ body:not(.editando) #herr{display:none}
 </div>
 <div id="aviso" role="status"></div>
 <div id="modal" class="hidden"><div class="box"><p id="mTxt"></p><div class="bts" id="mBts"></div></div></div>
+<div id="codModal" class="hidden" role="dialog" aria-modal="true" aria-labelledby="codTit"><div class="box">
+  <h2 id="codTit">🔑 Tu código de recuperación</h2>
+  <div class="cod-grande"><b id="codValor"></b><button class="btn" id="codCopiar" type="button">Copiar</button></div>
+  <ul class="cod-info">
+    <li>Tu tarea se guarda sola en este navegador.</li>
+    <li>Con este código puedes <b>seguir en otro ordenador o móvil</b>: en la pantalla de inicio, escríbelo en «¿Empezaste en otro ordenador o móvil?» y recuperarás tu trabajo.</li>
+    <li>Es tuyo y sirve para todos los ejercicios. Apúntalo y no se lo des a nadie.</li>
+    <li>Si lo pierdes, pídeselo a tu profesor.</li>
+  </ul>
+  <p class="cod-nube" id="nube"></p>
+  <div class="bts"><button class="btn-main" id="codCerrar" type="button">Entendido</button></div>
+</div></div>
 <div id="pendModal" class="hidden" role="dialog" aria-modal="true" aria-labelledby="pendTit"><div class="box">
   <h2 id="pendTit">Tu ejercicio aún no está completo</h2>
   <p>Puedes descargar el PDF igualmente, pero esto es lo que te falta:</p>
@@ -1072,7 +1101,7 @@ const TICKS = () => [...COMUN.pasos.map((_, i) => 'p' + i), ...COMUN.normas.map(
 const todoLeido = () => TICKS().every(k => LEIDOS[k]);
 // Aviso de guardado (norma 18): se puede guardar en este navegador y el código sirve para seguir en otro dispositivo
 function avisoGuardado(){
-  return `<div class="aviso-guardado">💾 Puedes guardar tu tarea en este navegador. Si vas a continuar en otro dispositivo, copia el código que se te proporciona para poder recuperarla y no perderla.${enServidor() ? ` <span class="cod-inline">Tu código: <b>${esc(miCodigo())}</b> <button type="button" data-copiar-cod>Copiar</button></span>` : ''}</div>`;
+  return `<div class="aviso-guardado">💾 Puedes guardar tu tarea en este navegador. Si vas a continuar en otro dispositivo, copia el código que se te proporciona para poder recuperarla y no perderla.${enServidor() ? ' Lo tienes en el botón <b>🔑 Código</b> de la barra de arriba.' : ''}</div>`;
 }
 function enunciadoHTML(){
   const item = (k, txt, num) => `<li><button type="button" class="tk" data-tick="${k}" data-num="${num}" aria-pressed="false"><i>${num}</i><span>${txt}</span></button></li>`;
@@ -1091,7 +1120,6 @@ function construir(esp){
   h += `<div class="cab"><small>${esc(COMUN.asignatura)} · ${esc(COMUN.unidad)}</small><h1>${esc(COMUN.ejercicio)}</h1>
     <div class="meta"><span class="chip">CFGS ${esc(C.nombre)}</span><span class="chip">Resultado de aprendizaje: ${COMUN.ra}</span><span class="chip">Criterios de evaluación: ${COMUN.ce}</span>${COMUN.peso ? `<span class="chip">Peso: ${esc(COMUN.peso)}</span>` : ''}${COMUN.modalidad ? `<span class="chip">${esc(COMUN.modalidad)}</span>` : ''}<span class="chip">Alumno/a: ${esc(completo())}</span></div></div>
     <section class="card">${introHTML(C)}<h2 style="font-size:1.1rem">Cómo se califica</h2>${tablaCriterios()}</section>`;
-  if (enServidor()) h += `<div class="codigo-card"><span>🔑 Tu código para seguir en otro ordenador o móvil: <b>${esc(miCodigo())}</b></span><button type="button" data-copiar-cod>Copiar</button><small>Apúntalo. En la pantalla de inicio de otro dispositivo, escríbelo en «¿Empezaste en otro dispositivo?» y recuperarás tu trabajo.</small></div>`;
   h += enunciadoHTML();
   h += `<div id="tarea">${construirTarea(C)}
     <section class="fase f4"><header><h2>Fuentes y uso de IA</h2></header><div class="cuerpo">${caja('fuentes', COMUN.numFuentes, 'Fuentes consultadas y declaración de uso de IA', `<div class="pista">${esc(COMUN.fuentes)}</div>`)}</div></section></div>`;
@@ -1113,8 +1141,9 @@ function abrirEditor(esp, nombre, apellidos, reg){
   construir(esp);
   if (reg && reg.cajas) document.querySelectorAll('.ed').forEach(ed => { if (reg.cajas[ed.dataset.id] != null) ed.innerHTML = limpiarHTML(reg.cajas[ed.dataset.id]); });
   ponerCampos((reg && reg.campos) || (EJEMPLO && typeof ejemploCampos === 'function' ? ejemploCampos() : {}));
-  $('#tTitulo').textContent = COMUN.corto + ' · ' + CICLOS[esp].nombre;
-  $('#tSub').textContent = completo();
+  $('#tTitulo').textContent = COMUN.corto.split(' · ')[0] + ' · ' + COMUN.ejercicio;
+  $('#tSub').textContent = completo() + ' · ' + CICLOS[esp].nombre;
+  $('#btnCodigo').classList.toggle('hidden', !enServidor());
   $('#estado').textContent = EJEMPLO ? 'Ejemplo: no se guarda' : (reg ? 'Borrador cargado (' + fechaTxt(reg.fecha) + ')' : 'Sin guardar todavía');
   $('#nube').textContent = '';
   $('#inicio').classList.add('hidden'); $('#editor').classList.remove('hidden');
@@ -1259,12 +1288,12 @@ async function subirCopia(){
   if (!ESP || !enServidor() || nubeEnCurso || $('#editor').classList.contains('hidden')) return;
   nubeEnCurso = true; nubeSucia = false;
   const n = $('#nube'), cuerpo = cuerpoCopia();
-  if (cuerpo.length > 6 * 1024 * 1024){ n.textContent = ' · ⚠ Demasiadas imágenes para la copia en el servidor (reduce alguna)'; nubeEnCurso = false; return; }
+  if (cuerpo.length > 6 * 1024 * 1024){ n.textContent = '⚠ Tienes demasiadas imágenes para la copia en el servidor: reduce alguna.'; nubeEnCurso = false; return; }
   try {
     const r = await fetch('../api/borradores.php', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: cuerpo });
     if (!r.ok) throw new Error(r.status);
-    n.textContent = ' · ☁ Copia en el servidor ' + new Date().toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
-  } catch(e){ nubeSucia = true; n.textContent = ' · ☁ Sin conexión: se copiará al servidor cuando vuelva'; }
+    n.textContent = '☁ Última copia en el servidor: ' + new Date().toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
+  } catch(e){ nubeSucia = true; n.textContent = '☁ Sin conexión: se copiará al servidor cuando vuelva.'; }
   nubeEnCurso = false;
 }
 setInterval(() => { if (nubeSucia) subirCopia(); }, 60000);
@@ -1280,6 +1309,13 @@ document.addEventListener('click', async e => {
   if (!e.target.closest('[data-copiar-cod]')) return;
   try { await navigator.clipboard.writeText(miCodigo()); aviso('Código copiado. Guárdalo en un sitio seguro.'); } catch(_){ prompt('Tu código:', miCodigo()); }
 });
+// Botón «Código» de la barra superior: popup con el código y para qué sirve
+function cerrarCodigo(){ $('#codModal').classList.add('hidden'); }
+$('#btnCodigo').addEventListener('click', () => { $('#codValor').textContent = miCodigo(); $('#codModal').classList.remove('hidden'); $('#codCerrar').focus(); });
+$('#codCerrar').addEventListener('click', cerrarCodigo);
+$('#codModal').addEventListener('click', e => { if (e.target.id === 'codModal') cerrarCodigo(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') cerrarCodigo(); });
+$('#codCopiar').addEventListener('click', async () => { try { await navigator.clipboard.writeText(miCodigo()); aviso('Código copiado. Guárdalo en un sitio seguro.'); } catch(_){ prompt('Tu código:', miCodigo()); } });
 // Recuperar el trabajo desde otro dispositivo con el código
 $('#btnRecuperar').addEventListener('click', async () => {
   const err = $('#errRec'); err.textContent = '';

@@ -694,6 +694,14 @@ body:not(.editando) .toolbar{visibility:hidden;pointer-events:none}
 .aviso-guardado .cod-inline{display:inline-flex;flex-wrap:wrap;gap:8px;align-items:center;margin-left:6px}
 .aviso-guardado b{font-family:ui-monospace,Consolas,monospace;letter-spacing:.06em}
 .nota-cod{margin:10px 0 0;font-size:13px;color:var(--muted)}
+.cod-grande{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;background:var(--sky);border-radius:14px;padding:12px 14px;margin:14px 0}
+.cod-grande b{font-family:ui-monospace,Consolas,monospace;font-size:24px;letter-spacing:.08em}
+ul.cod-info{margin:0 0 12px;padding-left:20px;font-size:14px}
+ul.cod-info li{margin:5px 0}
+.cod-nube{font-size:13px;color:var(--muted);margin:0 0 12px}
+.top .brand>div{min-width:0}
+.top .brand b{overflow-wrap:anywhere}
+@media (max-width:600px){.tx-cod,.top .who-txt{display:none}.top .brand small{max-width:none}}
 /* Color de la unidad UT2 (menta) */
 .top{border-bottom:3px solid var(--mint-ink)}
 .kicker{color:var(--mint-ink)}
@@ -736,7 +744,7 @@ body:not(.editando) .toolbar{visibility:hidden;pointer-events:none}
       <div class="ra-inicio" id="raInicio"></div>
       <div class="rec" id="recuperar" hidden>
         <label for="codRec">¿Empezaste en otro ordenador o móvil?</label>
-        <p>Escribe tu código de recuperación (lo ves arriba del ejercicio, por ejemplo K7QF-M2XR-9P). Si lo has perdido, pídeselo a tu profesor.</p>
+        <p>Escribe tu código de recuperación (lo ves en el botón 🔑 Código de la barra de arriba del ejercicio; por ejemplo K7QF-M2XR-9P). Si lo has perdido, pídeselo a tu profesor.</p>
         <div class="rec-fila"><input id="codRec" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="XXXX-XXXX-XX" maxlength="14"><button class="btn primary" type="button" id="btnRecuperar">Recuperar mi trabajo</button></div>
       </div>
       <form id="startForm" autocomplete="off">
@@ -771,6 +779,7 @@ body:not(.editando) .toolbar{visibility:hidden;pointer-events:none}
     <div class="spacer"></div>
     <span class="status" id="saveStatus">Sin cambios</span>
     <button class="btn" id="btnSave" type="button">Guardar</button>
+    <button class="btn" id="btnCodigo" type="button" hidden title="Tu código para seguir en otro ordenador o móvil">🔑<span class="tx-cod"> Código</span></button>
     <button class="btn primary" id="btnPdf" type="button">Descargar PDF</button>
   </div>
 </div>
@@ -872,6 +881,20 @@ body:not(.editando) .toolbar{visibility:hidden;pointer-events:none}
   <button type="button" class="rm" id="imgRemove">Quitar</button>
 </div>
 <div class="toast" id="toast"></div>
+<div class="modal" id="codModal" hidden role="dialog" aria-modal="true" aria-labelledby="codTit">
+  <div class="modal-card">
+    <h2 id="codTit">🔑 Tu código de recuperación</h2>
+    <div class="cod-grande"><b id="codValor"></b><button type="button" class="btn" id="codCopiar">Copiar</button></div>
+    <ul class="cod-info">
+      <li>Tu tarea se guarda sola en este navegador.</li>
+      <li>Con este código puedes <b>seguir en otro ordenador o móvil</b>: en la pantalla de inicio, escríbelo en «¿Empezaste en otro ordenador o móvil?» y recuperarás tu trabajo.</li>
+      <li>Es tuyo y sirve para todos los ejercicios. Apúntalo y no se lo des a nadie.</li>
+      <li>Si lo pierdes, pídeselo a tu profesor.</li>
+    </ul>
+    <p class="cod-nube" id="nube"></p>
+    <div class="modal-acts"><button type="button" class="btn primary" id="codCerrar">Entendido</button></div>
+  </div>
+</div>
 <div class="modal" id="pendModal" hidden role="dialog" aria-modal="true" aria-labelledby="pendTitle">
   <div class="modal-card">
     <div class="modal-ico" aria-hidden="true">!</div>
@@ -1755,7 +1778,7 @@ function renderBrief(){
    ========================================================= */
 function mountApp(){
   renderBrief(); setEnunCollapsed(enunProgress());
-  $('#who').innerHTML = `${esc(state.alumno.nombre+' '+state.alumno.apellidos)} · ${esc(state.alumno.ciclo)}${state.alumno.grupo?' · '+esc(state.alumno.grupo):''} · <a href="#" id="editWho">cambiar datos</a>`;
+  $('#who').innerHTML = `<span class="who-txt">${esc(state.alumno.nombre+' '+state.alumno.apellidos)} · ${esc(state.alumno.ciclo)}${state.alumno.grupo?' · '+esc(state.alumno.grupo):''} · </span><a href="#" id="editWho">cambiar datos</a>`;
   $('#editWho').onclick = e=>{ e.preventDefault(); showStart(true); };
   $('#mapHolder').innerHTML = buildMap();
   const svg=$('#map');
@@ -1863,7 +1886,7 @@ $('#startForm').addEventListener('submit', async e=>{
   if(draft){ await dbDel(); draft=null; }
   state=newState(alumno); $('#start').hidden=true; mountApp(); saveNow();
 });
-function mountWho(){ $('#who').innerHTML = `${esc(state.alumno.nombre+' '+state.alumno.apellidos)} · ${esc(state.alumno.ciclo)}${state.alumno.grupo?' · '+esc(state.alumno.grupo):''} · <a href="#" id="editWho">cambiar datos</a>`; $('#editWho').onclick=e=>{e.preventDefault(); showStart(true);}; }
+function mountWho(){ $('#who').innerHTML = `<span class="who-txt">${esc(state.alumno.nombre+' '+state.alumno.apellidos)} · ${esc(state.alumno.ciclo)}${state.alumno.grupo?' · '+esc(state.alumno.grupo):''} · </span><a href="#" id="editWho">cambiar datos</a>`; $('#editWho').onclick=e=>{e.preventDefault(); showStart(true);}; }
 $('#draftLoad').addEventListener('click', ()=>{ state=draft; draft=null; $('#start').hidden=true; mountApp(); toast('Borrador cargado'); });
 $('#draftDiscard').addEventListener('click', async ()=>{ if(!confirm('¿Seguro que quieres borrar el borrador guardado? No se puede deshacer.')) return; await dbDel(); draft=null; showStart(false); toast('Borrador descartado'); });
 
@@ -1963,10 +1986,10 @@ async function subirCopia(){
   if(!state || !enServidor() || nubeEnCurso || !$('#start').hidden) return;
   nubeEnCurso = true; nubeSucia = false;
   const n = document.getElementById('nube'); const c = cuerpoCopia();
-  if(c.length > 6*1024*1024){ if(n) n.textContent='⚠ Demasiadas imágenes para la copia en el servidor (reduce alguna)'; nubeEnCurso=false; return; }
+  if(c.length > 6*1024*1024){ if(n) n.textContent='⚠ Tienes demasiadas imágenes para la copia en el servidor: reduce alguna.'; nubeEnCurso=false; return; }
   try{ const r = await fetch('../api/borradores.php', { method:'POST', headers:{'Content-Type':'application/json'}, body:c }); if(!r.ok) throw new Error(r.status);
-    if(n) n.textContent = '☁ Copia en el servidor ' + new Date().toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit'}); }
-  catch(e){ nubeSucia = true; if(n) n.textContent = '☁ Sin conexión: se copiará al servidor cuando vuelva'; }
+    if(n) n.textContent = '☁ Última copia en el servidor: ' + new Date().toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit'}); }
+  catch(e){ nubeSucia = true; if(n) n.textContent = '☁ Sin conexión: se copiará al servidor cuando vuelva.'; }
   nubeEnCurso = false;
 }
 setInterval(()=>{ if(nubeSucia) subirCopia(); }, 60000);
@@ -1980,16 +2003,18 @@ mountApp = function(){
   _montar();
   // El profesor ve en la administración quién ha empezado la tarea (con su código)
   if (enServidor()){ const nc = document.getElementById('notaCod'); if (nc) nc.hidden = false; nubeSucia = true; setTimeout(subirCopia, 1200); }
-  let k = document.getElementById('codigoCard');
-  if(!enServidor()){ if(k) k.remove(); return; }
-  if(!k){ k = document.createElement('div'); k.id='codigoCard'; k.className='codigo-card'; const hero=document.querySelector('#app .hero'); hero.parentNode.insertBefore(k, hero.nextSibling); }
-  k.innerHTML = '<span>🔑 Tu código para seguir en otro ordenador o móvil: <b>'+miCodigo()+'</b></span><button type="button" class="btn small" id="copiarCod">Copiar</button><span id="nube" style="color:var(--muted);font-size:13px"></span><small>Apúntalo. En la pantalla de inicio de otro dispositivo, escríbelo en «¿Empezaste en otro dispositivo?» y recuperarás tu trabajo.</small>';
+  document.getElementById('btnCodigo').hidden = !enServidor();
   const ca = document.getElementById('codAviso');
-  if (ca){ ca.hidden = false; ca.innerHTML = 'Tu código: <b>' + miCodigo() + '</b> <button type="button" class="btn small" id="copiarCod2">Copiar</button>';
-    document.getElementById('copiarCod2').onclick = async ()=>{ try{ await navigator.clipboard.writeText(miCodigo()); toast('Código copiado. Guárdalo en un sitio seguro.'); }catch(_){ prompt('Tu código:', miCodigo()); } }; }
-  document.getElementById('copiarCod').onclick = async ()=>{ try{ await navigator.clipboard.writeText(miCodigo()); toast('Código copiado. Guárdalo en un sitio seguro.'); }catch(_){ prompt('Tu código:', miCodigo()); } };
+  if (ca){ ca.hidden = !enServidor(); ca.className = ''; ca.innerHTML = ' Lo tienes en el botón <b>🔑 Código</b> de la barra de arriba.'; }
 };
 if(enServidor()) document.getElementById('recuperar').hidden = false;
+// Botón «Código»: popup con el código y para qué sirve
+function cerrarCodigo(){ document.getElementById('codModal').hidden = true; }
+document.getElementById('btnCodigo').addEventListener('click', ()=>{ document.getElementById('codValor').textContent = miCodigo(); document.getElementById('codModal').hidden = false; document.getElementById('codCerrar').focus(); });
+document.getElementById('codCerrar').addEventListener('click', cerrarCodigo);
+document.getElementById('codModal').addEventListener('click', e=>{ if(e.target.id==='codModal') cerrarCodigo(); });
+document.addEventListener('keydown', e=>{ if(e.key==='Escape') cerrarCodigo(); });
+document.getElementById('codCopiar').addEventListener('click', async ()=>{ try{ await navigator.clipboard.writeText(miCodigo()); toast('Código copiado. Guárdalo en un sitio seguro.'); }catch(_){ prompt('Tu código:', miCodigo()); } });
 document.getElementById('btnRecuperar').addEventListener('click', async ()=>{
   const s = $('#codRec').value.toUpperCase().replace(/[^A-Z0-9]/g,'');
   if(s.length!==10){ toast('El código tiene 10 letras y números, por ejemplo K7QF-M2XR-9P.'); return; }

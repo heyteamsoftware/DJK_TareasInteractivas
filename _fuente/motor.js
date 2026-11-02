@@ -165,7 +165,7 @@ const TICKS = () => [...COMUN.pasos.map((_, i) => 'p' + i), ...COMUN.normas.map(
 const todoLeido = () => TICKS().every(k => LEIDOS[k]);
 // Aviso de guardado (norma 18): se puede guardar en este navegador y el código sirve para seguir en otro dispositivo
 function avisoGuardado(){
-  return `<div class="aviso-guardado">💾 Puedes guardar tu tarea en este navegador. Si vas a continuar en otro dispositivo, copia el código que se te proporciona para poder recuperarla y no perderla.${enServidor() ? ` <span class="cod-inline">Tu código: <b>${esc(miCodigo())}</b> <button type="button" data-copiar-cod>Copiar</button></span>` : ''}</div>`;
+  return `<div class="aviso-guardado">💾 Puedes guardar tu tarea en este navegador. Si vas a continuar en otro dispositivo, copia el código que se te proporciona para poder recuperarla y no perderla.${enServidor() ? ' Lo tienes en el botón <b>🔑 Código</b> de la barra de arriba.' : ''}</div>`;
 }
 function enunciadoHTML(){
   const item = (k, txt, num) => `<li><button type="button" class="tk" data-tick="${k}" data-num="${num}" aria-pressed="false"><i>${num}</i><span>${txt}</span></button></li>`;
@@ -184,7 +184,6 @@ function construir(esp){
   h += `<div class="cab"><small>${esc(COMUN.asignatura)} · ${esc(COMUN.unidad)}</small><h1>${esc(COMUN.ejercicio)}</h1>
     <div class="meta"><span class="chip">CFGS ${esc(C.nombre)}</span><span class="chip">Resultado de aprendizaje: ${COMUN.ra}</span><span class="chip">Criterios de evaluación: ${COMUN.ce}</span>${COMUN.peso ? `<span class="chip">Peso: ${esc(COMUN.peso)}</span>` : ''}${COMUN.modalidad ? `<span class="chip">${esc(COMUN.modalidad)}</span>` : ''}<span class="chip">Alumno/a: ${esc(completo())}</span></div></div>
     <section class="card">${introHTML(C)}<h2 style="font-size:1.1rem">Cómo se califica</h2>${tablaCriterios()}</section>`;
-  if (enServidor()) h += `<div class="codigo-card"><span>🔑 Tu código para seguir en otro ordenador o móvil: <b>${esc(miCodigo())}</b></span><button type="button" data-copiar-cod>Copiar</button><small>Apúntalo. En la pantalla de inicio de otro dispositivo, escríbelo en «¿Empezaste en otro dispositivo?» y recuperarás tu trabajo.</small></div>`;
   h += enunciadoHTML();
   h += `<div id="tarea">${construirTarea(C)}
     <section class="fase f4"><header><h2>Fuentes y uso de IA</h2></header><div class="cuerpo">${caja('fuentes', COMUN.numFuentes, 'Fuentes consultadas y declaración de uso de IA', `<div class="pista">${esc(COMUN.fuentes)}</div>`)}</div></section></div>`;
@@ -206,8 +205,9 @@ function abrirEditor(esp, nombre, apellidos, reg){
   construir(esp);
   if (reg && reg.cajas) document.querySelectorAll('.ed').forEach(ed => { if (reg.cajas[ed.dataset.id] != null) ed.innerHTML = limpiarHTML(reg.cajas[ed.dataset.id]); });
   ponerCampos((reg && reg.campos) || (EJEMPLO && typeof ejemploCampos === 'function' ? ejemploCampos() : {}));
-  $('#tTitulo').textContent = COMUN.corto + ' · ' + CICLOS[esp].nombre;
-  $('#tSub').textContent = completo();
+  $('#tTitulo').textContent = COMUN.corto.split(' · ')[0] + ' · ' + COMUN.ejercicio;
+  $('#tSub').textContent = completo() + ' · ' + CICLOS[esp].nombre;
+  $('#btnCodigo').classList.toggle('hidden', !enServidor());
   $('#estado').textContent = EJEMPLO ? 'Ejemplo: no se guarda' : (reg ? 'Borrador cargado (' + fechaTxt(reg.fecha) + ')' : 'Sin guardar todavía');
   $('#nube').textContent = '';
   $('#inicio').classList.add('hidden'); $('#editor').classList.remove('hidden');
@@ -352,12 +352,12 @@ async function subirCopia(){
   if (!ESP || !enServidor() || nubeEnCurso || $('#editor').classList.contains('hidden')) return;
   nubeEnCurso = true; nubeSucia = false;
   const n = $('#nube'), cuerpo = cuerpoCopia();
-  if (cuerpo.length > 6 * 1024 * 1024){ n.textContent = ' · ⚠ Demasiadas imágenes para la copia en el servidor (reduce alguna)'; nubeEnCurso = false; return; }
+  if (cuerpo.length > 6 * 1024 * 1024){ n.textContent = '⚠ Tienes demasiadas imágenes para la copia en el servidor: reduce alguna.'; nubeEnCurso = false; return; }
   try {
     const r = await fetch('../api/borradores.php', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: cuerpo });
     if (!r.ok) throw new Error(r.status);
-    n.textContent = ' · ☁ Copia en el servidor ' + new Date().toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
-  } catch(e){ nubeSucia = true; n.textContent = ' · ☁ Sin conexión: se copiará al servidor cuando vuelva'; }
+    n.textContent = '☁ Última copia en el servidor: ' + new Date().toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
+  } catch(e){ nubeSucia = true; n.textContent = '☁ Sin conexión: se copiará al servidor cuando vuelva.'; }
   nubeEnCurso = false;
 }
 setInterval(() => { if (nubeSucia) subirCopia(); }, 60000);
@@ -373,6 +373,13 @@ document.addEventListener('click', async e => {
   if (!e.target.closest('[data-copiar-cod]')) return;
   try { await navigator.clipboard.writeText(miCodigo()); aviso('Código copiado. Guárdalo en un sitio seguro.'); } catch(_){ prompt('Tu código:', miCodigo()); }
 });
+// Botón «Código» de la barra superior: popup con el código y para qué sirve
+function cerrarCodigo(){ $('#codModal').classList.add('hidden'); }
+$('#btnCodigo').addEventListener('click', () => { $('#codValor').textContent = miCodigo(); $('#codModal').classList.remove('hidden'); $('#codCerrar').focus(); });
+$('#codCerrar').addEventListener('click', cerrarCodigo);
+$('#codModal').addEventListener('click', e => { if (e.target.id === 'codModal') cerrarCodigo(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') cerrarCodigo(); });
+$('#codCopiar').addEventListener('click', async () => { try { await navigator.clipboard.writeText(miCodigo()); aviso('Código copiado. Guárdalo en un sitio seguro.'); } catch(_){ prompt('Tu código:', miCodigo()); } });
 // Recuperar el trabajo desde otro dispositivo con el código
 $('#btnRecuperar').addEventListener('click', async () => {
   const err = $('#errRec'); err.textContent = '';
