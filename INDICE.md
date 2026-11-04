@@ -21,7 +21,7 @@
 | UT1_E1 | Revoluciones industriales canarias y quinta revolución industrial | RA1 | a, b | AF, AS, EI, HB, IS + EI SP, IS SP, MC SP | A | [UT1_E1](UT1/UT1_E1_Revoluciones_Industriales_Canarias.html) | [Ejemplo](UT1/UT1_E1_EJEMPLO_relleno.html) | Sí | Sí | Hecho |
 | UT1_E2 | Combinación de sistemas ciberfísicos | RA1 | e, f, g | AF, AS, EI, HB, IS + EI SP, IS SP, MC SP | A (bocadillos + diapositivas) | [UT1_E2](UT1/UT1_E2_Combinacion_Sistemas_Ciberfisicos.html) | [Ejemplo](UT1/UT1_E2_EJEMPLO_relleno.html) | Sí (4·2·2·1·1) | Sí | Hecho |
 | UT1_E3 | Sistemas ciberfísicos y digitalización del sector | RA1 | c, d, e, f | AF, AS, EI, HB, IS + EI SP, IS SP, MC SP | A | [UT1_E3](UT1/UT1_E3_Digitalizacion_Sistemas_CiberFisicos.html) | [Ejemplo](UT1/UT1_E3_EJEMPLO_relleno.html) | Sí | Sí | Hecho |
-| UT1_SP | Digitalización de los sectores productivos (semipresencial: reúne E1, E2 y E3 en versión corta) | RA1 | a, b, c, d, e, f, g | Solo EI SP, IS SP y MC SP | A (remix) | [UT1_SP](SEMI/UT1_SP_Digitalizacion_Sectores_Productivos.html) | [Ejemplo](SEMI/UT1_SP_EJEMPLO_relleno.html) | Sí (1·1·1·1,5·1,5·1·1,5·1,5) | Sí | Hecho |
+| UT1_SP | Digitalización de los sectores productivos (semipresencial: reúne E1, E2 y E3 en versión corta) | RA1 | a, b, c, d, e, f, g | Solo EI SP, IS SP y MC SP | A (remix) | [UT1_SP](SEMI/UT1_SP_Digitalizacion_Sectores_Productivos.html) | [Ejemplo](SEMI/UT1_SP_EJEMPLO_relleno.html) | Sí (2·1·1·1,5·1,5·1,5·1,5) | Sí | Hecho |
 | UT2_E1 | Parejas de tecnologías habilitadoras (juego) | RA2 | a | AF, AS, EI, HB, IS + EI SP, IS SP, MC SP | C (juego en el motor común) | [UT2_E1](UT2/UT2_E1_Parejas_Tecnologias_Habilitadoras.html) | [Ejemplo](UT2/UT2_E1_EJEMPLO_relleno.html) | Sí (5 rondas × 2) | Sí | Hecho |
 | UT2_E2 | Tecnologías habilitadoras en tu centro (plano) | RA2 | a, c, d, e | Los 8 · plano y banco de 20 adaptados a cada especialidad | B | [UT2_E2](UT2/UT2_E2_Tecnologias_Habilitadoras.html) | `?ejemplo` | Sí (otro reparto) | Sí (original) | Hecho (antes era UT2_E1) |
 
@@ -92,10 +92,11 @@ En semipresencial solo hay un ejercicio por unidad: un «remix» de los ejercici
 
 | UT1_SP | De dónde sale | Qué tiene (antes → ahora) | Puntos |
 |---|---|---|---|
-| Bloque 1 | UT1_E1 | Revoluciones en Canarias 4 → 2 (3ª y 4ª) · debate de la 5ª revolución 2 preguntas → 1 · mi profesión 3 → 2 | 1 · 1 · 1 |
-| Bloque 2 | UT1_E2 | Dispositivo asignado al azar (mismas imágenes) · tecnologías 4 → 2 (bocadillos de arriba) · funciones combinadas · actividades 4 → 2 (bocadillos de abajo) · ventajas e inconvenientes · diapositivas 6 → 3 | 1,5 · 1,5 · 1 |
-| Bloque 3 | UT1_E3 | Productos reales 5 → 3 · preguntas frecuentes 5 → 3 | 1,5 · 1,5 |
+| Bloque 1 | UT1_E1 | Las 4 revoluciones en Canarias (0,5 cada una) · debate de la 5ª revolución 2 preguntas → 1 · mi profesión 3 → 2 | 2 · 1 · 1 |
+| Bloque 2 | UT1_E2 | Dispositivo asignado al azar (mismas imágenes) · **sistemas ciberfísicos** 4 → 2 (bocadillos de arriba; no se dice «tecnología habilitadora») · funciones combinadas · **1 sola actividad** con explicación de qué hacer (título y «con quién» en los bocadillos de abajo; paso a paso, dónde, cuánto dura, qué datos recogen los sistemas y para qué se usan) · ventajas e inconvenientes · **sin diapositivas** | 1,5 · 1,5 |
+| Bloque 3 | UT1_E3 | Productos reales 5 → 3 · **5 preguntas frecuentes** (0,3 cada una), una de cada grupo por turnos | 1,5 · 1,5 |
 | Checks | — | 2 pasos, 2 normas y 2 comprobaciones por bloque | — |
+| Cambios 04/11/2026 | — | 4 revoluciones (antes 2) · «Sistema ciberfísico» en lugar de «Tecnología habilitadora» (y fuera la sigla THD) · 1 actividad (antes 2) · sin diapositivas · 5 FAQ (antes 3) | — |
 
 ## Planos de UT2_E2 por especialidad
 
@@ -175,6 +176,7 @@ Todos los ejercicios muestran una tabla «Cómo se califica» con esta forma, de
 | 21 | No hay bloque «Entrega» en la página: la entrega (formato, plazo, aula virtual) la comunica el profesor en clase. La página solo tiene Objetivo, Cómo se califica, la tarea, «Antes de entregar, comprueba» y las siglas. |
 | 22 | Semipresencial: un solo ejercicio por unidad (`UTn_SP`, carpeta `SEMI`), remix de los ejercicios de la unidad con la mitad de elementos. Los ciclos semipresenciales se quitan de la lista de ciclos de **todos** los ejercicios normales (UTn_Em), haya o no ya un UTn_SP de esa unidad; siguen pudiendo abrir sus borradores antiguos. En la administración, sus filas solo muestran UTn_SP. |
 | 15 | Cada unidad tiene su color (UT1 lavanda · UT2 menta · UT3 melocotón · UT4 cielo · UT5 rosa) en la administración, el ejercicio y el PDF. |
+| 23 | Icono de la pestaña con las siglas del ejercicio (`U1E1`, `U2E2`, `U1SP`…) sobre el color de la unidad de las pruebas de DJK_Unidades (UT1 ámbar · UT2 verde azulado · UT3 violeta · UT4 rosa · UT5 verde). Lo pone `construir.js` en `comun_head.html` (`{{ICONO}}`); en UT2_E2 y su redirección va escrito en el HTML. |
 
 ## Versión por dispositivo
 

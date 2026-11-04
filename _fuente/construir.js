@@ -25,12 +25,17 @@ function imagenes(cod){
   return 'const IMAGENES = ' + JSON.stringify(out) + ';\n';
 }
 
+// Icono de la pestaña: siglas UXEX (U1E1, U1SP…) sobre el color de la unidad, igual que en las pruebas de DJK_Unidades
+const COLOR_ICONO = { UT1: '%23D97706', UT2: '%230E7F96', UT3: '%237C3AED', UT4: '%23BE185D', UT5: '%2315803D' };
+const siglasIcono = cod => cod.replace(/^UT(\d)_E?/, 'U$1E').replace('ESP', 'SP');
+
 const cabecera = leer('comun_head.html'), libPDF = leer('jspdf.html'), motor = leer('motor.js');
 for (const e of EJERCICIOS){
   const unidad = e.cod.split('_')[0].toLowerCase();   // ut1, ut2… → color de la unidad
   // Remix semipresencial: su contenido se saca de los ejercicios originales (ver _fuente/remix_*.js)
   const datos = e.remix ? leer(e.cod + '.js').replace('__DATOS__', () => JSON.stringify(require(path.join(F, e.remix))())) : leer(e.cod + '.js');
-  const html = cabecera.split('{{TITULO}}').join(e.titulo).replace('<body>', `<body class="${unidad}">`) + libPDF + '\n<script>\n' + imagenes(e.img || e.cod) + datos + '\n' + motor + '\n</script>\n</body>\n</html>\n';
+  const cab = cabecera.split('{{TITULO}}').join(e.titulo).replace('{{ICONO_COLOR}}', COLOR_ICONO[e.cod.split('_')[0]]).replace('{{ICONO}}', siglasIcono(e.cod));
+  const html = cab.replace('<body>', `<body class="${unidad}">`) + libPDF + '\n<script>\n' + imagenes(e.img || e.cod) + datos + '\n' + motor + '\n</script>\n</body>\n</html>\n';
   const dir = path.join(RAIZ, e.dir); fs.mkdirSync(dir, { recursive: true });
   fs.writeFileSync(path.join(dir, e.archivo), html);
   fs.writeFileSync(path.join(dir, e.cod + '_EJEMPLO_relleno.html'), html.replace('</head>', '<script>window.EJEMPLO_FORZADO = true;</script>\n</head>'));
