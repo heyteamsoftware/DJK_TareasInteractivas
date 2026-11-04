@@ -45,7 +45,7 @@ td.num,th.num{text-align:right;font-variant-numeric:tabular-nums;white-space:now
 const NOMBRES = {
   portada: 'Portada',
   UT1_E1: 'UT1 · E1 · Revoluciones industriales canarias', UT1_E2: 'UT1 · E2 · Combinación de sistemas ciberfísicos', UT1_E3: 'UT1 · E3 · Sistemas ciberfísicos',
-  UT1_SP: 'Semipresencial · UT1 · Digitalización de los sectores productivos', UT2_E1: 'UT2 · E1 · Parejas de tecnologías habilitadoras', UT2_E2: 'UT2 · E2 · Tecnologías habilitadoras en tu centro'
+  UT1_SP: 'Semipresencial · UT1 · Digitalización de los sectores productivos', UT2_E1: 'UT2 · E1 · Parejas de tecnologías habilitadoras', UT2_E2: 'UT2 · E2 · Tecnologías habilitadoras en tu centro', UT2_E3: 'UT2 · E3 · Diseña tu app de realidad virtual o mixta'
 };
 const nombre = k => { const ej = /_ejemplo$/.test(k); const b = k.replace(/_ejemplo$/, ''); return (NOMBRES[b] || b) + (ej ? ' (ejemplo)' : ''); };
 const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));

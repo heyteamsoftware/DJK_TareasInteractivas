@@ -24,6 +24,7 @@
 | UT1_SP | Digitalización de los sectores productivos (semipresencial: reúne E1, E2 y E3 en versión corta) | RA1 | a, b, c, d, e, f, g | Solo EI SP, IS SP y MC SP | A (remix) | [UT1_SP](SEMI/UT1_SP_Digitalizacion_Sectores_Productivos.html) | [Ejemplo](SEMI/UT1_SP_EJEMPLO_relleno.html) | Sí (2·1·1·1,5·1,5·1,5·1,5) | Sí | Hecho |
 | UT2_E1 | Parejas de tecnologías habilitadoras (juego) | RA2 | a | AF, AS, EI, HB, IS + EI SP, IS SP, MC SP | C (juego en el motor común) | [UT2_E1](UT2/UT2_E1_Parejas_Tecnologias_Habilitadoras.html) | [Ejemplo](UT2/UT2_E1_EJEMPLO_relleno.html) | Sí (5 rondas × 2) | Sí | Hecho |
 | UT2_E2 | Tecnologías habilitadoras en tu centro (plano) | RA2 | a, c, d, e | Los 8 · plano y banco de 20 adaptados a cada especialidad | B | [UT2_E2](UT2/UT2_E2_Tecnologias_Habilitadoras.html) | `?ejemplo` | Sí (otro reparto) | Sí (original) | Hecho (antes era UT2_E1) |
+| UT2_E3 | Diseña tu app de realidad virtual o mixta (tras probar las gafas en clase) | RA2 | b, d, g | AF, AS, EI, HB, IS | C (juego + constructor en el motor común) | [UT2_E3](UT2/UT2_E3_App_Realidad_Virtual_Mixta.html) | [Ejemplo](UT2/UT2_E3_EJEMPLO_relleno.html) | Sí (1,5·1·3,5·1,5·2,5) | Sí | Hecho (sustituye al Word «Informe técnico») |
 
 ## Ciclos
 
@@ -148,6 +149,7 @@ Todos los ejercicios muestran una tabla «Cómo se califica» con esta forma, de
 |---|---|
 | UT1_E1 | Parte 1 → 4 (1 por revolución) · Parte 2 → 3 (2 preguntas, 1,5 cada una) · Parte 3 → 3 (1 por pregunta) |
 | UT1_E3 | Fase 1 → 5 (1 por producto) · Fase 2 → 5 (5 preguntas, 1 cada una) · Fase 3 eliminada |
+| UT2_E3 | Parte 1 juego → 1,5 · Parte 2 experiencia con las gafas → 1 · Parte 3 constructor → 3,5 · Parte 4 ficha de tienda → 1,5 · Parte 5 ventajas, riesgos y mercado → 2,5 |
 | UT2_E1 | Juego → 10 (las 50 parejas casadas; errores, pistas y tiempo informativos) |
 
 ## Normas acordadas
@@ -232,3 +234,15 @@ Todos los ejercicios muestran una tabla «Cómo se califica» con esta forma, de
 | Contador | En la cabecera de la administración: «N visitantes distintos». El aviso de privacidad está en la pantalla de inicio de cada ejercicio. |
 | Estadísticas | `estadisticas.html`: visitantes distintos, visitas totales y de los últimos 7 días, visitas por página y por día (30 días). |
 | Ejercicios nuevos | El motor común registra la visita solo; en la página de estadísticas hay que añadir el nombre del ejercicio en `NOMBRES`. |
+
+## UT2_E3 · Diseña tu app de realidad virtual o mixta
+
+| Parte | Cómo es |
+|---|---|
+| 1 · ¿Virtual, mixta o aumentada? | Juego: 12 situaciones del sector (4 de cada tipo) en orden aleatorio. Se toca la caja (o se arrastra la tarjeta; en tablet, mantener pulsado). Si falla, sale la definición del tipo elegido (no la respuesta) y la tarjeta se queda. Marcador de errores y «a la primera». |
+| 2 · Mi experiencia con las gafas | Fichas (qué probaste, qué te sorprendió, qué cambiarías), 4 escalas con caras (inmersión, comodidad, facilidad, mareo) y una frase. |
+| 3 · Constructor de la app | 8 retos por ciclo + reto propio · caja con la idea · deslizador «cuánto mundo real se ve» (real / aumentada / mixta / virtual; tiene que quedar en mixta o virtual) · fichas: para quién, dónde, cómo se maneja, duración · boceto en un lienzo con forma de visor (lápiz, goma, 7 colores, 3 grosores, pegatinas, fondo blanco / sala real / foto propia, deshacer) · 3 escenas (caja con imagen). |
+| 4 · Tu app en la tienda | Nombre, icono (24 emojis), color (6), eslogan, edad (+3 a +18), precio (gratis, pago único, suscripción, la paga el centro + importe). Ficha generada en directo con el boceto como captura; en el PDF va en página apaisada. |
+| 5 · Ventajas, riesgos y mercado | 3 cajas (ventajas, riesgos con solución, nuevo mercado). |
+| Guardado | Todo lo que no es caja va en el campo oculto `e3` (JSON revisado campo a campo al cargar; imágenes solo en formato `data:image/png` o `data:image/jpeg` en base64). |
+| EI | Aviso de edad mínima de las gafas (10–13 años según fabricante) en el objetivo. |

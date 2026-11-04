@@ -12,7 +12,8 @@ const EJERCICIOS = [
   { cod: 'UT1_E2', dir: 'UT1', archivo: 'UT1_E2_Combinacion_Sistemas_Ciberfisicos.html', titulo: 'UT1 · E2 · Combinación de sistemas ciberfísicos' },
   { cod: 'UT1_E3', dir: 'UT1', archivo: 'UT1_E3_Digitalizacion_Sistemas_CiberFisicos.html', titulo: 'UT1 · E3 · Sistemas ciberfísicos y digitalización del sector' },
   { cod: 'UT1_SP', dir: 'SEMI', archivo: 'UT1_SP_Digitalizacion_Sectores_Productivos.html', titulo: 'UT1 · Digitalización de los sectores productivos', img: 'UT1_E2', remix: 'remix_UT1_SP.js' },
-  { cod: 'UT2_E1', dir: 'UT2', archivo: 'UT2_E1_Parejas_Tecnologias_Habilitadoras.html', titulo: 'UT2 · E1 · Parejas de tecnologías habilitadoras' }
+  { cod: 'UT2_E1', dir: 'UT2', archivo: 'UT2_E1_Parejas_Tecnologias_Habilitadoras.html', titulo: 'UT2 · E1 · Parejas de tecnologías habilitadoras' },
+  { cod: 'UT2_E3', dir: 'UT2', archivo: 'UT2_E3_App_Realidad_Virtual_Mixta.html', titulo: 'UT2 · E3 · Diseña tu app de realidad virtual o mixta' }
 ];
 
 // Imágenes del ejercicio: _fuente/img/UTn_Em/*.jpg|png → const IMAGENES = { nombre: dataURL }
