@@ -25,6 +25,7 @@
 | UT2_E1 | Parejas de tecnologías habilitadoras (juego) | RA2 | a | AF, AS, EI, HB, IS + EI SP, IS SP, MC SP | C (juego en el motor común) | [UT2_E1](UT2/UT2_E1_Parejas_Tecnologias_Habilitadoras.html) | [Ejemplo](UT2/UT2_E1_EJEMPLO_relleno.html) | Sí (5 rondas × 2) | Sí | Hecho |
 | UT2_E2 | Tecnologías habilitadoras en tu centro (plano) | RA2 | a, c, d, e | Los 8 · plano y banco de 20 adaptados a cada especialidad | B | [UT2_E2](UT2/UT2_E2_Tecnologias_Habilitadoras.html) | `?ejemplo` | Sí (otro reparto) | Sí (original) | Hecho (antes era UT2_E1) |
 | UT2_E3 | Diseña tu app de realidad virtual o mixta (tras probar las gafas en clase) | RA2 | b, d, g | AF, AS, EI, HB, IS | C (juego + constructor en el motor común) | [UT2_E3](UT2/UT2_E3_App_Realidad_Virtual_Mixta.html) | [Ejemplo](UT2/UT2_E3_EJEMPLO_relleno.html) | Sí (1,5·1·3,5·1,5·2,5) | Sí | Hecho (sustituye al Word «Informe técnico») |
+| UT2_E4 | Diseñad vuestro robot (trabajo en grupo; se entrega la presentación de Canva) | RA2 | b, g | AF, AS, EI, HB, IS | C (constructor por piezas en el motor común) | [UT2_E4](UT2/UT2_E4_Disenad_Vuestro_Robot.html) | [Ejemplo](UT2/UT2_E4_EJEMPLO_relleno.html) | Sí (3·3·2·2) | Sí | Hecho |
 
 ## Ciclos
 
@@ -150,6 +151,7 @@ Todos los ejercicios muestran una tabla «Cómo se califica» con esta forma, de
 | UT1_E1 | Parte 1 → 4 (1 por revolución) · Parte 2 → 3 (2 preguntas, 1,5 cada una) · Parte 3 → 3 (1 por pregunta) |
 | UT1_E3 | Fase 1 → 5 (1 por producto) · Fase 2 → 5 (5 preguntas, 1 cada una) · Fase 3 eliminada |
 | UT2_E3 | Parte 1 juego → 1,5 · Parte 2 experiencia con las gafas → 1 · Parte 3 constructor → 3,5 · Parte 4 ficha de tienda → 1,5 · Parte 5 ventajas, riesgos y mercado → 2,5 |
+| UT2_E4 | Montaje del robot → 3 · Justificación del montaje → 3 · Imagen con IA → 2 · Presentación en Canva y exposición → 2 |
 | UT2_E1 | Juego → 10 (las 50 parejas casadas; errores, pistas y tiempo informativos) |
 
 ## Normas acordadas
@@ -204,6 +206,7 @@ Todos los ejercicios muestran una tabla «Cómo se califica» con esta forma, de
 | UT1_E3 | ✓ | ✓ | ✓ |
 | UT2_E1 | ✓ | ✓ | ✓ |
 | UT2_E2 | ✓ | ✓ | ✓ |
+| UT2_E4 | ✓ | ✓ | ✓ |
 
 ## Pendiente de unificar
 
@@ -246,3 +249,16 @@ Todos los ejercicios muestran una tabla «Cómo se califica» con esta forma, de
 | 5 · Ventajas, riesgos y mercado | 3 cajas (ventajas, riesgos con solución, nuevo mercado). |
 | Guardado | Todo lo que no es caja va en el campo oculto `e3` (JSON revisado campo a campo al cargar; imágenes solo en formato `data:image/png` o `data:image/jpeg` en base64). |
 | EI | Aviso de edad mínima de las gafas (10–13 años según fabricante) en el objetivo. |
+
+## UT2_E4 · Diseñad vuestro robot (en grupo)
+
+| Parte | Cómo es |
+|---|---|
+| 1 · Equipo y reto | Integrantes del grupo y el reto de la especialidad (un reto por ciclo). |
+| 2 · Montaje | Constructor tipo puzle: 23 piezas comunes + 10 de la especialidad (⭐) = 33. Zonas: cabeza (antena, orejas y ojos: 1 pieza cada una), torso (3 módulos), brazos (de 2 a 4, una pieza en cada uno) y movimiento (1). Cada pieza solo encaja en su zona y cambia el aspecto del robot (forma de la cabeza, del brazo, ruedas, orugas, piernas o hélices). Se toca la pieza y su sitio, o se arrastra (en tablet, mantener pulsado). Nombre del robot en una placa. |
+| Imagen del robot | Botón «⬇ Descargar robot (imagen)»: PNG de 1200 × 1680 px con el robot, el nombre y el ciclo, para Canva. Queda apuntado que se ha descargado (check). También va en el PDF. |
+| 3 · Justificación | Una caja general: para qué sirve, por qué esas piezas, quién lo usaría, ventajas y riesgos. |
+| 4 · Imagen con IA | Tabla de herramientas gratuitas (Canva Magic Media, Microsoft Designer/Copilot, Adobe Firefly, Google Gemini, Ideogram), descripción para la IA generada con sus piezas y el entorno del ciclo («Copiar»), caja para pegar la imagen y caja con la herramienta y el prompt. |
+| 5 · Presentación en Canva | Estructura de 6 diapositivas recomendada. **La entrega es la presentación de Canva en el aula virtual**, con la imagen del robot; se expone en grupo. El PDF de la página queda como apoyo (y registra la descarga en la administración). |
+| Guardado | Piezas, número de brazos y si se ha descargado la imagen van en el campo oculto `robot` (JSON revisado al cargar: solo piezas del ciclo y en su zona). |
+| Ciclos | Solo los 5 presenciales. |
