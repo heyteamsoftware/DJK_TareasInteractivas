@@ -1,72 +1,101 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" class="dk dk-base">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="color-scheme" content="light only">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#0b0c0e">
 <meta name="robots" content="noindex, nofollow">
 <title>Administración · Ejercicios DJK</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%236a54b8'/%3E%3Ctext x='32' y='42' font-family='Arial' font-weight='700' font-size='26' fill='white' text-anchor='middle'%3EDJK%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="/DJK/ui/djk-ui.css?v=1">
 <style>
-:root{--bg:#fbf8f3;--card:#fff;--ink:#2f2d3a;--muted:#5f5b6b;--line:#e7e1ef;--lav:#e9e2fb;--lav2:#c9b8f0;--lav3:#6a54b8;--mint:#dff3ea;--mint3:#2f7d5c;--peach:#ffe9dc;--rose3:#a33c58;--r:14px}
+/* Administración de Ejercicios · aspecto común DJK (la base está en /DJK/ui/djk-ui.css) */
 *{box-sizing:border-box}
-html,body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif}
-.wrap{max-width:1000px;margin:0 auto;padding:1rem}
+html,body{margin:0}
+.wrap{max-width:1180px;margin:0 auto;padding:1.4rem clamp(.8rem,2.4vw,1.6rem) 2.5rem}
 .hidden{display:none!important}
-h1{font-size:1.5rem;margin:.6rem 0 .2rem}
-.sub{color:var(--muted);margin:0 0 1rem}
-.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:1rem;margin:1rem 0}
-.card h2{margin:0 0 .7rem;font-size:1.1rem}
-button{font:inherit;cursor:pointer;border:1px solid var(--line);background:#fff;color:var(--ink);border-radius:10px;padding:.5rem .9rem;min-height:44px}
-button:hover{background:var(--lav)}
-.btn-main{background:var(--lav3);border-color:var(--lav3);color:#fff;font-weight:600}
-.btn-main:hover{background:#5a45a4}
-input[type=password],input[type=search]{width:100%;font:inherit;padding:.65rem .8rem;border:1px solid var(--line);border-radius:10px;min-height:48px}
-:focus-visible{outline:3px solid var(--lav2);outline-offset:2px}
-.login{max-width:380px;margin:3rem auto}
-.err{color:var(--rose3);font-weight:600;min-height:1.4em;margin:.5rem 0 0}
-.barra{display:flex;flex-wrap:wrap;gap:.6rem;align-items:center;justify-content:space-between}
-.chips{display:flex;flex-wrap:wrap;gap:.4rem;margin:.4rem 0 .8rem}
-.chip{border-radius:999px;padding:.45rem .9rem;border:1.5px solid var(--line);background:#fff;font-weight:600;font-size:.92rem}
-.chip.on{background:var(--lav);border-color:var(--lav3);color:var(--lav3)}
-.chip small{font-weight:700;margin-left:.3rem;color:var(--muted)}
-.tabla{overflow-x:auto}
-table{width:100%;border-collapse:collapse;font-size:.93rem}
-th,td{text-align:left;padding:.45rem .55rem;border-bottom:1px solid var(--line);vertical-align:top}
-th{background:var(--lav);font-weight:600;white-space:nowrap}
-td.num,th.num{text-align:center;font-variant-numeric:tabular-nums}
-td.n0{color:#b0abb9}
-.ej{margin:1.2rem 0 .4rem;font-size:1rem;color:var(--lav3)}
-.vacio{color:var(--muted);font-style:italic}
-.nota{font-size:.88rem;color:var(--muted)}
-.disp{min-width:118px;border-radius:999px;font-weight:700;font-size:.88rem;padding:.4rem .8rem}
-.disp.abierto{background:var(--mint);border-color:#9fd8bd;color:var(--mint3)}
-.disp.bloq{background:var(--peach);border-color:#f6bf9e;color:#7a3b1b}
-.disp:disabled{opacity:.5;cursor:wait}
+.sub{color:var(--dk-mute);margin:0 0 1rem}
+.card{background:var(--dk-s1);border:1px solid var(--dk-line);border-radius:var(--dk-r);padding:1.15rem 1.25rem;margin:1rem 0;box-shadow:var(--dk-sombra)}
+.card h2{display:flex;align-items:center;gap:.6rem}
+.card h2::before{content:"";width:8px;height:8px;border-radius:2px;background:var(--dk-acc)}
+.btn-main{background:var(--dk-acc);border-color:var(--dk-acc);color:var(--dk-acc-ink)}
+.btn-main:hover{background:var(--dk-acc2)}
+input[type=password],input[type=search]{width:100%;min-height:46px}
+#buscar{margin:.2rem 0 .4rem;padding-left:2.4rem;
+  background:var(--dk-bg2) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2393928b' stroke-width='1.8' stroke-linecap='round'%3E%3Ccircle cx='11' cy='11' r='6.5'/%3E%3Cpath d='m20 20-4.2-4.2'/%3E%3C/svg%3E") no-repeat .8rem 50%/1.05rem}
+.login{max-width:420px;margin:min(16vh,9rem) auto 2rem;padding:2rem 1.8rem 1.6rem;animation:dk-entra .45s var(--dk-ease) both}
+.login h1{display:flex;align-items:center;gap:.75rem;font-size:2rem;margin:0 0 .4rem}
+.login h1::before{content:"DJK";display:inline-grid;place-items:center;height:36px;padding:0 .55rem;border-radius:var(--dk-r3);background:var(--dk-acc);color:var(--dk-acc-ink);font:700 1.1rem/1 var(--dk-f-disp);letter-spacing:.04em}
+.login label{font:500 .66rem/1.2 var(--dk-f-mono);letter-spacing:.12em;text-transform:uppercase;color:var(--dk-mute)}
+.login .btn-main{min-height:46px;margin-top:.4rem}
+:focus-visible{outline:2px solid var(--dk-acc);outline-offset:2px}
+.err{color:var(--dk-bad);font-weight:600;min-height:1.4em;margin:.5rem 0 0;font-size:.9rem}
+.barra{display:flex;flex-wrap:wrap;gap:.8rem 1.5rem;align-items:flex-end;justify-content:space-between;margin:.5rem 0 .2rem}
+.barra h1{font-size:clamp(1.8rem,3.4vw,2.6rem);letter-spacing:-.015em;margin:.25rem 0 .3rem}
+.barra .sub{margin:0;font:500 .72rem/1.3 var(--dk-f-mono);letter-spacing:.1em;text-transform:uppercase}
+.barra .sub #nVisitas{color:var(--dk-acc);font-size:.9rem}
+.barra>div:last-child{align-items:center}
+.chips{display:flex;flex-wrap:wrap;gap:.35rem;margin:.3rem 0 .8rem}
+.chip{display:inline-flex;align-items:center;gap:.5rem;min-height:36px;padding:0 .75rem;border-radius:var(--dk-r3);border:1px solid var(--dk-line2);background:transparent;color:var(--dk-mute);
+  font:500 .7rem/1 var(--dk-f-mono);letter-spacing:.09em;text-transform:uppercase}
+.chip:hover{color:var(--dk-ink);border-color:var(--dk-line3)}
+.chip.on{color:var(--dk-ink);background:var(--dk-s2);border-color:var(--dk-acc);box-shadow:inset 0 -2px 0 var(--dk-acc)}
+.chip small{font-weight:600;color:var(--dk-faint);margin-left:0}
+.chip.on small{color:var(--dk-acc)}
+.tabla{overflow-x:auto;border:1px solid var(--dk-line);border-radius:var(--dk-r2);background:var(--dk-bg2)}
+.tabla table{font-size:.88rem}
+.tabla th{background:var(--dk-s1)}
+.tabla tr:last-child td{border-bottom:0}
+td.num,th.num{text-align:center}
+td.n0{color:var(--dk-faint)}
 td.celda{text-align:center}
-td.cod{font-family:ui-monospace,Consolas,monospace;letter-spacing:.04em;white-space:nowrap}
-button.borrar{min-height:36px;min-width:40px;padding:.3rem .5rem;color:var(--rose3);background:#fff}
-button.borrar:hover{background:#fde4ea}
+td.cod{font-family:var(--dk-f-mono);letter-spacing:.06em;white-space:nowrap}
+h3.ej{display:flex;align-items:center;gap:.55rem;margin:1.5rem 0 .55rem;font:600 1rem/1.3 var(--dk-f-disp);color:var(--dk-ink)}
+h3.ej::before{content:"";width:3px;height:1.1em;border-radius:2px;background:var(--dk-acc)}
+.vacio{color:var(--dk-faint);font-size:.9rem;margin:.3rem 0}
+.nota{font-size:.86rem;color:var(--dk-mute);line-height:1.55}
+.n0{color:var(--dk-faint)}
+.disp{min-width:132px;border-radius:999px;font:600 .68rem/1 var(--dk-f-mono);letter-spacing:.1em;text-transform:uppercase;min-height:34px;gap:.35rem}
+.disp.abierto{background:var(--dk-acc-bg);border-color:var(--dk-acc-line);color:var(--dk-acc)}
+.disp.abierto:hover{background:rgba(212,243,74,.18);border-color:var(--dk-acc)}
+.disp.bloq{background:var(--dk-warn-bg);border-color:var(--dk-warn-line);color:var(--dk-warn)}
+.disp.bloq:hover{background:rgba(255,181,71,.18);border-color:var(--dk-warn)}
+.disp:disabled{opacity:.5;cursor:wait}
+button.borrar{min-height:32px;min-width:36px;padding:.3rem .45rem;color:var(--dk-bad);background:transparent;border-color:transparent}
+button.borrar:hover{background:var(--dk-bad-bg);border-color:var(--dk-bad-line)}
 @media (pointer:coarse){button.borrar{min-height:44px;min-width:44px}}
-a.enlace{display:inline-flex;align-items:center;min-height:44px;padding:.5rem .9rem;border:1px solid var(--line);border-radius:10px;background:#fff;color:var(--lav3);font-weight:600;text-decoration:none}
-a.enlace:hover{background:var(--lav)}
+a.enlace{font:600 .84rem/1.1 var(--dk-f-text);display:inline-flex;align-items:center;gap:.4rem;min-height:36px;padding:.35rem .7rem;border:1px solid var(--dk-line2);border-radius:var(--dk-r2);
+  background:var(--dk-s2);color:var(--dk-ink);text-decoration:none;transition:background .15s,border-color .15s}
+a.enlace:hover{background:var(--dk-s3);border-color:var(--dk-line3)}
+.barra a.enlace{min-height:40px}
+.ut .acc button{min-height:36px;font-size:.84rem;padding:.35rem .7rem}
 /* Lista de ejercicios por unidad, con el color de cada unidad */
-.ut{--u:#e9e2fb;--u2:#c9b8f0;--u3:#6a54b8;border:1px solid var(--line);border-left:6px solid var(--u2);border-radius:12px;margin:.8rem 0;overflow:hidden}
-.semi{--u:#fff4d6;--u2:#efcd5f;--u3:#7a5a00}
-.ut2{--u:#dff3ea;--u2:#9fd8bd;--u3:#2f7d5c} .ut3{--u:#ffe9dc;--u2:#f6bf9e;--u3:#a3532a} .ut4{--u:#e2eefc;--u2:#a9c8ef;--u3:#2f5f98} .ut5{--u:#fde4ea;--u2:#f1b3c3;--u3:#a33c58}
-.ut h3{margin:0;padding:.6rem 1rem;background:var(--u);color:var(--u3);font-size:1rem}
-.ut ul{list-style:none;margin:0;padding:.2rem 1rem .6rem}
-.ut li{display:flex;flex-wrap:wrap;gap:.4rem .8rem;align-items:center;justify-content:space-between;padding:.55rem 0;border-top:1px dashed var(--line)}
+.ut{--u2:#9583f0;border:1px solid var(--dk-line);border-radius:var(--dk-r);margin:.9rem 0;overflow:hidden;background:var(--dk-s2)}
+.ut2{--u2:#55c690}.ut3{--u2:#e8935c}.ut4{--u2:#679ff2}.ut5{--u2:#e46f92}.semi{--u2:#e6c24a}
+.ut h3{display:flex;align-items:center;gap:.6rem;margin:0;padding:.75rem 1rem;font:600 .98rem/1.2 var(--dk-f-disp);color:var(--dk-ink);border-bottom:1px solid var(--dk-line);
+  background:linear-gradient(90deg,color-mix(in srgb,var(--u2) 14%,transparent),transparent 65%)}
+.ut h3::before{content:"";width:8px;height:8px;border-radius:2px;background:var(--u2);flex:none}
+.ut ul{list-style:none;margin:0;padding:0}
+.ut li{display:flex;flex-wrap:wrap;gap:.5rem .9rem;align-items:center;justify-content:space-between;padding:.75rem 1rem;border-top:1px solid var(--dk-line)}
 .ut li:first-child{border-top:0}
-.ut li b{display:block}
-.ut li small{color:var(--muted)}
-.ut .acc{display:flex;flex-wrap:wrap;gap:.4rem}
-.ut .enlace{color:var(--u3)}
-.ut .vacio{padding:.3rem 1rem .7rem;margin:0}
-@media (max-width:600px){.wrap{padding:.7rem}table{font-size:.86rem}}
+.ut li b{display:block;font-weight:600}
+.ut li small{color:var(--dk-mute);font-size:.8rem}
+.ut .acc{display:flex;flex-wrap:wrap;gap:.35rem}
+.ut .vacio{padding:.6rem 1rem .8rem;margin:0}
+@media (max-width:600px){.wrap{padding:.8rem .7rem 2rem}table{font-size:.84rem}}
 </style>
 </head>
 <body>
+<header class="dk-top">
+  <a class="dk-marca" href="/DJK/" aria-label="Panel DJK"><span class="dk-logo">DJK</span><span class="dk-sec">Ejercicios</span></a>
+  <nav class="dk-nav" aria-label="Herramientas DJK">
+    <a href="/DJK/"><svg class="ic" aria-hidden="true"><use href="/DJK/ui/iconos.svg#cuadricula"/></svg><span class="t">Panel</span></a>
+    <a href="/DJK/api/abrir.php?app=apuntes"><svg class="ic" aria-hidden="true"><use href="/DJK/ui/iconos.svg#libro"/></svg><span class="t">Apuntes</span></a>
+    <a href="/DJK/DJK_EjerciciosInteractivos/" aria-current="page"><svg class="ic" aria-hidden="true"><use href="/DJK/ui/iconos.svg#tarea"/></svg><span class="t">Ejercicios</span></a>
+    <a href="/DJK/api/abrir.php?app=examenes"><svg class="ic" aria-hidden="true"><use href="/DJK/ui/iconos.svg#examen"/></svg><span class="t">Exámenes</span></a>
+  </nav>
+</header>
 <main class="wrap">
 
   <section id="vLogin" class="card login">
@@ -83,7 +112,7 @@ a.enlace:hover{background:var(--lav)}
   <div id="vPanel" class="hidden">
     <div class="barra">
       <div><h1>Ejercicios Interactivos · DJK</h1><p class="sub">Administración · <span id="nVisitas">–</span> visitantes distintos</p></div>
-      <div style="display:flex;gap:.5rem;flex-wrap:wrap"><a class="enlace" href="estadisticas.html" target="_blank" rel="noopener">Estadísticas ↗</a><button id="bRecargar">↻ Actualizar</button><button id="bSalir">Salir</button></div>
+      <div style="display:flex;gap:.5rem;flex-wrap:wrap"><a class="enlace" href="estadisticas.html" target="_blank" rel="noopener"><svg class="ic" aria-hidden="true"><use href="/DJK/ui/iconos.svg#grafico"/></svg>Estadísticas</a><button id="bRecargar"><svg class="ic" aria-hidden="true"><use href="/DJK/ui/iconos.svg#refrescar"/></svg>Actualizar</button><button id="bSalir"><svg class="ic" aria-hidden="true"><use href="/DJK/ui/iconos.svg#salir"/></svg>Salir</button></div>
     </div>
 
     <section class="card"><h2>Ejercicios</h2>
@@ -121,6 +150,8 @@ const LISTA = [
   // Semipresencial: un ejercicio por unidad, «remix» de los de la unidad (solo EI SP, IS SP y MC SP)
   { cod: 'UT1_SP', semi: true, titulo: 'Digitalización de los sectores productivos', ra: 'RA1 · CE a–g · reúne E1, E2 y E3 en versión corta', url: 'SEMI/UT1_SP_Digitalizacion_Sectores_Productivos.html', ejemplo: 'SEMI/UT1_SP_EJEMPLO_relleno.html' }
 ];
+const ICO = n => `<svg class="ic" aria-hidden="true"><use href="/DJK/ui/iconos.svg#${n}"/></svg>`;
+const COPIAR = ICO('copiar') + 'Copiar enlace';
 const EJERCICIOS = Object.fromEntries(LISTA.map(e => [e.cod, e.cod.replace('_', ' · ') + ' · ' + e.titulo]));
 function pintarLista(){
   $('#listaEj').innerHTML = Object.keys(UNIDADES).map(u => {
@@ -131,13 +162,13 @@ function pintarLista(){
 function grupoLista(titulo, clase, ejs){
     return `<div class="ut ${clase}"><h3>${titulo}</h3>${ejs.length ? `<ul>${ejs.map(e => {
       const abs = new URL(e.url, location.href).href;
-      return `<li><div><b>${esc(e.semi ? e.cod.split('_')[0] : e.cod.split('_')[1])} · ${esc(e.titulo)}</b><small>${esc(e.ra)}</small></div><div class="acc"><a class="enlace" href="${esc(e.url)}" target="_blank" rel="noopener">Abrir ↗</a><a class="enlace" href="${esc(e.ejemplo)}" target="_blank" rel="noopener">Ejemplo ↗</a><button data-copiar="${esc(abs)}">📋 Copiar enlace</button></div></li>`; }).join('')}</ul>` : '<p class="vacio">Próximamente</p>'}</div>`;
+      return `<li><div><b>${esc(e.semi ? e.cod.split('_')[0] : e.cod.split('_')[1])} · ${esc(e.titulo)}</b><small>${esc(e.ra)}</small></div><div class="acc"><a class="enlace" href="${esc(e.url)}" target="_blank" rel="noopener">Abrir ${ICO('ext')}</a><a class="enlace" href="${esc(e.ejemplo)}" target="_blank" rel="noopener">Ejemplo ${ICO('ext')}</a><button data-copiar="${esc(abs)}">${COPIAR}</button></div></li>`; }).join('')}</ul>` : '<p class="vacio">Próximamente</p>'}</div>`;
 }
 document.addEventListener('click', async e => {
   const b = e.target.closest('[data-copiar]'); if (!b) return;
-  try { await navigator.clipboard.writeText(b.dataset.copiar); b.textContent = '✓ Copiado'; }
+  try { await navigator.clipboard.writeText(b.dataset.copiar); b.innerHTML = ICO('check') + 'Copiado'; }
   catch(_){ prompt('Copia el enlace:', b.dataset.copiar); }
-  setTimeout(() => { b.textContent = '📋 Copiar enlace'; }, 1800);
+  setTimeout(() => { b.innerHTML = COPIAR; }, 1800);
 });
 function pintarVisitas(){ fetch('api/visitas.php', { cache: 'no-store' }).then(r => r.json()).then(d => { if (d.ok) $('#nVisitas').textContent = d.total.toLocaleString('es-ES'); }).catch(() => {}); }
 const API = 'api/admin.php';
@@ -167,7 +198,7 @@ const celdaNo = '<td class="num n0" title="Este ejercicio no es para este ciclo"
 function pintarDisponibilidad(){
   const ejs = ejerciciosConocidos();
   $('#tDisp').innerHTML = `<thead><tr><th>Ciclo</th>${ejs.map(ej => `<th class="num" title="${esc(EJERCICIOS[ej] || ej)}">${esc(ej.replace('_', ' · '))}</th>`).join('')}</tr></thead>
-    <tbody>${DATOS.ciclos.map(c => `<tr><td>${esc(c)}</td>${ejs.map(ej => { if (!aplica(ej, c)) return celdaNo; const b = bloqueado(ej, c); return `<td class="celda"><button class="disp ${b ? 'bloq' : 'abierto'}" data-ej="${esc(ej)}" data-ciclo="${esc(c)}" aria-pressed="${b}" title="${esc((EJERCICIOS[ej] || ej) + ' · ' + c)}">${b ? '🔒 Bloqueado' : '✓ Abierto'}</button></td>`; }).join('')}</tr>`).join('')}</tbody>`;
+    <tbody>${DATOS.ciclos.map(c => `<tr><td>${esc(c)}</td>${ejs.map(ej => { if (!aplica(ej, c)) return celdaNo; const b = bloqueado(ej, c); return `<td class="celda"><button class="disp ${b ? 'bloq' : 'abierto'}" data-ej="${esc(ej)}" data-ciclo="${esc(c)}" aria-pressed="${b}" title="${esc((EJERCICIOS[ej] || ej) + ' · ' + c)}">${b ? ICO('candado') + 'Bloqueado' : ICO('check') + 'Abierto'}</button></td>`; }).join('')}</tr>`).join('')}</tbody>`;
 }
 $('#tDisp').addEventListener('click', async e => {
   const b = e.target.closest('button.disp'); if (!b) return;
@@ -217,7 +248,7 @@ function pintar(){
     const filas = de(CICLO, ej).filter(p => !q || (p.nombre + ' ' + p.apellidos + ' ' + p.codigos.join(' ')).toLowerCase().includes(q));
     const pdf = filas.filter(p => p.entrega).length;
     h += `<h3 class="ej">${esc(EJERCICIOS[ej] || ej)} · ${filas.length} ${filas.length === 1 ? 'persona' : 'personas'} · ${pdf} con PDF</h3>`;
-    h += filas.length ? `<div class="tabla"><table><thead><tr><th>Apellidos</th><th>Nombre</th><th>Código</th><th>Empezó</th><th>Última actividad</th><th>PDF descargado</th><th></th></tr></thead><tbody>${filas.map(p => `<tr><td>${esc(p.apellidos)}</td><td>${esc(p.nombre)}</td><td class="cod">${p.codigos.length ? p.codigos.map(esc).join('<br>') : '<span class="n0">—</span>'}</td><td>${p.creado ? fecha(p.creado) : '—'}</td><td>${p.actualizado ? fecha(p.actualizado) : '—'}</td><td>${p.entrega ? `✓ ${fecha(p.entrega.ultima)}${+p.entrega.veces > 1 ? ` (${p.entrega.veces} veces)` : ''}` : '<span class="n0">No</span>'}</td><td class="num"><button class="borrar" data-borrar="${p.i}" title="Borrar el registro de ${esc(p.nombre + ' ' + p.apellidos)}" aria-label="Borrar el registro de ${esc(p.nombre + ' ' + p.apellidos)}">🗑</button></td></tr>`).join('')}</tbody></table></div>`
+    h += filas.length ? `<div class="tabla"><table><thead><tr><th>Apellidos</th><th>Nombre</th><th>Código</th><th>Empezó</th><th>Última actividad</th><th>PDF descargado</th><th></th></tr></thead><tbody>${filas.map(p => `<tr><td>${esc(p.apellidos)}</td><td>${esc(p.nombre)}</td><td class="cod">${p.codigos.length ? p.codigos.map(esc).join('<br>') : '<span class="n0">—</span>'}</td><td>${p.creado ? fecha(p.creado) : '—'}</td><td>${p.actualizado ? fecha(p.actualizado) : '—'}</td><td>${p.entrega ? `${ICO('check')} ${fecha(p.entrega.ultima)}${+p.entrega.veces > 1 ? ` (${p.entrega.veces} veces)` : ''}` : '<span class="n0">No</span>'}</td><td class="num"><button class="borrar" data-borrar="${p.i}" title="Borrar el registro de ${esc(p.nombre + ' ' + p.apellidos)}" aria-label="Borrar el registro de ${esc(p.nombre + ' ' + p.apellidos)}">${ICO('papelera')}</button></td></tr>`).join('')}</tbody></table></div>`
       : `<p class="vacio">${q ? 'Nadie coincide con la búsqueda.' : 'Todavía nadie de este ciclo ha empezado esta tarea.'}</p>`;
   }
   $('#detalle').innerHTML = h;

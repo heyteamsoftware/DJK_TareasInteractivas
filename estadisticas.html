@@ -1,35 +1,45 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" class="dk dk-base">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="color-scheme" content="light only">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#0b0c0e">
 <meta name="robots" content="noindex, nofollow">
 <title>Estadísticas · Ejercicios DJK</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%236a54b8'/%3E%3Ctext x='32' y='42' font-family='Arial' font-weight='700' font-size='26' fill='white' text-anchor='middle'%3EDJK%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="/DJK/ui/djk-ui.css?v=1">
 <style>
-:root{--bg:#fbf8f3;--card:#fff;--ink:#2f2d3a;--muted:#5f5b6b;--line:#e7e1ef;--lav:#e9e2fb;--lav3:#6a54b8;--mint:#dff3ea;--mint3:#2f7d5c;--r:14px}
+/* Estadísticas de Ejercicios · aspecto común DJK (la base está en /DJK/ui/djk-ui.css) */
 *{box-sizing:border-box}
-html,body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif}
-.wrap{max-width:900px;margin:0 auto;padding:1rem}
-h1{font-size:1.5rem;margin:1rem 0 .2rem}
-.sub{color:var(--muted);margin:0 0 1rem}
-.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:.8rem;margin:1rem 0}
-.kpi{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:.9rem 1rem}
-.kpi small{color:var(--muted);display:block}
-.kpi b{font-size:1.8rem;font-variant-numeric:tabular-nums}
-.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:1rem;margin:1rem 0;overflow-x:auto}
-.card h2{margin:0 0 .6rem;font-size:1.1rem}
-table{width:100%;border-collapse:collapse;font-size:.93rem}
-th,td{text-align:left;padding:.45rem .5rem;border-bottom:1px solid var(--line);vertical-align:middle}
-th{background:var(--lav);font-weight:600}
-td.num,th.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
-.barra{height:10px;border-radius:5px;background:var(--lav3);min-width:2px}
-.vacio{color:var(--muted);font-style:italic}
-@media (max-width:600px){.wrap{padding:.7rem}table{font-size:.86rem}}
+html,body{margin:0}
+.wrap{max-width:1000px;margin:0 auto;padding:1.4rem clamp(.8rem,2.4vw,1.6rem) 2.5rem}
+h1{font-size:clamp(1.8rem,3.4vw,2.6rem);letter-spacing:-.015em;margin:.5rem 0 .3rem}
+.sub{color:var(--dk-mute);margin:0 0 1rem}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1px;margin:1.2rem 0;background:var(--dk-line);border:1px solid var(--dk-line);border-radius:var(--dk-r);overflow:hidden;box-shadow:var(--dk-sombra)}
+.kpi{background:var(--dk-s1);padding:.9rem 1.1rem 1rem}
+.kpi small{display:block;font:500 .6rem/1.2 var(--dk-f-mono);letter-spacing:.14em;text-transform:uppercase;color:var(--dk-mute)}
+.kpi b{display:block;margin-top:.35rem;font:600 2.2rem/1 var(--dk-f-disp);font-variant-numeric:tabular-nums;color:var(--dk-ink)}
+.kpi:first-child b{color:var(--dk-acc)}
+.card{background:var(--dk-s1);border:1px solid var(--dk-line);border-radius:var(--dk-r);padding:1.15rem 1.25rem;margin:1rem 0;overflow-x:auto;box-shadow:var(--dk-sombra)}
+.card h2{display:flex;align-items:center;gap:.6rem}
+.card h2::before{content:"";width:8px;height:8px;border-radius:2px;background:var(--dk-acc)}
+td.num,th.num{white-space:nowrap}
+.barra{height:6px;border-radius:3px;background:linear-gradient(90deg,var(--dk-acc),color-mix(in srgb,var(--dk-acc) 55%,transparent));min-width:2px}
+.vacio{color:var(--dk-faint)}
+@media (max-width:600px){.wrap{padding:.8rem .7rem 2rem}table{font-size:.84rem}}
 </style>
 </head>
 <body>
+<header class="dk-top">
+  <a class="dk-marca" href="/DJK/" aria-label="Panel DJK"><span class="dk-logo">DJK</span><span class="dk-sec">Ejercicios</span></a>
+  <nav class="dk-nav" aria-label="Herramientas DJK">
+    <a href="/DJK/"><svg class="ic" aria-hidden="true"><use href="/DJK/ui/iconos.svg#cuadricula"/></svg><span class="t">Panel</span></a>
+    <a href="/DJK/api/abrir.php?app=apuntes"><svg class="ic" aria-hidden="true"><use href="/DJK/ui/iconos.svg#libro"/></svg><span class="t">Apuntes</span></a>
+    <a href="/DJK/DJK_EjerciciosInteractivos/"><svg class="ic" aria-hidden="true"><use href="/DJK/ui/iconos.svg#tarea"/></svg><span class="t">Ejercicios</span></a>
+    <a href="/DJK/api/abrir.php?app=examenes"><svg class="ic" aria-hidden="true"><use href="/DJK/ui/iconos.svg#examen"/></svg><span class="t">Exámenes</span></a>
+  </nav>
+</header>
 <main class="wrap">
   <h1>Estadísticas de uso</h1>
   <p class="sub">Ejercicios Interactivos DJK · datos anónimos (sin nombres ni respuestas).</p>
