@@ -2453,12 +2453,14 @@ async function descargarPDF(){
   registrarEntrega();
   aviso('PDF generado. Revisa tu carpeta de descargas.');
 }
-// Avisa al profesor de que este alumno ha descargado su PDF (solo nombre, apellidos, ciclo y ejercicio)
+// Avisa al profesor de que este alumno ha descargado su PDF (solo nombre, apellidos, ciclo y ejercicio).
+// Los ejercicios que se corrigen solos definen notaEntrega() (nota sobre 10) y la nota va también: el profesor la descarga en Excel.
 function registrarEntrega(){
   try {
     if (EJEMPLO || !/^https?:$/.test(location.protocol)) return;
     fetch('../api/entregas.php', { method: 'POST', keepalive: true, headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ ejercicio: COMUN.codigo, ciclo: CICLOS[ESP].nombre, nombre: NOMBRE, apellidos: APELLIDOS }) }).catch(() => {});
+      body: JSON.stringify(Object.assign({ ejercicio: COMUN.codigo, ciclo: CICLOS[ESP].nombre, nombre: NOMBRE, apellidos: APELLIDOS },
+        typeof notaEntrega === 'function' ? { nota: notaEntrega() } : {})) }).catch(() => {});
   } catch(e){}
 }
 $('#btnPDF').addEventListener('click', intentarPDF);

@@ -26,6 +26,9 @@ function bd(): PDO
         id INTEGER PRIMARY KEY, ejercicio TEXT NOT NULL, ciclo TEXT NOT NULL, clave TEXT NOT NULL,
         nombre TEXT NOT NULL, apellidos TEXT NOT NULL, primera INTEGER NOT NULL, ultima INTEGER NOT NULL,
         veces INTEGER NOT NULL DEFAULT 1, UNIQUE (ejercicio, ciclo, clave))');
+    // Nota de los ejercicios que se corrigen solos (p. ej. UT2_E1): la de la última vez que se descargó el PDF
+    $cols = array_column($db->query('PRAGMA table_info(entregas)')->fetchAll(PDO::FETCH_ASSOC), 'name');
+    if (!in_array('nota', $cols, true)) $db->exec('ALTER TABLE entregas ADD COLUMN nota REAL');
     $db->exec('CREATE TABLE IF NOT EXISTS limites (tipo TEXT NOT NULL, ip TEXT NOT NULL, hora INTEGER NOT NULL)');
     $db->exec('CREATE TABLE IF NOT EXISTS bloqueos (ejercicio TEXT NOT NULL, ciclo TEXT NOT NULL, desde INTEGER NOT NULL, PRIMARY KEY (ejercicio, ciclo))');
     return $db;

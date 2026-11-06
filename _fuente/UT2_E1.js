@@ -241,6 +241,8 @@ const est = () => J || { hechas: [], er: 0, pi: 0, seg: 0, celdas: [], pool: [] 
 const decimasFallos = (s = est()) => Math.max(10, 100 - s.er);
 const notaD = (s = est()) => terminado(s) ? decimasFallos(s) : Math.max(10, Math.round(decimasFallos(s) * s.hechas.length / NT));
 const fmtNota = d => (d / 10).toLocaleString('es-ES', { minimumFractionDigits: d % 10 ? 1 : 0, maximumFractionDigits: 1 });
+// La nota se guarda con la entrega al descargar el PDF (el profesor la ve en el panel DJK y la descarga en Excel)
+function notaEntrega(){ return notaD() / 10; }
 
 // Coloca hasta «max» parejas nuevas en celdas vacías (sin tocar las que se están casando)
 function colocar(s, max){

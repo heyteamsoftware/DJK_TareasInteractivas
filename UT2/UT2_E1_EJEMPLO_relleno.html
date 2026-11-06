@@ -995,6 +995,8 @@ const est = () => J || { hechas: [], er: 0, pi: 0, seg: 0, celdas: [], pool: [] 
 const decimasFallos = (s = est()) => Math.max(10, 100 - s.er);
 const notaD = (s = est()) => terminado(s) ? decimasFallos(s) : Math.max(10, Math.round(decimasFallos(s) * s.hechas.length / NT));
 const fmtNota = d => (d / 10).toLocaleString('es-ES', { minimumFractionDigits: d % 10 ? 1 : 0, maximumFractionDigits: 1 });
+// La nota se guarda con la entrega al descargar el PDF (el profesor la ve en el panel DJK y la descarga en Excel)
+function notaEntrega(){ return notaD() / 10; }
 
 // Coloca hasta «max» parejas nuevas en celdas vacías (sin tocar las que se están casando)
 function colocar(s, max){
@@ -2015,12 +2017,14 @@ async function descargarPDF(){
   registrarEntrega();
   aviso('PDF generado. Revisa tu carpeta de descargas.');
 }
-// Avisa al profesor de que este alumno ha descargado su PDF (solo nombre, apellidos, ciclo y ejercicio)
+// Avisa al profesor de que este alumno ha descargado su PDF (solo nombre, apellidos, ciclo y ejercicio).
+// Los ejercicios que se corrigen solos definen notaEntrega() (nota sobre 10) y la nota va también: el profesor la descarga en Excel.
 function registrarEntrega(){
   try {
     if (EJEMPLO || !/^https?:$/.test(location.protocol)) return;
     fetch('../api/entregas.php', { method: 'POST', keepalive: true, headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ ejercicio: COMUN.codigo, ciclo: CICLOS[ESP].nombre, nombre: NOMBRE, apellidos: APELLIDOS }) }).catch(() => {});
+      body: JSON.stringify(Object.assign({ ejercicio: COMUN.codigo, ciclo: CICLOS[ESP].nombre, nombre: NOMBRE, apellidos: APELLIDOS },
+        typeof notaEntrega === 'function' ? { nota: notaEntrega() } : {})) }).catch(() => {});
   } catch(e){}
 }
 $('#btnPDF').addEventListener('click', intentarPDF);
