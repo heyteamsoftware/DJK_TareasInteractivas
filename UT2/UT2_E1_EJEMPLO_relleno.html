@@ -833,11 +833,11 @@ const COMUN = {
   ],
   normas: [
     'Juega tú: el resultado tiene que ser tuyo.',
-    'Lee bien cada definición antes de elegir: los errores, las pistas y el tiempo aparecen en el PDF.',
+    'Lee bien cada definición antes de elegir: cada fallo resta 0,1 a tu nota. Las pistas y el tiempo no restan.',
     'Tienes 5 pistas para todo el juego. Úsalas solo si te atascas.'
   ],
   criterios: [
-    ['Juego · Parejas de tecnologías habilitadoras', 'Las 50 tecnologías casadas con su definición. Los errores, las pistas y el tiempo son informativos.', 10]
+    ['Juego · Parejas de tecnologías habilitadoras', 'Las 50 tecnologías casadas con su definición. Partes de un 10 y cada fallo resta 0,1 (la nota mínima es 1). Si entregas sin casar las 50, la nota baja en proporción (por ejemplo, con 25 de 50 parejas, la mitad). Las pistas y el tiempo no restan.', 10]
   ],
   siglas: [
     ['THD', 'Tecnologías habilitadoras digitales'],
@@ -874,6 +874,9 @@ document.head.insertAdjacentHTML('beforeend', `<style>
 .jg-stat small{display:block;font-size:.68rem;color:var(--mint3);font-weight:800;text-transform:uppercase;letter-spacing:.05em}
 .jg-stat b{font-size:1.2rem;font-variant-numeric:tabular-nums}
 .jg-stat.err b{color:#b8433f}
+.jg-stat.nota{background:#fff6d4;border-color:#efcd5f}
+.jg-stat.nota small{color:#7a5a00}
+.jg-stat.nota b{color:#2f2d3a}
 #jgPista{flex:0 0 auto;border-radius:12px;background:#fff6d4;border:1px solid #efcd5f;font-weight:700;padding:.35rem .9rem}
 #jgPista:hover{background:#ffeeb0}
 #jgPista:disabled{opacity:.45;cursor:not-allowed}
@@ -909,10 +912,13 @@ document.head.insertAdjacentHTML('beforeend', `<style>
 .jg-aviso .big{font-size:3.2rem;line-height:1;display:inline-block;animation:jgBote 1.2s ease-in-out infinite}
 .jg-aviso h3{margin:.5rem 0 .3rem;font-size:1.35rem;color:#1d4d38}
 .jg-aviso p{margin:.2rem 0;color:var(--muted)}
-.jg-res{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:.5rem;max-width:620px;margin:1rem auto .4rem}
+.jg-res{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:.5rem;max-width:760px;margin:1rem auto .4rem}
 .jg-res div{background:#fff;border:1px solid var(--mint2);border-radius:12px;padding:.5rem}
 .jg-res small{display:block;font-size:.68rem;color:var(--mint3);font-weight:800;text-transform:uppercase;letter-spacing:.05em}
 .jg-res b{font-size:1.25rem}
+.jg-res .nota{background:#fff6d4;border-color:#efcd5f}
+.jg-res .nota small{color:#7a5a00}
+.jg-res .nota b{font-size:1.6rem}
 @keyframes jgBote{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
 .jg-pill{position:fixed;left:50%;bottom:max(14px,env(safe-area-inset-bottom));transform:translateX(-50%);z-index:60;background:#2f2d3a;color:#fff;border-radius:99px;padding:.45rem .5rem .45rem 1rem;display:flex;gap:.6rem;align-items:center;box-shadow:0 10px 24px rgba(0,0,0,.25);max-width:calc(100vw - 24px);font-size:.9rem;animation:jgPillIn .25s backwards}
 .jg-pill[hidden]{display:none}
@@ -950,7 +956,7 @@ document.head.insertAdjacentHTML('beforeend', `<style>
 function introHTML(C){
   return `<h2 style="margin-top:0;font-size:1.1rem">Objetivo</h2><p>${esc(COMUN.objetivo)}</p>
     <h2 style="font-size:1.1rem">Cómo se juega</h2>
-    <div class="jg-como"><div><b>1</b>Toca una <b style="display:inline;font-size:inherit">tecnología</b> (verde) y después su <b style="display:inline;font-size:inherit">definición</b> (blanca).</div><div><b>2</b>¡Pareja casada! Si no coinciden, cuenta como error. También puedes arrastrar un cuadrado encima del otro.</div><div><b>3</b>Cuando quede libre la mitad del tablero, aparecen más. Casa las 50.</div></div>
+    <div class="jg-como"><div><b>1</b>Toca una <b style="display:inline;font-size:inherit">tecnología</b> (verde) y después su <b style="display:inline;font-size:inherit">definición</b> (blanca).</div><div><b>2</b>¡Pareja casada! Si no coinciden, es un fallo y resta 0,1 a tu nota. También puedes arrastrar un cuadrado encima del otro.</div><div><b>3</b>Cuando quede libre la mitad del tablero, aparecen más. Casa las 50.</div></div>
     <div class="jg-centro">💭 Mientras juegas, piensa cuáles de estas tecnologías verías en ${esc(C.centro)}: te servirá para el E2.</div>`;
 }
 function construirTarea(C){
@@ -959,7 +965,8 @@ function construirTarea(C){
     <div class="jg-stats">
       <div class="jg-stat"><small>Parejas</small><b id="jgP">0/50</b></div>
       <div class="jg-stat"><small>En tablero</small><b id="jgM">0</b></div>
-      <div class="jg-stat err"><small>Errores</small><b id="jgE">0</b></div>
+      <div class="jg-stat err"><small>Fallos</small><b id="jgE">0</b></div>
+      <div class="jg-stat nota" title="La nota que llevas ahora: cada fallo resta 0,1 y, mientras no cases las 50, cuenta la parte casada"><small>Nota</small><b id="jgN">1</b></div>
       <div class="jg-stat"><small>Tiempo</small><b id="jgT">0:00</b></div>
       <button type="button" id="jgPista" title="Ilumina una tecnología y su definición">💡 Pista<span id="jgPN">5</span></button>
     </div>
@@ -971,7 +978,7 @@ function construirTarea(C){
 
 // ================= estado del juego (se guarda en el campo oculto «juego») =================
 // J = { v:2, pool: parejas aún sin salir, celdas: 20 valores (-1 vacío; n*2 = tecnología, n*2+1 = definición),
-//       hechas: parejas casadas en orden, er: errores, pi: pistas, seg: segundos, fin: fecha de fin }
+//       hechas: parejas casadas en orden, er: fallos, pi: pistas, seg: segundos, fin: fecha de fin }
 let J = null, ULT = null, SEL = null, NUEVO = -1, SUPR = 0, ULTACC = 0, ARR = null;
 const ANIM = new Map();      // celdas con la pareja que se está casando (animación)
 let SIG = [];                // firma de lo pintado en cada celda, para repintar solo lo que cambia
@@ -983,6 +990,11 @@ const terminado = (s = est()) => s.hechas.length >= NT;
 const precision = (s = est()) => { const t = s.hechas.length + s.er; return t ? Math.round(s.hechas.length / t * 100) : 0; };
 const mmss = s => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`;
 const est = () => J || { hechas: [], er: 0, pi: 0, seg: 0, celdas: [], pool: [] };
+// Nota sobre 10, en décimas: se parte de 10 y cada fallo resta 0,1 (una décima), con un mínimo de 1.
+// Si aún no se han casado las 50 parejas, esa nota se multiplica por la parte casada (mínimo 1). Las pistas y el tiempo no cuentan.
+const decimasFallos = (s = est()) => Math.max(10, 100 - s.er);
+const notaD = (s = est()) => terminado(s) ? decimasFallos(s) : Math.max(10, Math.round(decimasFallos(s) * s.hechas.length / NT));
+const fmtNota = d => (d / 10).toLocaleString('es-ES', { minimumFractionDigits: d % 10 ? 1 : 0, maximumFractionDigits: 1 });
 
 // Coloca hasta «max» parejas nuevas en celdas vacías (sin tocar las que se están casando)
 function colocar(s, max){
@@ -1043,7 +1055,7 @@ function listaChecks(){
 function jgPintar(){ jgMarcador(); jgTablero(); jgColeccion(); }
 function jgMarcador(){
   const s = est(), q = (id, v) => { const e = document.getElementById(id); if (e) e.textContent = v; };
-  q('jgP', `${s.hechas.length}/${NT}`); q('jgM', String(enMesa(s))); q('jgE', s.er); q('jgT', mmss(s.seg));
+  q('jgP', `${s.hechas.length}/${NT}`); q('jgM', String(enMesa(s))); q('jgE', s.er); q('jgN', fmtNota(notaD(s))); q('jgT', mmss(s.seg));
   q('jgPN', MAX_PISTAS - s.pi); q('jgColN', `${s.hechas.length}/${NT}`);
   const p = document.getElementById('jgPista'); if (p) p.disabled = !J || s.pi >= MAX_PISTAS || terminado();
 }
@@ -1077,7 +1089,7 @@ function jgFinal(){
   const s = est();
   return `<div class="jg-aviso" role="status"><span class="big" aria-hidden="true">🏆</span><h3>¡Has casado las ${NT} tecnologías!</h3>
     <p>Ya conoces para qué sirve cada una. Repásalas en «Tus parejas» y descarga el PDF para entregarlo.</p>
-    <div class="jg-res"><div><small>Parejas</small><b>${s.hechas.length}/${NT}</b></div><div><small>Errores</small><b>${s.er}</b></div><div><small>Precisión</small><b>${precision(s)} %</b></div><div><small>Pistas</small><b>${s.pi}/${MAX_PISTAS}</b></div><div><small>Tiempo</small><b>${mmss(s.seg)}</b></div></div></div>`;
+    <div class="jg-res"><div class="nota"><small>Nota</small><b>${fmtNota(notaD(s))}</b></div><div><small>Parejas</small><b>${s.hechas.length}/${NT}</b></div><div><small>Fallos</small><b>${s.er}</b></div><div><small>Precisión</small><b>${precision(s)} %</b></div><div><small>Pistas</small><b>${s.pi}/${MAX_PISTAS}</b></div><div><small>Tiempo</small><b>${mmss(s.seg)}</b></div></div></div>`;
 }
 function jgColeccion(){
   const c = document.getElementById('coleccion'); if (!c) return;
@@ -1235,8 +1247,25 @@ function confeti(n){
 async function pdfTarea(api, C){
   const { banda, P, texto, sitio, separador, COL } = api, s = est();
   banda('Juego · Tecnologías habilitadoras y sus definiciones', [223,243,234], COL.mint);
+  // Nota destacada
+  const d = notaD(s), dF = decimasFallos(s), { doc, M } = api, fin = terminado(s);
+  sitio(28);
+  const y0 = api.y;
+  doc.setFillColor(255, 246, 212); doc.setDrawColor(239, 205, 95); doc.setLineWidth(0.4);
+  doc.roundedRect(M, y0, api.CW, 19, 2.5, 2.5, 'FD');
+  doc.setFont('helvetica', 'bold'); doc.setFontSize(8.5); doc.setTextColor(122, 90, 0);
+  doc.text('NOTA', M + 6, y0 + 5.5, { baseline: 'middle' });
+  doc.setFontSize(21); doc.setTextColor(47, 45, 58);
+  doc.text(fmtNota(d) + ' / 10', M + 6, y0 + 12.8, { baseline: 'middle' });
+  doc.setFont('helvetica', 'normal'); doc.setFontSize(9.2); doc.setTextColor(108, 104, 120);
+  const xr = M + 58, ancho = api.CW - 62;
+  const linea1 = fin ? `Las ${NT} parejas casadas con ${s.er} fallo${s.er === 1 ? '' : 's'}.` : `Juego sin terminar: ${s.hechas.length} de ${NT} parejas casadas y ${s.er} fallo${s.er === 1 ? '' : 's'}.`;
+  const linea2 = (dF === 10 && 100 - s.er < 10 ? `Por fallos: 1 (nota mínima; 10 - ${s.er} × 0,1 queda por debajo).` : `Por fallos: 10 - ${s.er} × 0,1 = ${fmtNota(dF)}.`)
+    + (fin ? '' : ` Por la parte casada: ${fmtNota(dF)} × ${s.hechas.length}/${NT} = ${fmtNota(d)}${d === 10 && Math.round(dF * s.hechas.length / NT) < 10 ? ' (nota mínima: 1)' : ''}.`);
+  doc.text(doc.splitTextToSize(pdfTxt(linea1 + ' ' + linea2 + ' Las pistas y el tiempo no cuentan.'), ancho), xr, y0 + 5.2, { baseline: 'top', lineHeightFactor: 1.25 });
+  api.y = y0 + 24;
   texto([{ t: 'Parejas casadas: ', b: true }, { t: `${s.hechas.length} de ${NT}` }, { t: '     Precisión: ', b: true }, { t: precision(s) + ' %' }], { size: 10.5, tras: 1 });
-  texto([{ t: 'Errores: ', b: true }, { t: String(s.er) }, { t: '     Pistas usadas: ', b: true }, { t: `${s.pi} de ${MAX_PISTAS}` }, { t: '     Tiempo de juego: ', b: true }, { t: mmss(s.seg) }], { size: 10.5, tras: 2 });
+  texto([{ t: 'Fallos: ', b: true }, { t: String(s.er) }, { t: '     Pistas usadas: ', b: true }, { t: `${s.pi} de ${MAX_PISTAS}` }, { t: '     Tiempo de juego: ', b: true }, { t: mmss(s.seg) }], { size: 10.5, tras: 2 });
   separador();
   sitio(20); P('Tecnologías casadas, en el orden en que las encontraste', { size: 11.5, b: true, color: COL.mint, tras: 2 });
   let k = 1;

@@ -58,10 +58,11 @@
 |---|---|
 | Juego | Las 50 tecnologías y definiciones de UT2_E2. Tablero de 20 cuadrados (10 parejas); cuando queda libre la mitad, se rellena solo con nuevas parejas hasta casar las 50. Cuadrados mezclados: tecnología (verde, con icono) y definición (blanco). Orden aleatorio por alumno. |
 | Cómo se juega | Tocar o hacer clic en una tecnología y luego en su definición (o al revés). Con ratón también se puede arrastrar un cuadrado encima de su pareja; en tablet, mantener pulsado un momento y arrastrar. Funciona con teclado. |
-| Acierto / fallo | Acierto: la pareja brilla, desaparece del tablero y pasa a «Tus parejas». Fallo: los dos cuadrados tiemblan en rojo y suma un error. |
-| Extras | Marcador (parejas, en tablero, errores, tiempo), 5 pistas para todo el juego, barra de progreso y pantalla final con trofeo y precisión. |
+| Acierto / fallo | Acierto: la pareja brilla, desaparece del tablero y pasa a «Tus parejas». Fallo: los dos cuadrados tiemblan en rojo y suma un fallo. |
+| Nota | Sobre 10: cada fallo resta 0,1 (nota mínima 1). Si no se han casado las 50, se multiplica por la parte casada (25 de 50 → la mitad), mínimo 1. Las pistas y el tiempo no cuentan. Se calcula en décimas para no tener errores de redondeo (`notaD()`). |
+| Extras | Marcador (parejas, en tablero, fallos, nota que lleva en ese momento, tiempo), 5 pistas para todo el juego, barra de progreso y pantalla final con trofeo, nota y precisión. |
 | Tiempo | Solo cuenta con la página visible, la tarea desbloqueada y actividad en los últimos 90 s. |
-| PDF | Parejas, errores, precisión, pistas, tiempo, las tecnologías casadas en orden y, si las hubiera, las que quedan sin casar. |
+| PDF | Recuadro con la **nota** y cómo sale (fallos y, si el juego no está terminado, la parte casada); parejas, fallos, precisión, pistas, tiempo, las tecnologías casadas en orden y, si las hubiera, las que quedan sin casar. |
 | Definiciones retocadas | 10 definiciones se reescribieron para no repetir el nombre de la tecnología (pizarra digital, documentos compartidos, firma electrónica, huella dactilar, tarjeta de acceso, detector de humo, iluminación LED, persianas, riego automático, gestor de contraseñas). |
 
 ## Banco de tecnologías de UT2_E2 por especialidad
@@ -152,7 +153,7 @@ Todos los ejercicios muestran una tabla «Cómo se califica» con esta forma, de
 | UT1_E3 | Fase 1 → 5 (1 por producto) · Fase 2 → 5 (5 preguntas, 1 cada una) · Fase 3 eliminada |
 | UT2_E3 | Parte 1 juego → 1,5 · Parte 2 experiencia con las gafas → 1 · Parte 3 constructor → 3,5 · Parte 4 ficha de tienda → 1,5 · Parte 5 ventajas, riesgos y mercado → 2,5 |
 | UT2_E4 | Montaje del robot → 3 · Justificación del montaje → 3 · Imagen con IA → 2 · Presentación en Canva y exposición → 2 |
-| UT2_E1 | Juego → 10 (las 50 parejas casadas; errores, pistas y tiempo informativos) |
+| UT2_E1 | Juego → 10: se parte de 10 y cada fallo resta 0,1 (mínimo 1); sin las 50 parejas, en proporción a las casadas. Pistas y tiempo no cuentan (desde el 6 de noviembre de 2026) |
 
 ## Normas acordadas
 
