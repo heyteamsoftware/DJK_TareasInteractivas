@@ -22,7 +22,7 @@
 | UT1_E2 | Combinación de sistemas ciberfísicos | RA1 | e, f, g | AF, AS, EI, HB, IS + EI SP, IS SP, MC SP | A (bocadillos + diapositivas) | [UT1_E2](UT1/UT1_E2_Combinacion_Sistemas_Ciberfisicos.html) | [Ejemplo](UT1/UT1_E2_EJEMPLO_relleno.html) | Sí (4·2·2·1·1) | Sí | Hecho |
 | UT1_E3 | Sistemas ciberfísicos y digitalización del sector | RA1 | c, d, e, f | AF, AS, EI, HB, IS + EI SP, IS SP, MC SP | A | [UT1_E3](UT1/UT1_E3_Digitalizacion_Sistemas_CiberFisicos.html) | [Ejemplo](UT1/UT1_E3_EJEMPLO_relleno.html) | Sí | Sí | Hecho |
 | UT1_SP | Digitalización de los sectores productivos (semipresencial: reúne E1, E2 y E3 en versión corta) | RA1 | a, b, c, d, e, f, g | Solo EI SP, IS SP y MC SP | A (remix) | [UT1_SP](SEMI/UT1_SP_Digitalizacion_Sectores_Productivos.html) | [Ejemplo](SEMI/UT1_SP_EJEMPLO_relleno.html) | Sí (2·1·1·1,5·1,5·1,5·1,5) | Sí | Hecho |
-| UT2_E1 | Parejas de tecnologías habilitadoras (juego) | RA2 | a | AF, AS, EI, HB, IS + EI SP, IS SP, MC SP | C (juego en el motor común) | [UT2_E1](UT2/UT2_E1_Parejas_Tecnologias_Habilitadoras.html) | [Ejemplo](UT2/UT2_E1_EJEMPLO_relleno.html) | Sí (5 rondas × 2) | Sí | Hecho |
+| UT2_E1 | Parejas de tecnologías y su uso en tu profesión (juego + escritura) | RA2 | a | AF, AS, EI, HB, IS + EI SP, IS SP, MC SP | C (juego en el motor común) | [UT2_E1](UT2/UT2_E1_Parejas_Tecnologias_Habilitadoras.html) | [Ejemplo](UT2/UT2_E1_EJEMPLO_relleno.html) | Sí (5 rondas × 2) | Sí | Hecho |
 | UT2_E2 | Tecnologías habilitadoras en tu centro (plano) | RA2 | a, c, d, e | Los 8 · plano y banco de 20 adaptados a cada especialidad | B | [UT2_E2](UT2/UT2_E2_Tecnologias_Habilitadoras.html) | `?ejemplo` | Sí (otro reparto) | Sí (original) | Hecho (antes era UT2_E1) |
 | UT2_E3 | Diseña tu app de realidad virtual o mixta (tras probar las gafas en clase) | RA2 | b, d, g | AF, AS, EI, HB, IS | C (juego + constructor en el motor común) | [UT2_E3](UT2/UT2_E3_App_Realidad_Virtual_Mixta.html) | [Ejemplo](UT2/UT2_E3_EJEMPLO_relleno.html) | Sí (1,5·1·3,5·1,5·2,5) | Sí | Hecho (sustituye al Word «Informe técnico») |
 | UT2_E4 | Diseñad vuestro robot (trabajo en grupo; se entrega la presentación de Canva) | RA2 | b, g | AF, AS, EI, HB, IS | C (constructor por piezas en el motor común) | [UT2_E4](UT2/UT2_E4_Disenad_Vuestro_Robot.html) | [Ejemplo](UT2/UT2_E4_EJEMPLO_relleno.html) | Sí (3·3·2·2) | Sí | Hecho |
@@ -59,12 +59,29 @@
 | Juego | Las 50 tecnologías y definiciones de UT2_E2. Tablero de 20 cuadrados (10 parejas); cuando queda libre la mitad, se rellena solo con nuevas parejas hasta casar las 50. Cuadrados mezclados: tecnología (verde, con icono) y definición (blanco). Orden aleatorio por alumno. |
 | Cómo se juega | Tocar o hacer clic en una tecnología y luego en su definición (o al revés). Con ratón también se puede arrastrar un cuadrado encima de su pareja; en tablet, mantener pulsado un momento y arrastrar. Funciona con teclado. |
 | Acierto / fallo | Acierto: la pareja brilla, desaparece del tablero y pasa a «Tus parejas». Fallo: los dos cuadrados tiemblan en rojo y suma un fallo. |
-| Nota | Sobre 10: cada fallo resta 0,1 (nota mínima 1). Si no se han casado las 50, se multiplica por la parte casada (25 de 50 → la mitad), mínimo 1. Las pistas y el tiempo no cuentan. Se calcula en décimas para no tener errores de redondeo (`notaD()`). |
-| Nota guardada | Al descargar el PDF, la nota viaja con la entrega (`notaEntrega()` → columna `nota` de `entregas`, la de la última descarga; se ignora si no está entre 0 y 10). El profesor la ve en el panel DJK (pestaña Ejercicios, lista de alumnos de cada ejercicio) y la descarga en Excel. Cualquier ejercicio que se corrija solo puede hacer lo mismo definiendo `notaEntrega()` en su archivo de `_fuente`. |
+| Nota del juego | Sobre 10: cada fallo resta 0,1 (nota mínima 1). Si no se han casado las 50, se multiplica por la parte casada (25 de 50 → la mitad), mínimo 1. Las pistas y el tiempo no cuentan. Se calcula en décimas para no tener errores de redondeo (`notaD()`). **Vale la mitad: la parte 1 puntúa sobre 5** (9,4 → 4,7). |
+| Parte 2 (desde el 9/11/2026) | Elegir **5** de las 50 tecnologías (lista desplegable en orden alfabético, sin repetir) y explicar en una caja con formato cómo la usaría en el día a día de su profesión: qué haría, con quién, en qué momento y qué mejora. Mínimo 30 palabras por tecnología (contador debajo). Bajo la lista sale la definición. 1 punto cada una (5 en total), la corrige el profesor. |
+| Encaje con el ciclo (interno) | El alumnado no lo ve. En el PDF, junto a cada tecnología elegida, un punto de color: **verde** = encaja con su ciclo · **azul** = de uso general · **naranja** = poco relacionada. La tabla está en `_fuente/UT2_E1.js` (`ENCAJE_GENERAL`, `ENCAJE_CICLOS`, `ENCAJE_NINGUNO`) y abajo, en «Encaje de las tecnologías de UT2_E1». |
+| Nota guardada | Al descargar el PDF, la nota viaja con la entrega (`notaEntrega()` → columna `nota` de `entregas`, la de la última descarga; se ignora si no está entre 0 y 10). En UT2_E1 son **los puntos del juego sobre 5**; en el panel la columna se llama «Juego (sobre 5)» (`nota` en `EJ_META` del panel). El profesor la ve en el panel DJK (pestaña Ejercicios, lista de alumnos de cada ejercicio) y la descarga en Excel. Cualquier ejercicio que se corrija solo puede hacer lo mismo definiendo `notaEntrega()` en su archivo de `_fuente`. |
 | Extras | Marcador (parejas, en tablero, fallos, nota que lleva en ese momento, tiempo), 5 pistas para todo el juego, barra de progreso y pantalla final con trofeo, nota y precisión. |
 | Tiempo | Solo cuenta con la página visible, la tarea desbloqueada y actividad en los últimos 90 s. |
-| PDF | Recuadro con la **nota** y cómo sale (fallos y, si el juego no está terminado, la parte casada); parejas, fallos, precisión, pistas, tiempo, las tecnologías casadas en orden y, si las hubiera, las que quedan sin casar. |
+| PDF | Parte 1: recuadro con los **puntos del juego (sobre 5)** y cómo salen; parejas, fallos, precisión, pistas y tiempo. Parte 2: las 5 tecnologías (con el punto de color), su definición y lo que ha escrito; debajo, «Parte 2: ___ / 5 · Total: juego + ___ = ___ / 10» para el profesor. Al final, las tecnologías casadas en orden y, si las hubiera, las que quedan sin casar. |
 | Definiciones retocadas | 10 definiciones se reescribieron para no repetir el nombre de la tecnología (pizarra digital, documentos compartidos, firma electrónica, huella dactilar, tarjeta de acceso, detector de humo, iluminación LED, persianas, riego automático, gestor de contraseñas). |
+
+## Encaje de las tecnologías de UT2_E1 (parte 2, interno)
+
+Sale del banco de UT2_E2 (abajo), con las de uso general en cualquier centro aparte. Para cambiarla, edita las tres listas de `_fuente/UT2_E1.js` y vuelve a construir: si una tecnología queda sin clasificar o repetida, la página lo avisa en la consola.
+
+| Grupo | Tecnologías |
+|---|---|
+| Uso general (azul en todos los ciclos) | Wi-Fi · Fibra óptica · Ordenadores portátiles · Videoconferencia · Documentos compartidos en línea · Calendario compartido · Mensajería instantánea de grupo · Firma electrónica · Certificado digital · Control horario digital · Detector de humo · Desfibrilador (DEA) · Impresora multifunción · Escáner de documentos · Copias de seguridad · Antivirus · Verificación en dos pasos · Gestor de contraseñas |
+| Acondicionamiento Físico (verde) | Placas solares · Marcador electrónico · Reloj inteligente · Cámaras de videovigilancia · Códigos QR · Cámara deportiva · Pago con el móvil · Datáfono (TPV) · Lector de código de barras · Bluetooth · Lector de huella dactilar · Tarjeta de acceso · Sensor de presencia |
+| Animación Sociodeportiva (verde) | Tablets · Riego automático · Marcador electrónico · Reloj inteligente · Aula virtual · Códigos QR · Cámara deportiva · Pago con el móvil · Datáfono (TPV) · Bluetooth · Drones · Megafonía · Pantalla de avisos digital |
+| Educación Infantil (verde) | Pizarra digital interactiva · Tablets · Medidor de CO2 · Placas solares · Riego automático · Marcador electrónico · Reloj inteligente · Cámaras de videovigilancia · Videoportero · Iluminación LED · Persianas motorizadas · Termostato programable · Aula virtual · Códigos QR |
+| Higiene Bucodental (verde) | Medidor de CO2 · Termostato programable · Aula virtual · Pago con el móvil · Datáfono (TPV) · Lector de código de barras · Lector de huella dactilar · Microscopio digital · Impresión 3D |
+| Integración Social (verde) | Cámaras de videovigilancia · Videoportero · Termostato programable · Aula virtual · Lector de huella dactilar · Tarjeta de acceso · Cerradura electrónica |
+| Ninguno (naranja en todos) | Alarma antirrobo · Enchufe programable · Punto de carga eléctrica · Etiquetas antirrobo |
+| Resto | Las de otros ciclos salen en naranja para el tuyo |
 
 ## Banco de tecnologías de UT2_E2 por especialidad
 
@@ -154,7 +171,7 @@ Todos los ejercicios muestran una tabla «Cómo se califica» con esta forma, de
 | UT1_E3 | Fase 1 → 5 (1 por producto) · Fase 2 → 5 (5 preguntas, 1 cada una) · Fase 3 eliminada |
 | UT2_E3 | Parte 1 juego → 1,5 · Parte 2 experiencia con las gafas → 1 · Parte 3 constructor → 3,5 · Parte 4 ficha de tienda → 1,5 · Parte 5 ventajas, riesgos y mercado → 2,5 |
 | UT2_E4 | Montaje del robot → 3 · Justificación del montaje → 3 · Imagen con IA → 2 · Presentación en Canva y exposición → 2 |
-| UT2_E1 | Juego → 10: se parte de 10 y cada fallo resta 0,1 (mínimo 1); sin las 50 parejas, en proporción a las casadas. Pistas y tiempo no cuentan (desde el 6 de noviembre de 2026) |
+| UT2_E1 | Parte 1 juego → 5 (la mitad de la nota del juego: 10 − 0,1 por fallo, mínimo 1; sin las 50 parejas, en proporción; se calcula sola) · Parte 2 las 5 tecnologías en tu profesión → 5 (1 cada una, la corrige el profesor). Desde el 9/11/2026 (del 6 al 9, el juego valía 10) |
 
 ## Normas acordadas
 

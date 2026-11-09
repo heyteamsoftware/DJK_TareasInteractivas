@@ -809,6 +809,34 @@ const TEC = [
 // Tablero: 10 parejas como máximo (20 cuadrados). Cuando quedan 5 o menos, se rellena hasta 10.
 const NT = TEC.length, MESA = 10, UMBRAL = 5, CELDAS = MESA * 2, MAX_PISTAS = 5;
 
+// ===== Parte 2: 5 tecnologías explicadas en la profesión =====
+const N2 = 5, MIN_PAL = 30;
+// Con qué ciclos encaja cada tecnología. Es interno: el alumnado no lo ve; en el PDF sale solo un punto de color
+// junto a cada tecnología elegida (verde: encaja con su ciclo · azul: de uso general · naranja: poco relacionada).
+// Sale del banco de 20 por especialidad de UT2_E2 (ver INDICE.md), con las de uso general en cualquier centro aparte.
+const ENCAJE_GENERAL = ['Wi-Fi', 'Fibra óptica', 'Ordenadores portátiles', 'Videoconferencia', 'Documentos compartidos en línea', 'Calendario compartido',
+  'Mensajería instantánea de grupo', 'Firma electrónica', 'Certificado digital', 'Control horario digital', 'Detector de humo', 'Desfibrilador (DEA)',
+  'Impresora multifunción', 'Escáner de documentos', 'Copias de seguridad', 'Antivirus', 'Verificación en dos pasos', 'Gestor de contraseñas'];
+const ENCAJE_CICLOS = {
+  'Pizarra digital interactiva': 'ei', 'Tablets': 'ei as', 'Medidor de CO2': 'ei hb', 'Placas solares': 'ei af', 'Riego automático': 'ei as',
+  'Marcador electrónico': 'ei af as', 'Reloj inteligente': 'ei af as', 'Cámaras de videovigilancia': 'ei af is', 'Videoportero': 'ei is',
+  'Iluminación LED': 'ei', 'Persianas motorizadas': 'ei', 'Termostato programable': 'ei hb is', 'Aula virtual': 'ei as hb is', 'Códigos QR': 'ei af as',
+  'Cámara deportiva': 'af as', 'Pago con el móvil': 'af as hb', 'Datáfono (TPV)': 'af as hb', 'Lector de código de barras': 'af hb', 'Bluetooth': 'af as',
+  'Lector de huella dactilar': 'af hb is', 'Tarjeta de acceso': 'af is', 'Sensor de presencia': 'af', 'Drones': 'as', 'Megafonía': 'as',
+  'Pantalla de avisos digital': 'as', 'Microscopio digital': 'hb', 'Impresión 3D': 'hb', 'Cerradura electrónica': 'is'
+};
+const ENCAJE_NINGUNO = ['Alarma antirrobo', 'Enchufe programable', 'Punto de carga eléctrica', 'Etiquetas antirrobo'];
+// 'si' | 'general' | 'no' para la tecnología n y el ciclo esp
+function encaje(n, esp){
+  const nom = TEC[n][0];
+  if (ENCAJE_GENERAL.includes(nom)) return 'general';
+  return (ENCAJE_CICLOS[nom] || '').split(' ').includes(String(esp).replace('_sp', '')) ? 'si' : 'no';
+}
+// Comprobación: cada una de las 50 está clasificada una sola vez
+(() => { const vistas = [...ENCAJE_GENERAL, ...Object.keys(ENCAJE_CICLOS), ...ENCAJE_NINGUNO];
+  const faltan = TEC.map(t => t[0]).filter(n => vistas.filter(v => v === n).length !== 1);
+  if (faltan.length || vistas.length !== NT) console.warn('UT2_E1: clasificación incompleta o repetida', faltan); })();
+
 const COMUN = {
   codigo: 'UT2_E1',
   corto: 'UT2 · E1',
@@ -817,26 +845,29 @@ const COMUN = {
   ejercicio: 'E1 · Parejas de tecnologías habilitadoras',
   ra: 'RA2',
   ce: 'a',
-  modalidad: 'Individual · juego',
+  modalidad: 'Individual · juego y escritura',
   sinFuentes: true,
   raTexto: 'Caracteriza las tecnologías habilitadoras digitales necesarias para la adecuación/transformación de las empresas a entornos digitales describiendo sus características y aplicaciones.',
   ceTextos: [
     ['a', 'Se han identificado las principales tecnologías habilitadoras digitales.']
   ],
-  objetivo: 'Conocer 50 tecnologías habilitadoras del día a día y saber para qué sirve cada una. Las vas a necesitar en el siguiente ejercicio (UT2 · E2), en el que elegirás algunas para tu centro de trabajo.',
+  objetivo: 'Conocer 50 tecnologías habilitadoras del día a día, saber para qué sirve cada una y pensar cómo usarías algunas en tu profesión. Las vas a necesitar en el siguiente ejercicio (UT2 · E2), en el que elegirás algunas para tu centro de trabajo.',
   pasos: [
     'Lee el objetivo y la tabla «Cómo se califica».',
     'Toca una <b>tecnología</b> (cuadrado verde) y después su <b>definición</b> (cuadrado blanco). También puedes <b>arrastrar</b> un cuadrado encima de su pareja (en tablet, mantén el dedo pulsado un momento y arrastra).',
     'Cuando quede libre la <b>mitad del tablero</b>, aparecen nuevas tecnologías y definiciones. Sigue hasta casar las <b>50</b>.',
+    '<b>Parte 2:</b> elige <b>5</b> de las 50 tecnologías y explica cómo las usarías en el día a día de tu profesión, con un ejemplo concreto: qué harías, con quién, en qué momento y qué mejora.',
     'Revisa «Antes de entregar, comprueba», pulsa <b>Descargar PDF</b> y entrega ese PDF en el aula virtual.'
   ],
   normas: [
     'Juega tú: el resultado tiene que ser tuyo.',
     'Lee bien cada definición antes de elegir: cada fallo resta 0,1 a tu nota. Las pistas y el tiempo no restan.',
-    'Tienes 5 pistas para todo el juego. Úsalas solo si te atascas.'
+    'Tienes 5 pistas para todo el juego. Úsalas solo si te atascas.',
+    'En la parte 2, escribe con tus palabras y piensa en tu profesión: no copies la definición del juego ni textos de internet o de una IA.'
   ],
   criterios: [
-    ['Juego · Parejas de tecnologías habilitadoras', 'Las 50 tecnologías casadas con su definición. Partes de un 10 y cada fallo resta 0,1 (la nota mínima es 1). Si entregas sin casar las 50, la nota baja en proporción (por ejemplo, con 25 de 50 parejas, la mitad). Las pistas y el tiempo no restan.', 10]
+    ['Parte 1 · Juego de parejas', 'Las 50 tecnologías casadas con su definición. Vale la mitad de tu nota del juego: empiezas con un 10 y cada fallo resta 0,1 (mínimo 1). Si entregas sin casar las 50, baja en proporción. Las pistas y el tiempo no restan. Se calcula sola.', 5],
+    ['Parte 2 · Las tecnologías en tu profesión', '5 tecnologías explicadas con un ejemplo concreto de tu día a día en el trabajo: qué harías con ella, con quién, en qué momento y qué mejora. 1 punto cada una.', 5]
   ],
   siglas: [
     ['THD', 'Tecnologías habilitadoras digitales'],
@@ -918,6 +949,16 @@ document.head.insertAdjacentHTML('beforeend', `<style>
 .jg-res .nota{background:#fff6d4;border-color:#efcd5f}
 .jg-res .nota small{color:#7a5a00}
 .jg-res .nota b{font-size:1.6rem}
+.p2t{border:1px solid var(--line);border-radius:14px;padding:.8rem .9rem .3rem;margin:.9rem 0;background:#fff}
+.p2sel{display:flex;align-items:center;gap:.6rem;flex-wrap:wrap}
+.p2sel .n{flex:none;display:inline-grid;place-items:center;min-width:2.6rem;height:2.1rem;border-radius:10px;background:var(--sky);color:var(--sky3);font-weight:800}
+.p2sel select{flex:1 1 240px;min-height:44px;font:inherit;font-size:1rem;padding:.45rem .6rem;border:1.5px solid var(--sky2);border-radius:10px;background:#fff;color:var(--ink)}
+.p2sel select:focus{outline:3px solid var(--sky2);outline-offset:1px}
+.vh{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.p2def{margin:.45rem 0 0;font-size:.9rem;color:var(--muted);font-style:italic;min-height:0}
+.p2def:empty{display:none}
+.p2pal{margin:-.4rem 0 .5rem;font-size:.8rem;color:#a3532a;text-align:right;min-height:1em}
+.p2pal.ok{color:var(--mint3)}
 @keyframes jgBote{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
 .jg-pill{position:fixed;left:50%;bottom:max(14px,env(safe-area-inset-bottom));transform:translateX(-50%);z-index:60;background:#2f2d3a;color:#fff;border-radius:99px;padding:.45rem .5rem .45rem 1rem;display:flex;gap:.6rem;align-items:center;box-shadow:0 10px 24px rgba(0,0,0,.25);max-width:calc(100vw - 24px);font-size:.9rem;animation:jgPillIn .25s backwards}
 .jg-pill[hidden]{display:none}
@@ -956,24 +997,50 @@ function introHTML(C){
   return `<h2 style="margin-top:0;font-size:1.1rem">Objetivo</h2><p>${esc(COMUN.objetivo)}</p>
     <h2 style="font-size:1.1rem">Cómo se juega</h2>
     <div class="jg-como"><div><b>1</b>Toca una <b style="display:inline;font-size:inherit">tecnología</b> (verde) y después su <b style="display:inline;font-size:inherit">definición</b> (blanca).</div><div><b>2</b>¡Pareja casada! Si no coinciden, es un fallo y resta 0,1 a tu nota. También puedes arrastrar un cuadrado encima del otro.</div><div><b>3</b>Cuando quede libre la mitad del tablero, aparecen más. Casa las 50.</div></div>
-    <div class="jg-centro">💭 Mientras juegas, piensa cuáles de estas tecnologías verías en ${esc(C.centro)}: te servirá para el E2.</div>`;
+    <div class="jg-centro">💭 Mientras juegas, piensa cuáles de estas tecnologías usarías en ${esc(C.centro)}: en la parte 2 elegirás 5 y explicarás cómo las usarías.</div>`;
 }
 function construirTarea(C){
-  return `<section class="fase f1"><header><h2>Juego · Casa cada tecnología con su definición</h2></header><div class="cuerpo">
+  return `<section class="fase f1"><header><h2>Parte 1 · Juego: casa cada tecnología con su definición</h2></header><div class="cuerpo">
     <input type="hidden" id="juegoDato" data-campo="juego">
     <div class="jg-stats">
       <div class="jg-stat"><small>Parejas</small><b id="jgP">0/50</b></div>
       <div class="jg-stat"><small>En tablero</small><b id="jgM">0</b></div>
       <div class="jg-stat err"><small>Fallos</small><b id="jgE">0</b></div>
-      <div class="jg-stat nota" title="La nota que llevas ahora: cada fallo resta 0,1 y, mientras no cases las 50, cuenta la parte casada"><small>Nota</small><b id="jgN">1</b></div>
+      <div class="jg-stat nota" title="Los puntos del juego que llevas ahora (sobre 5): cada fallo resta y, mientras no cases las 50, cuenta la parte casada"><small>Puntos</small><b id="jgN">0,5/5</b></div>
       <div class="jg-stat"><small>Tiempo</small><b id="jgT">0:00</b></div>
       <button type="button" id="jgPista" title="Ilumina una tecnología y su definición">💡 Pista<span id="jgPN">5</span></button>
     </div>
     <div class="jg-tab" id="tablero" role="group" aria-label="Tablero del juego"></div>
     <details class="jg-col" id="jgCol" open><summary>📚 Tus parejas <span id="jgColN">0/50</span></summary><div id="coleccion"></div></details>
     <div class="jg-pill" id="jgPill" hidden role="status"><span id="jgPillTx"></span><button type="button" id="jgPillX" aria-label="Quitar la selección">✕</button></div>
+  </div></section>
+  <section class="fase f2" id="parte2"><header><h2>Parte 2 · Las tecnologías en tu profesión</h2></header><div class="cuerpo">
+    <p>Elige <b>${N2}</b> de las 50 tecnologías del juego (sin repetir) y explica cómo las usarías en el día a día de tu trabajo en ${esc(C.centro)}. Cuéntalo con un ejemplo concreto: <b>qué harías</b> con ella, <b>con quién</b>, <b>en qué momento</b> y <b>qué mejora</b>. Mínimo ${MIN_PAL} palabras en cada una.</p>
+    ${[...Array(N2).keys()].map(i => `<div class="p2t"><label class="p2sel"><span class="n">2.${i + 1}</span><span class="vh">Tecnología ${i + 1}</span>
+      <select id="p2_t${i}" data-campo="p2_t${i}"><option value="">Elige una tecnología…</option>${p2Opciones()}</select></label>
+      <p class="p2def" id="p2_d${i}"></p>
+      ${caja('p2_ex' + i, '', 'Cómo la usarías en tu día a día', '', { ph: 'Escribe aquí cómo la usarías: qué harías, con quién, en qué momento y qué mejora…' })}
+      <p class="p2pal" id="p2_p${i}" aria-live="polite"></p></div>`).join('')}
   </div></section>`;
 }
+// Lista de las 50 en orden alfabético (se monta la primera vez que hace falta: esc() es del motor, que se carga después)
+let P2_OPC = '';
+const p2Opciones = () => P2_OPC || (P2_OPC = TEC.map((t, n) => [t[0], n, t[2]]).sort((a, b) => a[0].localeCompare(b[0], 'es')).map(([nom, n, emo]) => `<option value="${n}">${emo} ${esc(nom)}</option>`).join(''));
+const p2Tec = i => { const v = campo('p2_t' + i); return v === '' ? -1 : +v; };
+const p2Pal = i => { const ed = edDeId('p2_ex' + i); return ed ? (ed.textContent.trim().match(/[\p{L}\p{N}]+/gu) || []).length : 0; };
+const p2Lista = () => [...Array(N2).keys()].map(i => ({ n: p2Tec(i), pal: p2Pal(i) }));
+// Sin repetir: en cada lista se desactivan las ya elegidas en otra; debajo, la definición y las palabras
+function p2Pintar(){
+  const l = p2Lista();
+  l.forEach((x, i) => {
+    const sel = document.getElementById('p2_t' + i); if (!sel) return;
+    for (const o of sel.options) if (o.value !== '') o.disabled = l.some((y, j) => j !== i && y.n === +o.value);
+    const d = document.getElementById('p2_d' + i); if (d) d.textContent = x.n >= 0 ? TEC[x.n][1] : '';
+    const p = document.getElementById('p2_p' + i);
+    if (p){ p.textContent = x.pal ? `${x.pal} palabra${x.pal === 1 ? '' : 's'}${x.pal < MIN_PAL ? ` · mínimo ${MIN_PAL}` : ' ✓'}` : ''; p.classList.toggle('ok', x.pal >= MIN_PAL); }
+  });
+}
+document.addEventListener('input', e => { if (e.target.closest && e.target.closest('#parte2 .ed')) p2Pintar(); });
 
 // ================= estado del juego (se guarda en el campo oculto «juego») =================
 // J = { v:2, pool: parejas aún sin salir, celdas: 20 valores (-1 vacío; n*2 = tecnología, n*2+1 = definición),
@@ -994,8 +1061,10 @@ const est = () => J || { hechas: [], er: 0, pi: 0, seg: 0, celdas: [], pool: [] 
 const decimasFallos = (s = est()) => Math.max(10, 100 - s.er);
 const notaD = (s = est()) => terminado(s) ? decimasFallos(s) : Math.max(10, Math.round(decimasFallos(s) * s.hechas.length / NT));
 const fmtNota = d => (d / 10).toLocaleString('es-ES', { minimumFractionDigits: d % 10 ? 1 : 0, maximumFractionDigits: 1 });
-// La nota se guarda con la entrega al descargar el PDF (el profesor la ve en el panel DJK y la descarga en Excel)
-function notaEntrega(){ return notaD() / 10; }
+// Puntos del juego sobre 5 (la mitad de la nota del juego); la parte 2 la corrige el profesor
+const fmtPts = d => (d / 20).toLocaleString('es-ES', { maximumFractionDigits: 2 });
+// Se guardan con la entrega al descargar el PDF (el profesor los ve en el panel DJK y los descarga en Excel)
+function notaEntrega(){ return Math.round(notaD() * 5) / 100; }
 
 // Coloca hasta «max» parejas nuevas en celdas vacías (sin tocar las que se están casando)
 function colocar(s, max){
@@ -1045,18 +1114,26 @@ function alActualizar(){
     J = jgCargar(i.value); jgEscribir(); t.dataset.listo = '1';
     SEL = null; ANIM.clear(); t.dataset.modo = ''; jgPintar();
   }
+  p2Pintar();
 }
-function progresoPropio(){ const n = est().hechas.length; return { hechas: n, total: NT, texto: `${n} de ${NT} parejas casadas` }; }
+// Progreso: el juego cuenta la mitad y cada tecnología explicada de la parte 2, un décimo
+function progresoPropio(){
+  const n = est().hechas.length, k = p2Lista().filter(x => x.n >= 0 && x.pal >= MIN_PAL).length;
+  return { hechas: n + k * 10, total: NT + N2 * 10, texto: `${n} de ${NT} parejas · ${k} de ${N2} tecnologías explicadas` };
+}
 function listaChecks(){
   const n = est().hechas.length;
-  return [{ ok: n === NT, t: `Las ${NT} parejas casadas`, cuenta: `${n}/${NT}`, falta: `Sigue jugando hasta casar las ${NT} tecnologías.` }];
+  const l = p2Lista(), elegidas = l.filter(x => x.n >= 0).length, explicadas = l.filter(x => x.n >= 0 && x.pal >= MIN_PAL).length;
+  return [{ ok: n === NT, t: `Parte 1 · Las ${NT} parejas casadas`, cuenta: `${n}/${NT}`, falta: `Sigue jugando hasta casar las ${NT} tecnologías.` },
+    { ok: elegidas === N2, t: `Parte 2 · ${N2} tecnologías elegidas`, cuenta: `${elegidas}/${N2}`, falta: `Elige ${N2} tecnologías distintas en la parte 2.` },
+    { ok: explicadas === N2, t: `Parte 2 · Las ${N2} explicadas (mínimo ${MIN_PAL} palabras cada una)`, cuenta: `${explicadas}/${N2}`, falta: `Explica cada tecnología con un ejemplo de tu día a día (mínimo ${MIN_PAL} palabras).` }];
 }
 
 // ================= pintar =================
 function jgPintar(){ jgMarcador(); jgTablero(); jgColeccion(); }
 function jgMarcador(){
   const s = est(), q = (id, v) => { const e = document.getElementById(id); if (e) e.textContent = v; };
-  q('jgP', `${s.hechas.length}/${NT}`); q('jgM', String(enMesa(s))); q('jgE', s.er); q('jgN', fmtNota(notaD(s))); q('jgT', mmss(s.seg));
+  q('jgP', `${s.hechas.length}/${NT}`); q('jgM', String(enMesa(s))); q('jgE', s.er); q('jgN', fmtPts(notaD(s)) + '/5'); q('jgT', mmss(s.seg));
   q('jgPN', MAX_PISTAS - s.pi); q('jgColN', `${s.hechas.length}/${NT}`);
   const p = document.getElementById('jgPista'); if (p) p.disabled = !J || s.pi >= MAX_PISTAS || terminado();
 }
@@ -1089,8 +1166,8 @@ function pintaCelda(i){
 function jgFinal(){
   const s = est();
   return `<div class="jg-aviso" role="status"><span class="big" aria-hidden="true">🏆</span><h3>¡Has casado las ${NT} tecnologías!</h3>
-    <p>Ya conoces para qué sirve cada una. Repásalas en «Tus parejas» y descarga el PDF para entregarlo.</p>
-    <div class="jg-res"><div class="nota"><small>Nota</small><b>${fmtNota(notaD(s))}</b></div><div><small>Parejas</small><b>${s.hechas.length}/${NT}</b></div><div><small>Fallos</small><b>${s.er}</b></div><div><small>Precisión</small><b>${precision(s)} %</b></div><div><small>Pistas</small><b>${s.pi}/${MAX_PISTAS}</b></div><div><small>Tiempo</small><b>${mmss(s.seg)}</b></div></div></div>`;
+    <p>Ya conoces para qué sirve cada una. Ahora, en la <b>Parte 2</b> (aquí debajo), elige ${N2} y explica cómo las usarías en tu profesión.</p>
+    <div class="jg-res"><div class="nota"><small>Puntos del juego</small><b>${fmtPts(notaD(s))} / 5</b></div><div><small>Nota del juego</small><b>${fmtNota(notaD(s))}</b></div><div><small>Parejas</small><b>${s.hechas.length}/${NT}</b></div><div><small>Fallos</small><b>${s.er}</b></div><div><small>Precisión</small><b>${precision(s)} %</b></div><div><small>Pistas</small><b>${s.pi}/${MAX_PISTAS}</b></div><div><small>Tiempo</small><b>${mmss(s.seg)}</b></div></div></div>`;
 }
 function jgColeccion(){
   const c = document.getElementById('coleccion'); if (!c) return;
@@ -1247,7 +1324,7 @@ function confeti(n){
 // ================= PDF =================
 async function pdfTarea(api, C){
   const { banda, P, texto, sitio, separador, COL } = api, s = est();
-  banda('Juego · Tecnologías habilitadoras y sus definiciones', [223,243,234], COL.mint);
+  banda('Parte 1 · Juego: tecnologías habilitadoras y sus definiciones', [223,243,234], COL.mint);
   // Nota destacada
   const d = notaD(s), dF = decimasFallos(s), { doc, M } = api, fin = terminado(s);
   sitio(28);
@@ -1255,20 +1332,36 @@ async function pdfTarea(api, C){
   doc.setFillColor(255, 246, 212); doc.setDrawColor(239, 205, 95); doc.setLineWidth(0.4);
   doc.roundedRect(M, y0, api.CW, 19, 2.5, 2.5, 'FD');
   doc.setFont('helvetica', 'bold'); doc.setFontSize(8.5); doc.setTextColor(122, 90, 0);
-  doc.text('NOTA', M + 6, y0 + 5.5, { baseline: 'middle' });
+  doc.text('PARTE 1 · JUEGO', M + 6, y0 + 5.5, { baseline: 'middle' });
   doc.setFontSize(21); doc.setTextColor(47, 45, 58);
-  doc.text(fmtNota(d) + ' / 10', M + 6, y0 + 12.8, { baseline: 'middle' });
+  doc.text(fmtPts(d) + ' / 5', M + 6, y0 + 12.8, { baseline: 'middle' });
   doc.setFont('helvetica', 'normal'); doc.setFontSize(9.2); doc.setTextColor(108, 104, 120);
   const xr = M + 58, ancho = api.CW - 62;
   const linea1 = fin ? `Las ${NT} parejas casadas con ${s.er} fallo${s.er === 1 ? '' : 's'}.` : `Juego sin terminar: ${s.hechas.length} de ${NT} parejas casadas y ${s.er} fallo${s.er === 1 ? '' : 's'}.`;
   const linea2 = (dF === 10 && 100 - s.er < 10 ? `Por fallos: 1 (nota mínima; 10 - ${s.er} × 0,1 queda por debajo).` : `Por fallos: 10 - ${s.er} × 0,1 = ${fmtNota(dF)}.`)
     + (fin ? '' : ` Por la parte casada: ${fmtNota(dF)} × ${s.hechas.length}/${NT} = ${fmtNota(d)}${d === 10 && Math.round(dF * s.hechas.length / NT) < 10 ? ' (nota mínima: 1)' : ''}.`);
-  doc.text(doc.splitTextToSize(pdfTxt(linea1 + ' ' + linea2 + ' Las pistas y el tiempo no cuentan.'), ancho), xr, y0 + 5.2, { baseline: 'top', lineHeightFactor: 1.25 });
+  doc.text(doc.splitTextToSize(pdfTxt(linea1 + ' ' + linea2 + ` Nota del juego ${fmtNota(d)}: vale la mitad, ${fmtPts(d)} de 5 puntos. Las pistas y el tiempo no cuentan.`), ancho), xr, y0 + 4.4, { baseline: 'top', lineHeightFactor: 1.2 });
   api.y = y0 + 24;
   texto([{ t: 'Parejas casadas: ', b: true }, { t: `${s.hechas.length} de ${NT}` }, { t: '     Precisión: ', b: true }, { t: precision(s) + ' %' }], { size: 10.5, tras: 1 });
   texto([{ t: 'Fallos: ', b: true }, { t: String(s.er) }, { t: '     Pistas usadas: ', b: true }, { t: `${s.pi} de ${MAX_PISTAS}` }, { t: '     Tiempo de juego: ', b: true }, { t: mmss(s.seg) }], { size: 10.5, tras: 2 });
+  // Parte 2: las 5 tecnologías y cómo las usaría (con un punto de color discreto: encaje con su ciclo, para el profesor)
+  banda('Parte 2 · Las tecnologías en tu profesión', [226,238,252], COL.sky);
+  const PUNTO = { si: [79,179,138], general: [127,170,224], no: [232,150,92] };
+  const l2 = p2Lista();
+  for (let i = 0; i < N2; i++){
+    const n = l2[i].n;
+    sitio(22);
+    if (n >= 0){ doc.setFillColor(...PUNTO[encaje(n, ESP)]); doc.circle(M + 1.3, api.y + 2.1, 1.1, 'F'); }
+    texto([{ t: `2.${i + 1}  `, b: true }, { t: n >= 0 ? TEC[n][0] : '(sin elegir)', b: n >= 0, i: n < 0 }], { size: 11, color: n >= 0 ? COL.ink : COL.muted, sang: 3.5, tras: 0.6 });
+    if (n >= 0) P(TEC[n][1], { size: 9.2, i: true, color: COL.muted, sang: 3.5, tras: 1.4 });
+    await api.respuesta('p2_ex' + i);
+    if (i < N2 - 1) separador();
+  }
+  sitio(14); api.y = api.y + 2;
+  texto([{ t: 'Parte 2: ', b: true }, { t: '______ / 5', b: true }, { t: '      Total: ', b: true }, { t: `${fmtPts(d)} + ______ = ______ / 10`, b: true }], { size: 10.5, color: COL.ink, tras: 2 });
+  // Anexo: las parejas del juego
   separador();
-  sitio(20); P('Tecnologías casadas, en el orden en que las encontraste', { size: 11.5, b: true, color: COL.mint, tras: 2 });
+  sitio(20); P('Parte 1 · Tecnologías casadas, en el orden en que las encontraste', { size: 11.5, b: true, color: COL.mint, tras: 2 });
   let k = 1;
   for (const n of s.hechas) texto([{ t: TEC[n][0] + ': ', b: true }, { t: TEC[n][1] }], { size: 9.6, marca: (k++) + '.', tras: 0.6 });
   const faltan = TEC.map((_, n) => n).filter(n => !s.hechas.includes(n));
@@ -1280,9 +1373,13 @@ async function pdfTarea(api, C){
 
 // ================= ejemplo relleno: juego terminado =================
 function ejemploCampos(){
-  return { juego: JSON.stringify({ v: 2, pool: [], celdas: Array(CELDAS).fill(-1), hechas: [...Array(NT).keys()], er: 6, pi: 2, seg: 912, fin: 1 }) };
+  return { juego: JSON.stringify({ v: 2, pool: [], celdas: Array(CELDAS).fill(-1), hechas: [...Array(NT).keys()], er: 6, pi: 2, seg: 912, fin: 1 }),
+    p2_t0: '10', p2_t1: '13', p2_t2: '47', p2_t3: '1', p2_t4: '39' };
 }
-function ejemploRespuesta(){ return ''; }
+function ejemploRespuesta(id){
+  if (/^p2_ex\d$/.test(id)) return '<p>[Texto de muestra] Cómo usarías esta tecnología en un día normal de tu trabajo: qué harías con ella, con quién, en qué momento del día y qué mejora para las personas con las que trabajas y para ti. Pon un ejemplo concreto de tu profesión, con tus palabras, de al menos treinta palabras.</p>';
+  return '';
+}
 
 // =====================================================================
 // MOTOR COMÚN · Ejercicios Interactivos DJK
