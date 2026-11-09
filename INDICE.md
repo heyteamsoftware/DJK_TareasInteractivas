@@ -205,16 +205,17 @@ Todos los ejercicios muestran una tabla «Cómo se califica» con esta forma, de
 
 | Dispositivo | Ancho | Qué debe cumplir |
 |---|---|---|
-| Ordenador | ≥ 1024 px | Diseño completo; barra de formato con texto en los botones; atajos de teclado; arrastrar y soltar imágenes. |
-| Tablet | 600–1023 px | Botones y casillas grandes para tocar (mínimo 44 px); barra de formato compacta; todo lo que se arrastra tiene alternativa tocando. |
-| Móvil | < 600 px | Una sola columna; sin desplazamiento horizontal; barra de formato reducida a iconos; botones Guardar y PDF siempre visibles; textos y casillas legibles sin hacer zoom. |
+| Ordenador | ≥ 1024 px | Diseño completo; barra de formato con texto en los botones (en las cajas estrechas, solo iconos y en una fila); atajos de teclado; arrastrar y soltar imágenes. |
+| Tablet | 600–1023 px | Botones y casillas grandes para tocar (mínimo 44 px); barra de formato con todos sus botones a la vista (si la caja es estrecha, en dos filas); todo lo que se arrastra tiene alternativa tocando. |
+| Móvil | < 600 px | Una sola columna; sin desplazamiento horizontal; barra de formato reducida a iconos en una fila que se desliza con el dedo; botones Guardar y PDF siempre visibles; textos y casillas legibles sin hacer zoom. |
 | Pruebas | 375 px, 768 px y escritorio | Se prueba cada ejercicio en los tres tamaños antes de publicarlo. |
 
 | Cómo se aplica | Dónde |
 |---|---|
 | Botones, casillas y ticks de mínimo 44 px en tablet y móvil (o en cualquier pantalla táctil) | Motor común (`_fuente/comun_head.html`) y bloque «norma 13» en UT2_E2 |
-| Barra de formato en una sola fila que se desliza con el dedo | Motor común |
-| La barra de formato solo aparece mientras se escribe en una caja (ordenador, tablet y móvil); al salir de la caja se oculta | Motor común (`_fuente/motor.js`) y UT2_E2 |
+| Barra de formato en una sola fila que se desliza con el dedo (solo en móvil) | Motor común y UT2_E2 |
+| **Cada caja de texto lleva su propia barra de formato** encima (negrita, cursiva, subrayado, títulos, listas, enlace e imagen) y actúa sobre esa caja; está tenue y se ilumina al escribir en ella. Ya no hay barra en la cabecera (desde el 9/11/2026). La barra se adapta al ancho de su caja, no solo al de la pantalla | Motor común (`caja()` en `_fuente/motor.js`, estilos en `_fuente/comun_head.html`) y UT2_E2 (bloque «barrasCajas») |
+| **Cajas que se pueden agrandar:** asa debajo de cada caja; se arrastra con el ratón o con el dedo (o flechas arriba/abajo con el teclado). El alto elegido se recuerda en ese navegador | Motor común y UT2_E2 |
 | Barra superior con Guardar y PDF fija al hacer scroll (`overflow-x:clip`, no `hidden`) | Motor común |
 | Cabecera de UT2_E2 en una sola fila en móvil, con «Descargar PDF» siempre visible | UT2_E1 |
 | Asa para redimensionar imágenes más grande en pantallas táctiles | Motor común |

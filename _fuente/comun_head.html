@@ -85,10 +85,18 @@ input[type=text]{width:100%;font:inherit;padding:.65rem .8rem;border:1px solid v
 .btn.primary{background:var(--lav3);border-color:var(--lav3);color:#fff}
 .btn.primary:hover{background:var(--lav3);filter:brightness(.9)}
 .prog-fila{max-width:1100px;margin:0 auto;padding:0 1rem 6px}
-#herr{max-width:900px;margin:0 auto;padding:0 1rem .5rem;display:flex;flex-wrap:wrap;gap:.3rem}
-#herr button{padding:.3rem .55rem;min-width:2.2rem;font-size:.9rem;background:#fff}
-#herr button:hover{background:var(--lav)}
-#herr .sep{width:1px;background:var(--line);margin:0 .15rem}
+/* Barra de formato de cada caja (encima de la caja) y asa para hacerla más grande (debajo) */
+.edw{position:relative;container-type:inline-size}
+.herr{display:flex;flex-wrap:wrap;gap:.25rem;align-items:center;margin:0 0 .3rem;opacity:.55;transition:opacity .15s}
+.edw:focus-within .herr,.edw:hover .herr{opacity:1}
+.herr button{padding:.2rem .5rem;min-width:2.1rem;min-height:2rem;font-size:.86rem;background:#fff;border:1px solid var(--line);border-radius:8px;color:var(--ink);cursor:pointer}
+.herr button:hover{background:var(--lav);border-color:var(--lav2)}
+.herr .sep{width:1px;align-self:stretch;background:var(--line);margin:0 .1rem}
+.asa{display:block;margin:-.55rem auto 0;width:64px;height:14px;padding:0;border:1px solid var(--lav2);border-radius:999px;background:#fff;cursor:ns-resize;touch-action:none;position:relative;z-index:1}
+.asa::before{content:"";position:absolute;left:50%;top:50%;width:26px;height:4px;transform:translate(-50%,-50%);border-top:1.5px solid var(--lav3);border-bottom:1.5px solid var(--lav3)}
+.asa:hover,.asa:focus-visible,.edw.estirando .asa{background:var(--lav);border-color:var(--lav3)}
+.edw.estirando .ed{border-color:var(--lav3)}
+@container (max-width:520px){.herr .tx,.herr .sep{display:none}.herr{gap:.15rem}.herr button{padding:.15rem .3rem;min-width:1.85rem}}
 .progreso{font-size:.8rem;color:var(--muted)}
 .prog-bar{height:6px;background:var(--line);border-radius:6px;overflow:hidden;margin-top:.25rem}
 .prog-bar i{display:block;height:100%;background:var(--mint2);width:0;transition:width .3s}
@@ -208,7 +216,6 @@ ul.checks li.ok i{background:var(--mint3);border-color:var(--mint3)}
 @media (max-width:600px){
   .wrap{padding:.7rem}
   .nombres,.campos{grid-template-columns:1fr}
-  #herr{padding:0 .7rem .45rem}
   .fase>.cuerpo{padding:.3rem .8rem .9rem}
   .fase>header{padding:.7rem .8rem}
   .rev{padding:.5rem .7rem .1rem}
@@ -220,9 +227,11 @@ ul.checks li.ok i{background:var(--mint3);border-color:var(--mint3)}
   #barra .who-txt{display:none}
   #barra .btn{padding:8px 10px;font-size:13px}
   .prog-fila{padding:0 .7rem 6px}
-  #herr{gap:.2rem}
-  #herr button{padding:.2rem .35rem;min-width:1.9rem;font-size:.82rem}
-  #herr .sep{display:none}
+  .herr{gap:.2rem;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+  .herr::-webkit-scrollbar{display:none}
+  .herr button{padding:.2rem .35rem;min-width:1.9rem;font-size:.82rem}
+  .herr .sep{display:none}
+  .herr .tx{display:none}
   .progreso{font-size:.75rem}
   table.siglas{font-size:.86rem}
 }
@@ -231,10 +240,9 @@ ul.checks li.ok i{background:var(--mint3);border-color:var(--mint3)}
 @media (max-width:1023px), (pointer:coarse){
   button{min-height:44px}
   #barra .btn{min-width:44px;min-height:44px;justify-content:center}
-  #herr{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch}
-  #herr::-webkit-scrollbar{display:none}
-  #herr button{min-width:44px;min-height:44px;flex:none}
-  #herr .sep{flex:none}
+  .herr button{min-width:44px;min-height:44px;flex:none}
+  .herr .sep{flex:none}
+  .asa{width:88px;height:26px;min-height:26px;margin-top:-.75rem}
   #imgHerr button{min-width:44px;min-height:40px}
   #imgAsa{width:32px;height:32px;right:-16px;bottom:-16px}
   input[type=text]{min-height:48px;font-size:16px}
@@ -243,8 +251,7 @@ ul.checks li.ok i{background:var(--mint3);border-color:var(--mint3)}
   .video a{min-height:44px;display:inline-flex;align-items:center}
   .ed{font-size:16px}
 }
-/* La barra de formato solo aparece mientras se escribe en una caja (ordenador, tablet y móvil) */
-body:not(.editando) #herr{display:none}
+/* La barra de formato va en cada caja: tenue hasta que se escribe en ella (ordenador, tablet y móvil) */
 </style>
 </head>
 <body>
@@ -298,23 +305,7 @@ body:not(.editando) #herr{display:none}
       <button class="btn hidden" id="btnCodigo" type="button" title="Tu código para seguir en otro ordenador o móvil">🔑<span class="tx"> Código</span></button>
       <button class="btn primary" id="btnPDF" type="button" title="Descargar la tarea en PDF"><span class="tx">Descargar </span>PDF</button>
     </div>
-    <div id="herr" role="toolbar" aria-label="Formato del texto">
-      <button data-cmd="bold" title="Negrita"><b>N</b></button>
-      <button data-cmd="italic" title="Cursiva"><i>C</i></button>
-      <button data-cmd="underline" title="Subrayado"><u>S</u></button>
-      <span class="sep"></span>
-      <button data-blk="H1" title="Título 1">H1</button>
-      <button data-blk="H2" title="Título 2">H2</button>
-      <button data-blk="H3" title="Título 3">H3</button>
-      <button data-blk="P" title="Texto normal">¶</button>
-      <span class="sep"></span>
-      <button data-cmd="insertUnorderedList" title="Lista con viñetas">•<span class="tx"> Lista</span></button>
-      <button data-cmd="insertOrderedList" title="Lista numerada">1.<span class="tx"> Lista</span></button>
-      <span class="sep"></span>
-      <button id="bEnlace" title="Insertar enlace">🔗<span class="tx"> Enlace</span></button>
-      <button id="bImagen" title="Insertar imagen">🖼<span class="tx"> Imagen</span></button>
-      <input type="file" id="fImagen" accept="image/*" multiple class="hidden">
-    </div>
+    <input type="file" id="fImagen" accept="image/*" multiple class="hidden">
     <div class="prog-fila">
       <div class="progreso"><span id="progTxt"></span></div>
       <div class="prog-bar"><i id="progBar"></i></div>

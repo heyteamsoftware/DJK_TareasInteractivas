@@ -156,8 +156,15 @@ function limpiarHTML(html){
   limpiar(t.content);
   return t.innerHTML;
 }
+// Barra de formato de cada caja (va encima de su caja y actúa sobre ella)
+const HERR = `<div class="herr" role="toolbar" aria-label="Formato del texto">
+  <button type="button" data-cmd="bold" title="Negrita"><b>N</b></button><button type="button" data-cmd="italic" title="Cursiva"><i>C</i></button><button type="button" data-cmd="underline" title="Subrayado"><u>S</u></button><span class="sep"></span>
+  <button type="button" data-blk="H1" title="Título 1">H1</button><button type="button" data-blk="H2" title="Título 2">H2</button><button type="button" data-blk="H3" title="Título 3">H3</button><button type="button" data-blk="P" title="Texto normal">¶</button><span class="sep"></span>
+  <button type="button" data-cmd="insertUnorderedList" title="Lista con viñetas">•<span class="tx"> Lista</span></button><button type="button" data-cmd="insertOrderedList" title="Lista numerada">1.<span class="tx"> Lista</span></button><span class="sep"></span>
+  <button type="button" data-acc="enlace" title="Insertar enlace">🔗<span class="tx"> Enlace</span></button><button type="button" data-acc="imagen" title="Insertar imagen">🖼<span class="tx"> Imagen</span></button></div>`;
 function caja(id, num, etiqueta, extra = '', o = {}){
-  return `<div class="caja${o.ancha ? ' ancha' : ''}"><div class="et">${num ? `<span class="n">${num}</span>` : ''}${etiqueta}</div>${extra}<div class="ed${o.corta ? ' corta' : ''}" contenteditable="true" spellcheck="true" data-id="${id}" data-ph="${esc(o.ph || 'Escribe aquí tu respuesta. Puedes pegar o arrastrar imágenes.')}" role="textbox" aria-multiline="true" aria-label="${esc((num ? num + ' ' : '') + etiqueta.replace(/<[^>]+>/g, ''))}"></div></div>`;
+  return `<div class="caja${o.ancha ? ' ancha' : ''}"><div class="et">${num ? `<span class="n">${num}</span>` : ''}${etiqueta}</div>${extra}<div class="edw">${HERR}<div class="ed${o.corta ? ' corta' : ''}" contenteditable="true" spellcheck="true" data-id="${id}" data-ph="${esc(o.ph || 'Escribe aquí tu respuesta. Puedes pegar o arrastrar imágenes.')}" role="textbox" aria-multiline="true" aria-label="${esc((num ? num + ' ' : '') + etiqueta.replace(/<[^>]+>/g, ''))}"></div>` +
+    `<button type="button" class="asa" data-asa="${id}" title="Arrastra para hacer la caja más grande o más pequeña" aria-label="Cambiar el tamaño de la caja (flechas arriba y abajo)"></button></div></div>`;
 }
 function tablaCriterios(){
   const tot = COMUN.criterios.reduce((s, c) => s + c[2], 0);
@@ -420,7 +427,7 @@ function guardarCursor(){
 }
 document.addEventListener('selectionchange', guardarCursor);
 // Mostrar la barra de formato solo mientras se escribe en una caja (todos los dispositivos)
-const enHerramientas = t => t && t.closest && t.closest('#herr,#imgHerr,#imgMarco');
+const enHerramientas = t => t && t.closest && t.closest('.herr,.asa,#imgHerr,#imgMarco');
 // Mostrar u ocultar la barra sin que el texto salte: se compensa el desplazamiento
 function ponerEditando(si){
   if (document.body.classList.contains('editando') === si) return;
@@ -441,15 +448,40 @@ function restaurarCursor(){
   s.addRange(r); return true;
 }
 try { document.execCommand('defaultParagraphSeparator', false, 'p'); } catch(e){}
-$('#herr').addEventListener('mousedown', e => { if (e.target.closest('button')) e.preventDefault(); });
-$('#herr').addEventListener('click', e => {
-  const b = e.target.closest('button'); if (!b) return;
-  if (b.id === 'bImagen'){ if (!ultimoEd) return aviso('Haz clic primero dentro de una caja de respuesta.'); $('#fImagen').click(); return; }
-  if (!restaurarCursor()) return aviso('Haz clic primero dentro de una caja de respuesta.');
+// Cada barra actúa sobre su caja: si el cursor estaba en otra, se pone al final de esta
+document.addEventListener('mousedown', e => { if (e.target.closest && e.target.closest('.herr button')) e.preventDefault(); });
+document.addEventListener('click', e => {
+  const b = e.target.closest && e.target.closest('.herr button'); if (!b) return;
+  const ed = b.closest('.edw').querySelector('.ed');
+  if (ed !== ultimoEd){ ultimoEd = ed; ultimoRango = null; }
+  if (b.dataset.acc === 'imagen'){ restaurarCursor(); guardarCursor(); $('#fImagen').click(); return; }
+  if (!restaurarCursor()) return;
   if (b.dataset.cmd) document.execCommand(b.dataset.cmd, false, null);
   if (b.dataset.blk) document.execCommand('formatBlock', false, b.dataset.blk === 'P' ? 'p' : b.dataset.blk.toLowerCase());
-  if (b.id === 'bEnlace') insertarEnlace();
+  if (b.dataset.acc === 'enlace') insertarEnlace();
   programarGuardado();
+});
+// Asa de cada caja: arrastrar (ratón o dedo) o flechas arriba/abajo para cambiar el alto. Se recuerda en este navegador.
+const ALTO = id => PREF + 'alto_' + id;
+function ponerAlto(ed, px){ const min = ed.classList.contains('corta') ? 52 : 90; px = Math.round(Math.max(min, Math.min(1400, px))); ed.style.minHeight = px + 'px'; return px; }
+function guardarAlto(ed){ try { localStorage.setItem(ALTO(ed.dataset.id), parseInt(ed.style.minHeight, 10) || ''); } catch(e){} }
+function aplicarAltos(){ document.querySelectorAll('.ed[data-id]').forEach(ed => { try { const v = +localStorage.getItem(ALTO(ed.dataset.id)); if (v) ponerAlto(ed, v); } catch(e){} }); }
+new MutationObserver(aplicarAltos).observe($('#contenido'), { childList: true });
+let ESTIRA = null;
+document.addEventListener('pointerdown', e => {
+  const a = e.target.closest && e.target.closest('.asa'); if (!a) return;
+  const w = a.closest('.edw'), ed = w.querySelector('.ed');
+  ESTIRA = { ed, w, y0: e.clientY, h0: ed.getBoundingClientRect().height, pid: e.pointerId };
+  w.classList.add('estirando'); try { a.setPointerCapture(e.pointerId); } catch(_){}
+  e.preventDefault();
+});
+document.addEventListener('pointermove', e => { if (ESTIRA && e.pointerId === ESTIRA.pid) ponerAlto(ESTIRA.ed, ESTIRA.h0 + e.clientY - ESTIRA.y0); });
+const finEstirar = e => { if (!ESTIRA || (e && e.pointerId !== ESTIRA.pid)) return; ESTIRA.w.classList.remove('estirando'); guardarAlto(ESTIRA.ed); ESTIRA = null; };
+document.addEventListener('pointerup', finEstirar); document.addEventListener('pointercancel', finEstirar);
+document.addEventListener('keydown', e => {
+  const a = e.target.closest && e.target.closest('.asa'); if (!a || (e.key !== 'ArrowDown' && e.key !== 'ArrowUp')) return;
+  const ed = a.closest('.edw').querySelector('.ed');
+  ponerAlto(ed, ed.getBoundingClientRect().height + (e.key === 'ArrowDown' ? 60 : -60)); guardarAlto(ed); e.preventDefault();
 });
 function insertarEnlace(){
   const rango = getSelection().getRangeAt(0).cloneRange();

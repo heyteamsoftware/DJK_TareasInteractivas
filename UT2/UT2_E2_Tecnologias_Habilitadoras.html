@@ -713,6 +713,22 @@ ul.cod-info li{margin:5px 0}
 .start .ciclo input{accent-color:var(--mint-ink)}
 </style>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 64 64%27%3E%3Crect width=%2764%27 height=%2764%27 rx=%2714%27 fill=%27%230E7F96%27/%3E%3Ctext x=%2732%27 y=%2742%27 font-size=%2719%27 font-family=%27Arial%27 font-weight=%27700%27 text-anchor=%27middle%27 fill=%27white%27%3EU2E2%3C/text%3E%3C/svg%3E">
+<style id="barrasCajas">
+/* Barra de formato en cada cuadro de texto (la de arriba de las fichas ya no se usa) y asa para agrandarlo */
+#toolbar{display:none!important}
+.tbx{display:flex;flex-wrap:wrap;gap:4px;align-items:center;margin:0 0 6px;opacity:.55;transition:opacity .15s}
+.edw:focus-within .tbx,.edw:hover .tbx{opacity:1}
+.edw{position:relative;container-type:inline-size}
+.tbx button{border:1px solid var(--line);background:#fff;min-width:34px;height:32px;border-radius:8px;font-size:13px;font-weight:600;padding:0 8px;cursor:pointer}
+.tbx button:hover{background:var(--soft)}
+.tbx .sep{width:1px;height:20px;background:var(--line);margin:0 2px}
+.asa{display:block;margin:-7px auto 0;width:64px;height:14px;padding:0;border:1px solid var(--line);border-radius:999px;background:#fff;cursor:ns-resize;touch-action:none;position:relative;z-index:1}
+.asa::before{content:"";position:absolute;left:50%;top:50%;width:26px;height:4px;transform:translate(-50%,-50%);border-top:1.5px solid var(--muted);border-bottom:1.5px solid var(--muted)}
+.asa:hover,.asa:focus-visible,.edw.estirando .asa{background:var(--soft)}
+@container (max-width:520px){.tbx .tx,.tbx .sep{display:none}.tbx{gap:2px}.tbx button{padding:0 5px;min-width:30px}}
+@media (max-width:1023px),(pointer:coarse){.tbx button{min-width:44px;height:44px;flex:none}.asa{width:88px;height:26px;margin-top:-12px}}
+@media (max-width:600px){.tbx .tx{display:none}.tbx .sep{display:none}.tbx{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none}.tbx::-webkit-scrollbar{display:none}}
+</style>
 </head>
 <body>
 
@@ -2248,6 +2264,62 @@ function exampleState(){
   st.updated=new Date().toISOString();
   return st;
 }
+</script>
+<script>
+// ===== Barra de formato en cada cuadro de texto y asa para agrandarlo =====
+(() => {
+  const BARRA = '<div class="tbx" role="toolbar" aria-label="Formato del texto">'
+    + '<button type="button" data-cmd="bold" title="Negrita (Ctrl+B)"><b>B</b></button><button type="button" data-cmd="italic" title="Cursiva (Ctrl+I)"><i>I</i></button><button type="button" data-cmd="underline" title="Subrayado (Ctrl+U)"><u>U</u></button><span class="sep"></span>'
+    + '<button type="button" data-block="H1" title="Título 1">H1</button><button type="button" data-block="H2" title="Título 2">H2</button><button type="button" data-block="H3" title="Título 3">H3</button><button type="button" data-block="P" title="Párrafo normal">¶</button><span class="sep"></span>'
+    + '<button type="button" data-cmd="insertUnorderedList" title="Lista con viñetas">•<span class="tx"> Lista</span></button><button type="button" data-cmd="insertOrderedList" title="Lista numerada">1.<span class="tx"> Lista</span></button><span class="sep"></span>'
+    + '<button type="button" data-twin="tbLink" title="Insertar enlace">🔗<span class="tx"> Enlace</span></button><button type="button" data-twin="tbImg" title="Insertar imagen">🖼<span class="tx"> Imagen</span></button></div>';
+  const ALTO = k => 'DJK_UT2_E2_alto_' + k;
+  const ponerAlto = (ed, px) => { px = Math.round(Math.max(70, Math.min(1400, px))); ed.style.minHeight = px + 'px'; };
+  // Cada cuadro .ed va dentro de .edw, con su barra encima y su asa debajo (también los que se crean después)
+  function preparar(){
+    document.querySelectorAll('.ed').forEach(ed => {
+      if (ed.parentElement && ed.parentElement.classList.contains('edw')) return;
+      const w = document.createElement('div'); w.className = 'edw';
+      ed.parentNode.insertBefore(w, ed);
+      w.insertAdjacentHTML('beforeend', BARRA); w.appendChild(ed);
+      w.insertAdjacentHTML('beforeend', '<button type="button" class="asa" title="Arrastra para hacer el cuadro más grande o más pequeño" aria-label="Cambiar el tamaño del cuadro (flechas arriba y abajo)"></button>');
+      try { const v = +localStorage.getItem(ALTO(ed.dataset.key)); if (v) ponerAlto(ed, v); } catch (e) {}
+    });
+  }
+  preparar();
+  new MutationObserver(preparar).observe(document.body, { childList: true, subtree: true });
+  // Botones: se apunta el cuadro de esa barra y se usa el botón equivalente de la barra original
+  document.addEventListener('mousedown', e => { if (e.target.closest && e.target.closest('.tbx button')) e.preventDefault(); });
+  document.addEventListener('click', e => {
+    const b = e.target.closest && e.target.closest('.tbx button'); if (!b) return;
+    const ed = b.closest('.edw').querySelector('.ed');
+    if (lastEditor !== ed || !lastRange || !ed.contains(lastRange.startContainer)) {
+      lastEditor = ed; const r = document.createRange(); r.selectNodeContents(ed); r.collapse(false); lastRange = r;
+    }
+    const tb = document.getElementById('toolbar');
+    const gemelo = b.dataset.twin ? document.getElementById(b.dataset.twin)
+      : tb.querySelector(b.dataset.cmd ? '[data-cmd="' + b.dataset.cmd + '"]' : '[data-block="' + b.dataset.block + '"]');
+    if (gemelo) gemelo.click();
+  });
+  // Asa: arrastrar (ratón o dedo) o flechas arriba/abajo; el alto se recuerda en este navegador
+  let E = null;
+  const guardar = ed => { try { localStorage.setItem(ALTO(ed.dataset.key), parseInt(ed.style.minHeight, 10) || ''); } catch (e) {} };
+  document.addEventListener('pointerdown', e => {
+    const a = e.target.closest && e.target.closest('.asa'); if (!a) return;
+    const w = a.closest('.edw'), ed = w.querySelector('.ed');
+    E = { w, ed, y0: e.clientY, h0: ed.getBoundingClientRect().height, pid: e.pointerId };
+    w.classList.add('estirando'); try { a.setPointerCapture(e.pointerId); } catch (_) {}
+    e.preventDefault();
+  });
+  document.addEventListener('pointermove', e => { if (E && e.pointerId === E.pid) ponerAlto(E.ed, E.h0 + e.clientY - E.y0); });
+  const fin = e => { if (!E || e.pointerId !== E.pid) return; E.w.classList.remove('estirando'); guardar(E.ed); E = null; };
+  document.addEventListener('pointerup', fin); document.addEventListener('pointercancel', fin);
+  document.addEventListener('keydown', e => {
+    const a = e.target.closest && e.target.closest('.asa'); if (!a || (e.key !== 'ArrowDown' && e.key !== 'ArrowUp')) return;
+    const ed = a.closest('.edw').querySelector('.ed');
+    ponerAlto(ed, ed.getBoundingClientRect().height + (e.key === 'ArrowDown' ? 60 : -60)); guardar(ed); e.preventDefault();
+  });
+})();
 </script>
 </body>
 </html>
