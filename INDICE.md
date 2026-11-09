@@ -23,9 +23,9 @@
 | UT1_E3 | Sistemas ciberfísicos y digitalización del sector | RA1 | c, d, e, f | AF, AS, EI, HB, IS + EI SP, IS SP, MC SP | A | [UT1_E3](UT1/UT1_E3_Digitalizacion_Sistemas_CiberFisicos.html) | [Ejemplo](UT1/UT1_E3_EJEMPLO_relleno.html) | Sí | Sí | Hecho |
 | UT1_SP | Digitalización de los sectores productivos (semipresencial: reúne E1, E2 y E3 en versión corta) | RA1 | a, b, c, d, e, f, g | Solo EI SP, IS SP y MC SP | A (remix) | [UT1_SP](SEMI/UT1_SP_Digitalizacion_Sectores_Productivos.html) | [Ejemplo](SEMI/UT1_SP_EJEMPLO_relleno.html) | Sí (2·1·1·1,5·1,5·1,5·1,5) | Sí | Hecho |
 | UT2_E1 | Parejas de tecnologías y su uso en tu profesión (juego + escritura) | RA2 | a | AF, AS, EI, HB, IS + EI SP, IS SP, MC SP | C (juego en el motor común) | [UT2_E1](UT2/UT2_E1_Parejas_Tecnologias_Habilitadoras.html) | [Ejemplo](UT2/UT2_E1_EJEMPLO_relleno.html) | Sí (5 rondas × 2) | Sí | Hecho |
-| UT2_E2 | Tecnologías habilitadoras en tu centro (plano) | RA2 | a, c, d, e | Los 8 · plano y banco de 20 adaptados a cada especialidad | B | [UT2_E2](UT2/UT2_E2_Tecnologias_Habilitadoras.html) | `?ejemplo` | Sí (otro reparto) | Sí (original) | Hecho (antes era UT2_E1) |
+| UT2_E2 | Diseñad vuestro robot (trabajo en grupo; se entrega la presentación de Canva) | RA2 | b, g | AF, AS, EI, HB, IS | C (constructor por piezas en el motor común) | [UT2_E2](UT2/UT2_E2_Disenad_Vuestro_Robot.html) | [Ejemplo](UT2/UT2_E2_EJEMPLO_relleno.html) | Sí (3·3·2·2) | Sí | Hecho |
 | UT2_E3 | Diseña tu app de realidad virtual o mixta (tras probar las gafas en clase) | RA2 | b, d, g | AF, AS, EI, HB, IS | C (juego + constructor en el motor común) | [UT2_E3](UT2/UT2_E3_App_Realidad_Virtual_Mixta.html) | [Ejemplo](UT2/UT2_E3_EJEMPLO_relleno.html) | Sí (1,5·1·3,5·1,5·2,5) | Sí | Hecho (sustituye al Word «Informe técnico») |
-| UT2_E4 | Diseñad vuestro robot (trabajo en grupo; se entrega la presentación de Canva) | RA2 | b, g | AF, AS, EI, HB, IS | C (constructor por piezas en el motor común) | [UT2_E4](UT2/UT2_E4_Disenad_Vuestro_Robot.html) | [Ejemplo](UT2/UT2_E4_EJEMPLO_relleno.html) | Sí (3·3·2·2) | Sí | Hecho |
+| UT2_E4 | Tecnologías habilitadoras en tu centro (plano) | RA2 | a, c, d, e | Los 8 · plano y banco de 20 adaptados a cada especialidad | B | [UT2_E4](UT2/UT2_E4_Tecnologias_Habilitadoras.html) | `?ejemplo` | Sí (otro reparto) | Sí (original) | Hecho (antes era UT2_E1 y después UT2_E2) |
 
 ## Ciclos
 
@@ -42,9 +42,9 @@
 
 ## Modelos de ejercicio
 
-| Rasgo | A · Proyecto por partes con variante por ciclo (UT1_E1, UT1_E3) | B · Actividad visual con plano (UT2_E2) |
+| Rasgo | A · Proyecto por partes con variante por ciclo (UT1_E1, UT1_E3) | B · Actividad visual con plano (UT2_E4) |
 |---|---|---|
-| Idea | Partes o fases con cajas de respuesta | Elegir 10 de 50 tecnologías y colocarlas en un plano de 4 espacios adaptado a la especialidad (ver «Planos de UT2_E2»), mínimo 2 por espacio |
+| Idea | Partes o fases con cajas de respuesta | Elegir 10 de 50 tecnologías y colocarlas en un plano de 4 espacios adaptado a la especialidad (ver «Planos de UT2_E4»), mínimo 2 por espacio |
 | Inicio | Nombre, Apellidos y Ciclo a elegir (5 opciones) | Nombre, Apellidos y Ciclo a elegir (5 opciones) |
 | Estructura | Inicio: RA + nombre, apellidos y ciclo · Ejercicio: Objetivo y criterios → Qué tienes que hacer (checks) → Partes → Fuentes e IA → Antes de entregar, comprueba → Entrega → Abreviaturas | Enunciado (checks) → Banco de tecnologías → Plano → Ficha por tecnología → Reflexión final |
 | Escritura | Editor con formato; pegar texto bloqueado, pegar/soltar imágenes y redimensionarlas | Pegar texto desactivado; se pueden añadir imágenes |
@@ -56,7 +56,7 @@
 
 | Pieza | UT2_E1 · Parejas de tecnologías |
 |---|---|
-| Juego | Las 50 tecnologías y definiciones de UT2_E2. Tablero de 20 cuadrados (10 parejas); cuando queda libre la mitad, se rellena solo con nuevas parejas hasta casar las 50. Cuadrados mezclados: tecnología (verde, con icono) y definición (blanco). Orden aleatorio por alumno. |
+| Juego | Las 50 tecnologías y definiciones de UT2_E4. Tablero de 20 cuadrados (10 parejas); cuando queda libre la mitad, se rellena solo con nuevas parejas hasta casar las 50. Cuadrados mezclados: tecnología (verde, con icono) y definición (blanco). Orden aleatorio por alumno. |
 | Cómo se juega | Tocar o hacer clic en una tecnología y luego en su definición (o al revés). Con ratón también se puede arrastrar un cuadrado encima de su pareja; en tablet, mantener pulsado un momento y arrastrar. Funciona con teclado. |
 | Acierto / fallo | Acierto: la pareja brilla, desaparece del tablero y pasa a «Tus parejas». Fallo: los dos cuadrados tiemblan en rojo y suma un fallo. |
 | Nota del juego | Sobre 10: cada fallo resta 0,1 (nota mínima 1). Si no se han casado las 50, se multiplica por la parte casada (25 de 50 → la mitad), mínimo 1. Las pistas y el tiempo no cuentan. Se calcula en décimas para no tener errores de redondeo (`notaD()`). **Vale la mitad: la parte 1 puntúa sobre 5** (9,4 → 4,7). |
@@ -70,7 +70,7 @@
 
 ## Encaje de las tecnologías de UT2_E1 (parte 2, interno)
 
-Sale del banco de UT2_E2 (abajo), con las de uso general en cualquier centro aparte. Para cambiarla, edita las tres listas de `_fuente/UT2_E1.js` y vuelve a construir: si una tecnología queda sin clasificar o repetida, la página lo avisa en la consola.
+Sale del banco de UT2_E4 (abajo), con las de uso general en cualquier centro aparte. Para cambiarla, edita las tres listas de `_fuente/UT2_E1.js` y vuelve a construir: si una tecnología queda sin clasificar o repetida, la página lo avisa en la consola.
 
 | Grupo | Tecnologías |
 |---|---|
@@ -83,7 +83,7 @@ Sale del banco de UT2_E2 (abajo), con las de uso general en cualquier centro apa
 | Ninguno (naranja en todos) | Alarma antirrobo · Enchufe programable · Punto de carga eléctrica · Etiquetas antirrobo |
 | Resto | Las de otros ciclos salen en naranja para el tuyo |
 
-## Banco de tecnologías de UT2_E2 por especialidad
+## Banco de tecnologías de UT2_E4 por especialidad
 
 Cada especialidad ve 20 de las 50 tecnologías (las que más se relacionan con su sector). El alumnado elige 10 de su banco.
 
@@ -119,7 +119,7 @@ En semipresencial solo hay un ejercicio por unidad: un «remix» de los ejercici
 | Checks | — | 2 pasos, 2 normas y 2 comprobaciones por bloque | — |
 | Cambios 04/11/2026 | — | 4 revoluciones (antes 2) · «Sistema ciberfísico» en lugar de «Tecnología habilitadora» (y fuera la sigla THD) · 1 actividad (antes 2) · sin diapositivas · 5 FAQ (antes 3) | — |
 
-## Planos de UT2_E2 por especialidad
+## Planos de UT2_E4 por especialidad
 
 | Ciclo | Título del plano | Sala grande | Despacho | Zona inferior | Zona derecha |
 |---|---|---|---|---|---|
@@ -134,7 +134,7 @@ En semipresencial solo hay un ejercicio por unidad: un «remix» de los ejercici
 
 | Cuándo | Qué hace |
 |---|---|
-| Al escribir | Guarda 1,5 s después de cada cambio (0,9 s en UT2_E2). |
+| Al escribir | Guarda 1,5 s después de cada cambio (0,9 s en UT2_E4). |
 | Cada 30 s | Copia de seguridad aunque no se detecte ningún cambio. |
 | Al cerrar, ocultar la pestaña o cambiar de app en el móvil | Guardado inmediato, sin esperas, antes de que el navegador cierre la página. |
 | Al volver a abrir | Avisa del borrador y carga la copia más reciente (Cargar / Descartar). |
@@ -144,7 +144,7 @@ En semipresencial solo hay un ejercicio por unidad: un «remix» de los ejercici
 | Código de recuperación | Cada alumno tiene un código aleatorio (p. ej. `K7QF-M2XR-9P`) que vale para todos los ejercicios. Lo ve arriba del ejercicio con botón «Copiar». Sin el código no se puede leer ninguna copia; máximo 60 intentos de recuperación por hora e IP. |
 | Seguir en otro dispositivo | En la pantalla de inicio: «¿Empezaste en otro ordenador o móvil?» → escribe el código → se recupera el trabajo. Si en ese dispositivo hay un borrador más reciente, pregunta cuál usar. |
 | Sin conexión | Se sigue guardando en el navegador y la copia sube al servidor cuando vuelve la conexión. |
-| Ordenadores compartidos | Cada alumno tiene su propio borrador y su propio código aunque usen el mismo navegador (la clave lleva ciclo + nombre). En UT2_E2, si otro alumno empieza en ese navegador, el borrador anterior se sube antes al servidor con el código de su dueño. |
+| Ordenadores compartidos | Cada alumno tiene su propio borrador y su propio código aunque usen el mismo navegador (la clave lleva ciclo + nombre). En UT2_E4, si otro alumno empieza en ese navegador, el borrador anterior se sube antes al servidor con el código de su dueño. |
 | Seguridad al recuperar | El contenido que llega del servidor se limpia: solo formato, enlaces https e imágenes incrustadas. |
 
 ## Sistema de checks
@@ -170,7 +170,7 @@ Todos los ejercicios muestran una tabla «Cómo se califica» con esta forma, de
 | UT1_E1 | Parte 1 → 4 (1 por revolución) · Parte 2 → 3 (2 preguntas, 1,5 cada una) · Parte 3 → 3 (1 por pregunta) |
 | UT1_E3 | Fase 1 → 5 (1 por producto) · Fase 2 → 5 (5 preguntas, 1 cada una) · Fase 3 eliminada |
 | UT2_E3 | Parte 1 juego → 1,5 · Parte 2 experiencia con las gafas → 1 · Parte 3 constructor → 3,5 · Parte 4 ficha de tienda → 1,5 · Parte 5 ventajas, riesgos y mercado → 2,5 |
-| UT2_E4 | Montaje del robot → 3 · Justificación del montaje → 3 · Imagen con IA → 2 · Presentación en Canva y exposición → 2 |
+| UT2_E2 | Montaje del robot → 3 · Justificación del montaje → 3 · Imagen con IA → 2 · Presentación en Canva y exposición → 2 |
 | UT2_E1 | Parte 1 juego → 5 (la mitad de la nota del juego: 10 − 0,1 por fallo, mínimo 1; sin las 50 parejas, en proporción; se calcula sola) · Parte 2 las 5 tecnologías en tu profesión → 5 (1 cada una, la corrige el profesor). Desde el 9/11/2026 (del 6 al 9, el juego valía 10) |
 
 ## Normas acordadas
@@ -192,14 +192,14 @@ Todos los ejercicios muestran una tabla «Cómo se califica» con esta forma, de
 | 17 | En «Cómo se califica» se indica siempre, debajo de la tabla, que **todas las partes son obligatorias** (aviso destacado). |
 | 18 | Lo relativo al guardado y al código de recuperación va **solo en el botón «🔑 Código»** de la barra superior (popup), no en la descripción de la tarea. |
 | 19 | «🔑 ¿Has perdido tu código? Pídeselo a tu profesor» va **dentro del popup del botón «Código»** (destacado), no en el checklist. En la casilla de recuperar de la pantalla de inicio se mantiene «Si lo has perdido, pídeselo a tu profesor». El profesor ve los códigos en el Detalle de la administración. |
-| 20 | Todas las tareas usan la **barra superior de UT2_E2 (antes UT2_E1)**: logo, título, «nombre · ciclo · cambiar datos», estado del guardado, botones Guardar, **🔑 Código** y Descargar PDF (en el color de la unidad, con línea inferior del mismo color). El botón «Código» abre un popup con el código del alumno, «Copiar», para qué sirve y que si lo pierde se lo pida al profesor. El código ya no aparece dentro del ejercicio. En móvil: sin logo ni estado, «Código» solo con 🔑, y la línea de abajo solo con «cambiar datos». |
+| 20 | Todas las tareas usan la **barra superior de UT2_E4 (antes UT2_E1)**: logo, título, «nombre · ciclo · cambiar datos», estado del guardado, botones Guardar, **🔑 Código** y Descargar PDF (en el color de la unidad, con línea inferior del mismo color). El botón «Código» abre un popup con el código del alumno, «Copiar», para qué sirve y que si lo pierde se lo pida al profesor. El código ya no aparece dentro del ejercicio. En móvil: sin logo ni estado, «Código» solo con 🔑, y la línea de abajo solo con «cambiar datos». |
 | 12 | Los ejercicios nuevos se crean en `_fuente/` (archivo de datos `UTn_Em.js`) con el motor común; no se editan los HTML a mano. |
 | 13 | Todos los ejercicios tienen versión para ordenador y para móvil/tablet, adaptada para que el alumno trabaje cómodo en cada dispositivo (ver «Versión por dispositivo»). |
 | 14 | El resultado de aprendizaje y sus criterios se muestran en la pantalla de inicio (junto al nombre, apellidos y ciclo), no dentro del ejercicio. En el PDF se mantienen. |
 | 21 | No hay bloque «Entrega» en la página: la entrega (formato, plazo, aula virtual) la comunica el profesor en clase. La página solo tiene Objetivo, Cómo se califica, la tarea, «Antes de entregar, comprueba» y las siglas. |
 | 22 | Semipresencial: un solo ejercicio por unidad (`UTn_SP`, carpeta `SEMI`), remix de los ejercicios de la unidad con la mitad de elementos. Los ciclos semipresenciales se quitan de la lista de ciclos de **todos** los ejercicios normales (UTn_Em), haya o no ya un UTn_SP de esa unidad; siguen pudiendo abrir sus borradores antiguos. En la administración, sus filas solo muestran UTn_SP. |
 | 15 | Cada unidad tiene su color (UT1 lavanda · UT2 menta · UT3 melocotón · UT4 cielo · UT5 rosa) en la administración, el ejercicio y el PDF. |
-| 23 | Icono de la pestaña con las siglas del ejercicio (`U1E1`, `U2E2`, `U1SP`…) sobre el color de la unidad de las pruebas de DJK_Unidades (UT1 ámbar · UT2 verde azulado · UT3 violeta · UT4 rosa · UT5 verde). Lo pone `construir.js` en `comun_head.html` (`{{ICONO}}`); en UT2_E2 y su redirección va escrito en el HTML. |
+| 23 | Icono de la pestaña con las siglas del ejercicio (`U1E1`, `U2E2`, `U1SP`…) sobre el color de la unidad de las pruebas de DJK_Unidades (UT1 ámbar · UT2 verde azulado · UT3 violeta · UT4 rosa · UT5 verde). Lo pone `construir.js` en `comun_head.html` (`{{ICONO}}`); en UT2_E4 y su redirección va escrito en el HTML. |
 
 ## Versión por dispositivo
 
@@ -212,12 +212,12 @@ Todos los ejercicios muestran una tabla «Cómo se califica» con esta forma, de
 
 | Cómo se aplica | Dónde |
 |---|---|
-| Botones, casillas y ticks de mínimo 44 px en tablet y móvil (o en cualquier pantalla táctil) | Motor común (`_fuente/comun_head.html`) y bloque «norma 13» en UT2_E2 |
-| Barra de formato en una sola fila que se desliza con el dedo (solo en móvil) | Motor común y UT2_E2 |
-| **Cada caja de texto lleva su propia barra de formato** encima (negrita, cursiva, subrayado, títulos, listas, enlace e imagen) y actúa sobre esa caja; está tenue y se ilumina al escribir en ella. Ya no hay barra en la cabecera (desde el 9/11/2026). La barra se adapta al ancho de su caja, no solo al de la pantalla | Motor común (`caja()` en `_fuente/motor.js`, estilos en `_fuente/comun_head.html`) y UT2_E2 (bloque «barrasCajas») |
-| **Cajas que se pueden agrandar:** asa debajo de cada caja; se arrastra con el ratón o con el dedo (o flechas arriba/abajo con el teclado). El alto elegido se recuerda en ese navegador | Motor común y UT2_E2 |
+| Botones, casillas y ticks de mínimo 44 px en tablet y móvil (o en cualquier pantalla táctil) | Motor común (`_fuente/comun_head.html`) y bloque «norma 13» en UT2_E4 |
+| Barra de formato en una sola fila que se desliza con el dedo (solo en móvil) | Motor común y UT2_E4 |
+| **Cada caja de texto lleva su propia barra de formato** encima (negrita, cursiva, subrayado, títulos, listas, enlace e imagen) y actúa sobre esa caja; está tenue y se ilumina al escribir en ella. Ya no hay barra en la cabecera (desde el 9/11/2026). La barra se adapta al ancho de su caja, no solo al de la pantalla | Motor común (`caja()` en `_fuente/motor.js`, estilos en `_fuente/comun_head.html`) y UT2_E4 (bloque «barrasCajas») |
+| **Cajas que se pueden agrandar:** asa debajo de cada caja; se arrastra con el ratón o con el dedo (o flechas arriba/abajo con el teclado). El alto elegido se recuerda en ese navegador | Motor común y UT2_E4 |
 | Barra superior con Guardar y PDF fija al hacer scroll (`overflow-x:clip`, no `hidden`) | Motor común |
-| Cabecera de UT2_E2 en una sola fila en móvil, con «Descargar PDF» siempre visible | UT2_E1 |
+| Cabecera de UT2_E4 en una sola fila en móvil, con «Descargar PDF» siempre visible | UT2_E1 |
 | Asa para redimensionar imágenes más grande en pantallas táctiles | Motor común |
 
 | Ejercicio | Ordenador | Tablet | Móvil |
@@ -232,7 +232,7 @@ Todos los ejercicios muestran una tabla «Cómo se califica» con esta forma, de
 
 | Ejercicio | Qué falta |
 |---|---|
-| UT2_E2 | No está en el motor común: cualquier norma nueva se aplica con scripts sobre su HTML. Guarda en el navegador con el nombre antiguo (`UT2_E1_Tecnologias_Habilitadoras`) para no perder borradores; en el servidor ya usa `UT2_E2`. El enlace antiguo `UT2/UT2_E1_Tecnologias_Habilitadoras.html` redirige a UT2_E2. |
+| UT2_E4 | No está en el motor común: cualquier norma nueva se aplica con scripts sobre su HTML. Guarda en el navegador con el nombre antiguo (`UT2_E1_Tecnologias_Habilitadoras`) para no perder borradores; en el servidor usa `UT2_E4`. El alto de sus cajas se guarda como `DJK_plano_UT2_alto_…`. El enlace antiguo `UT2/UT2_E1_Tecnologias_Habilitadoras.html` redirige a UT2_E4. |
 
 ## Zona de administración
 
@@ -270,12 +270,14 @@ Todos los ejercicios muestran una tabla «Cómo se califica» con esta forma, de
 | Guardado | Todo lo que no es caja va en el campo oculto `e3` (JSON revisado campo a campo al cargar; imágenes solo en formato `data:image/png` o `data:image/jpeg` en base64). |
 | EI | Aviso de edad mínima de las gafas (10–13 años según fabricante) en el objetivo. |
 
-## UT2_E4 · Diseñad vuestro robot (en grupo)
+## UT2_E2 · Diseñad vuestro robot (en grupo)
+
+Hasta el 9-11-2026 era el **UT2_E4** (y el plano era el UT2_E2): se intercambiaron los números. El motor pasa solo los borradores del navegador guardados con el código antiguo (`codigoAntes` en `COMUN`); en el servidor se cambió el código de entregas, borradores, bloqueos y visitas, y las direcciones antiguas redirigen a las nuevas.
 
 | Parte | Cómo es |
 |---|---|
 | 1 · Equipo y reto | Integrantes del grupo y el reto de la especialidad (un reto por ciclo). |
-| 2 · Montaje | Constructor tipo puzle: 23 piezas comunes + 10 de la especialidad (⭐) = 33. Zonas: cabeza (antena, orejas y ojos: 1 pieza cada una), torso (3 módulos), brazos (de 2 a 4, una pieza en cada uno) y movimiento (1). Cada pieza solo encaja en su zona y cambia el aspecto del robot (forma de la cabeza, del brazo, ruedas, orugas, piernas o hélices). Se toca la pieza y su sitio, o se arrastra (en tablet, mantener pulsado). Nombre del robot en una placa. |
+| 2 · Montaje | Constructor tipo puzle: 23 piezas comunes + 10 de la especialidad = 33, mezcladas por orden alfabético y **sin ninguna marca**: el alumno no sabe cuáles son las propias de su especialidad (decisión del profesor). Zonas: cabeza (antena, orejas y ojos: 1 pieza cada una), torso (3 módulos), brazos (de 2 a 4, una pieza en cada uno) y movimiento (1). Cada pieza solo encaja en su zona y cambia el aspecto del robot (forma de la cabeza, del brazo, ruedas, orugas, piernas o hélices). Se toca la pieza y su sitio, o se arrastra (en tablet, mantener pulsado). Nombre del robot en una placa. |
 | Imagen del robot | Botón «⬇ Descargar robot (imagen)»: PNG de 1200 × 1680 px con el robot, el nombre y el ciclo, para Canva. Queda apuntado que se ha descargado (check). También va en el PDF. |
 | 3 · Justificación | Una caja general: para qué sirve, por qué esas piezas, quién lo usaría, ventajas y riesgos. |
 | 4 · Imagen con IA | Tabla de herramientas gratuitas (Canva Magic Media, Microsoft Designer/Copilot, Adobe Firefly, Google Gemini, Ideogram), descripción para la IA generada con sus piezas y el entorno del ciclo («Copiar»), caja para pegar la imagen y caja con la herramienta y el prompt. |

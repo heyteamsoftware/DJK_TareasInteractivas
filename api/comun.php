@@ -34,7 +34,7 @@ function bd(): PDO
     return $db;
 }
 
-// Los ejercicios del motor común mandan la clave del ciclo (hb, is_sp…); UT2_E2 manda el nombre. Se guarda siempre el nombre.
+// Los ejercicios del motor común mandan la clave del ciclo (hb, is_sp…); el plano (UT2_E4) manda el nombre. Se guarda siempre el nombre.
 const CLAVES_CICLO = ['af' => 'Acondicionamiento Físico', 'as' => 'Animación Sociodeportiva', 'ei' => 'Educación Infantil',
     'hb' => 'Higiene Bucodental', 'is' => 'Integración Social', 'ei_sp' => 'Educación Infantil Semipresencial',
     'is_sp' => 'Integración Social Semipresencial', 'mc_sp' => 'Mediación Comunicativa Semipresencial'];

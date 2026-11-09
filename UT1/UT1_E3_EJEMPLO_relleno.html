@@ -1210,6 +1210,7 @@ async function guardarReg(reg){
   return ok;
 }
 async function leerClave(clave){
+  await adoptarAntiguos();
   let a = null, b = null;
   try { a = await tx('readonly', st => st.get(clave)); } catch(e){}
   try { b = JSON.parse(localStorage.getItem(clave) || 'null'); } catch(e){}
@@ -1218,6 +1219,7 @@ async function leerClave(clave){
 }
 // Todos los borradores de este ejercicio guardados en este navegador (de cualquier alumno)
 async function todosReg(){
+  await adoptarAntiguos();
   const m = new Map();
   const meter = r => { if (r && r.clave && r.clave.startsWith(PREF) && CICLOS[r.esp]){ const o = m.get(r.clave); if (!o || r.fecha > o.fecha) m.set(r.clave, r); } };
   try { (await tx('readonly', st => st.getAll()) || []).forEach(meter); } catch(e){}
@@ -1227,6 +1229,38 @@ async function todosReg(){
 async function borrarClave(clave){
   try { await tx('readwrite', st => st.delete(clave)); } catch(e){}
   try { localStorage.removeItem(clave); } catch(e){}
+}
+// Ejercicio renumerado (COMUN.codigoAntes): lo guardado en este navegador con el código antiguo pasa al nuevo
+// (borradores y alto de las cajas). Lo antiguo no se borra; si ya hay algo con el código nuevo, gana lo más reciente.
+let antP = null;
+function adoptarAntiguos(){
+  if (antP) return antP;
+  if (!COMUN.codigoAntes || COMUN.codigoAntes === COMUN.codigo) return (antP = Promise.resolve());
+  const ANT = 'DJK_' + COMUN.codigoAntes + '_';
+  const nueva = k => PREF + k.slice(ANT.length);
+  const masNuevo = (r, o) => !o || (r.fecha || 0) > (o.fecha || 0);
+  antP = (async () => {
+    try {
+      const ks = []; for (let i = 0; i < localStorage.length; i++){ const k = localStorage.key(i); if (k && k.startsWith(ANT)) ks.push(k); }
+      ks.forEach(k => {
+        const v = localStorage.getItem(k), nk = nueva(k);
+        let r = null; try { r = JSON.parse(v); } catch(_){}
+        if (r && typeof r === 'object' && r.clave){
+          let o = null; try { o = JSON.parse(localStorage.getItem(nk) || 'null'); } catch(_){}
+          if (masNuevo(r, o)) localStorage.setItem(nk, JSON.stringify(Object.assign({}, r, { clave: nk })));
+        } else if (localStorage.getItem(nk) === null) localStorage.setItem(nk, v);
+      });
+    } catch(e){}
+    try {
+      const todos = (await tx('readonly', st => st.getAll())) || [];
+      for (const r of todos){
+        if (!r || !r.clave || !r.clave.startsWith(ANT)) continue;
+        const nk = nueva(r.clave), o = await tx('readonly', st => st.get(nk));
+        if (masNuevo(r, o)) await tx('readwrite', st => st.put(Object.assign({}, r, { clave: nk })));
+      }
+    } catch(e){}
+  })();
+  return antP;
 }
 
 // ================= pantalla de inicio: nombre, apellidos y ciclo =================

@@ -1,4 +1,4 @@
-// ===== UT2_E4 · Diseñad vuestro robot (trabajo en grupo) =====
+// ===== UT2_E2 · Diseñad vuestro robot (trabajo en grupo) =====
 // Constructor de robots por piezas, como un puzle:
 //   cabeza (antena + orejas + ojos), torso (3 módulos), brazos (de 2 a 4, una tecnología en cada uno) y movimiento.
 //   23 piezas comunes + 10 propias de cada especialidad. Cada pieza cambia el aspecto del robot.
@@ -44,11 +44,12 @@ const COMUNES = [
 ];
 
 const COMUN = {
-  codigo: 'UT2_E4',
-  corto: 'UT2 · E4',
+  codigo: 'UT2_E2',
+  codigoAntes: 'UT2_E4',   // antes era el UT2 · E4: se recuperan los borradores guardados con ese código
+  corto: 'UT2 · E2',
   asignatura: 'Digitalización aplicada a los sectores productivos (DJK)',
   unidad: 'UT2 · Tecnologías habilitadoras digitales',
-  ejercicio: 'E4 · Diseñad vuestro robot',
+  ejercicio: 'E2 · Diseñad vuestro robot',
   ra: 'RA2',
   ce: 'b, g',
   modalidad: 'En grupo · presencial',
@@ -196,7 +197,6 @@ document.head.insertAdjacentHTML('beforeend', `<style>
 .pz .e{font-size:1.5rem;line-height:1}
 .pz b{font-size:.84rem;line-height:1.2}
 .pz small{font-size:.68rem;font-weight:800;text-transform:uppercase;letter-spacing:.04em;color:var(--o)}
-.pz i{font-style:normal;font-size:.66rem;font-weight:800;color:#7a5a00;background:#fff4d6;border-radius:99px;padding:0 .4rem}
 .pz.sel{box-shadow:0 0 0 4px #ffcf4d,0 8px 16px rgba(0,0,0,.15);transform:translateY(-3px)}
 .pz.usada{opacity:.42}
 .pz.usada::after{content:'✓';clip-path:none;width:auto;height:auto;border:0;background:none;right:.5rem;top:.9rem;margin:0;font-weight:900;color:var(--o)}
@@ -247,7 +247,8 @@ document.head.insertAdjacentHTML('beforeend', `<style>
 
 // ================= textos de la página =================
 let CC = null;   // ciclo actual (se fija al construir la tarea)
-const piezasDe = C => [...COMUNES, ...C.piezas.map(p => Object.assign({ esp: true }, p))];
+// Comunes y propias de la especialidad, mezcladas por orden alfabético y sin marca: el alumno no sabe cuáles son las propias
+const piezasDe = C => [...COMUNES, ...C.piezas].sort((a, b) => a.n.localeCompare(b.n, 'es'));
 const pieza = id => CC && piezasDe(CC).find(p => p.id === id);
 const textoDe = id => { const ed = edDeId(id); return ed ? ed.textContent.replace(/\s+/g, ' ').trim() : ''; };
 
@@ -273,7 +274,7 @@ function construirTarea(C){
 
   <section class="fase f2"><header><h2>Parte 2 · Montad vuestro robot</h2></header><div class="cuerpo">
     ${caja('nombre', '2.1', 'Nombre del robot', '', { corta: true, ph: 'Inventad un nombre…' })}
-    <p><b>2.2 · Montaje.</b> Elegid una pieza del almacén y tocad su sitio en el robot (o arrastradla encima, como en un puzle; en tablet, mantened el dedo pulsado un momento). Cada pieza solo encaja en su zona: <b>3 en la cabeza</b> (antena, orejas y ojos), <b>3 en el torso</b>, <b>una en cada brazo</b> (podéis poner de 2 a 4 brazos) y <b>una para moverse</b>. Las piezas con ⭐ son de vuestra especialidad.</p>
+    <p><b>2.2 · Montaje.</b> Elegid una pieza del almacén y tocad su sitio en el robot (o arrastradla encima, como en un puzle; en tablet, mantened el dedo pulsado un momento). Cada pieza solo encaja en su zona: <b>3 en la cabeza</b> (antena, orejas y ojos), <b>3 en el torso</b>, <b>una en cada brazo</b> (podéis poner de 2 a 4 brazos) y <b>una para moverse</b>.</p>
     <input type="hidden" id="rbDato" data-campo="robot">
     <div class="rb-taller">
       <div class="rb-escena">
@@ -503,7 +504,7 @@ function rbAlmacen(){
   document.querySelectorAll('.rb-tabs [data-filtro]').forEach(b => b.classList.toggle('on', b.dataset.filtro === FILTRO));
   c.innerHTML = piezasDe(CC).filter(p => FILTRO === 'todas' || zonaDeTipo(p.t) === FILTRO).map(p => {
     const T = TIPOS[p.t];
-    return `<button type="button" class="pz${usadas.has(p.id) ? ' usada' : ''}${SELP === p.id ? ' sel' : ''}" data-id="${p.id}" style="--c:${T.col};--o:${T.osc}" title="${esc(p.d)}"><span class="e" aria-hidden="true">${p.e}</span><b>${esc(p.n)}</b><small>Va en: ${esc(T.n)}</small>${p.esp ? '<i>⭐ Tu especialidad</i>' : ''}</button>`;
+    return `<button type="button" class="pz${usadas.has(p.id) ? ' usada' : ''}${SELP === p.id ? ' sel' : ''}" data-id="${p.id}" style="--c:${T.col};--o:${T.osc}" title="${esc(p.d)}"><span class="e" aria-hidden="true">${p.e}</span><b>${esc(p.n)}</b><small>Va en: ${esc(T.n)}</small></button>`;
   }).join('');
 }
 function rbPromptTexto(){
@@ -590,7 +591,7 @@ async function rbDescargar(){
   try {
     const url = await rbImagen();
     const limpio = s => s.normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^A-Za-z0-9]+/g, '_').replace(/^_|_$/g, '');
-    const a = document.createElement('a'); a.href = url; a.download = `UT2_E4_Robot_${limpio(nombreRobot()) || 'grupo'}.png`;
+    const a = document.createElement('a'); a.href = url; a.download = `UT2_E2_Robot_${limpio(nombreRobot()) || 'grupo'}.png`;
     document.body.appendChild(a); a.click(); a.remove();
     if (!EJEMPLO && !R.png){ R.png = true; rbGuardar(); }
     aviso(piezasPuestas() === slotsActivos().length ? 'Imagen del robot descargada. Ya podéis ponerla en Canva.' : 'Imagen descargada, pero al robot aún le faltan piezas.');
