@@ -21,7 +21,7 @@
 | UT1_E1 | Revoluciones industriales canarias y quinta revolución industrial | RA1 | a, b | AF, AS, EI, HB, IS + EI SP, IS SP, MC SP | A | [UT1_E1](UT1/UT1_E1_Revoluciones_Industriales_Canarias.html) | [Ejemplo](UT1/UT1_E1_EJEMPLO_relleno.html) | Sí | Sí | Hecho |
 | UT1_E2 | Combinación de sistemas ciberfísicos | RA1 | e, f, g | AF, AS, EI, HB, IS + EI SP, IS SP, MC SP | A (bocadillos + diapositivas) | [UT1_E2](UT1/UT1_E2_Combinacion_Sistemas_Ciberfisicos.html) | [Ejemplo](UT1/UT1_E2_EJEMPLO_relleno.html) | Sí (4·2·2·1·1) | Sí | Hecho |
 | UT1_E3 | Sistemas ciberfísicos y digitalización del sector | RA1 | c, d, e, f | AF, AS, EI, HB, IS + EI SP, IS SP, MC SP | A | [UT1_E3](UT1/UT1_E3_Digitalizacion_Sistemas_CiberFisicos.html) | [Ejemplo](UT1/UT1_E3_EJEMPLO_relleno.html) | Sí | Sí | Hecho |
-| UT1_SP | Digitalización de los sectores productivos (semipresencial: reúne E1, E2 y E3 en versión corta) | RA1 | a, b, c, d, e, f, g | Solo EI SP, IS SP y MC SP | A (remix) | [UT1_SP](SEMI/UT1_SP_Digitalizacion_Sectores_Productivos.html) | [Ejemplo](SEMI/UT1_SP_EJEMPLO_relleno.html) | Sí (2·1·1·1,5·1,5·1,5·1,5) | Sí | Hecho |
+| UT1_SP | Digitalización de los sectores productivos (semipresencial: reúne E1, E2 y E3 en versión corta) | RA1 | a, b, c, d, e, f, g | Solo EI SP, IS SP y MC SP | A (remix) | [UT1_SP](SEMI/UT1_SP_Digitalizacion_Sectores_Productivos.html) | [Ejemplo](SEMI/UT1_SP_EJEMPLO_relleno.html) | Sí (3·1,5·2·2·1,5) | Sí | Hecho |
 | UT2_E1 | Parejas de tecnologías y su uso en tu profesión (juego + escritura) | RA2 | a | AF, AS, EI, HB, IS + EI SP, IS SP, MC SP | C (juego en el motor común) | [UT2_E1](UT2/UT2_E1_Parejas_Tecnologias_Habilitadoras.html) | [Ejemplo](UT2/UT2_E1_EJEMPLO_relleno.html) | Sí (5 rondas × 2) | Sí | Hecho |
 | UT2_E2 | Diseñad vuestro robot (trabajo en grupo; se entrega la presentación de Canva) | RA2 | b, g | AF, AS, EI, HB, IS | C (constructor por piezas en el motor común) | [UT2_E2](UT2/UT2_E2_Disenad_Vuestro_Robot.html) | [Ejemplo](UT2/UT2_E2_EJEMPLO_relleno.html) | Sí (3·3·2·2) | Sí | Hecho |
 | UT2_E3 | Diseña tu app de realidad virtual o mixta (tras probar las gafas en clase) | RA2 | b, d, g | AF, AS, EI, HB, IS | C (juego + constructor en el motor común) | [UT2_E3](UT2/UT2_E3_App_Realidad_Virtual_Mixta.html) | [Ejemplo](UT2/UT2_E3_EJEMPLO_relleno.html) | Sí (1,5·1·3,5·1,5·2,5) | Sí | Hecho (sustituye al Word «Informe técnico») |
@@ -113,10 +113,11 @@ En semipresencial solo hay un ejercicio por unidad: un «remix» de los ejercici
 
 | UT1_SP | De dónde sale | Qué tiene (antes → ahora) | Puntos |
 |---|---|---|---|
-| Bloque 1 | UT1_E1 | Las 4 revoluciones en Canarias (0,5 cada una) · debate de la 5ª revolución 2 preguntas → 1 · mi profesión 3 → 2 | 2 · 1 · 1 |
-| Bloque 2 | UT1_E2 | Dispositivo asignado al azar (mismas imágenes) · **sistemas ciberfísicos** 4 → 2 (bocadillos de arriba; no se dice «tecnología habilitadora») · funciones combinadas · **1 sola actividad** con explicación de qué hacer (título y «con quién» en los bocadillos de abajo; paso a paso, dónde, cuánto dura, qué datos recogen los sistemas y para qué se usan) · ventajas e inconvenientes · **sin diapositivas** | 1,5 · 1,5 |
-| Bloque 3 | UT1_E3 | Productos reales 5 → 3 · **5 preguntas frecuentes** (0,3 cada una), una de cada grupo por turnos | 1,5 · 1,5 |
+| Bloque 1 | UT1_E1 | Las 4 revoluciones en Canarias (0,75 cada una) · mi profesión 3 → 2 (0,75 cada una) · **sin el debate de la 5ª revolución** | 3 · 1,5 |
+| Bloque 2 | UT1_E2 | Dispositivo asignado al azar (mismas imágenes) · **sistemas ciberfísicos** 4 → 2 (bocadillos de arriba; no se dice «tecnología habilitadora») · funciones combinadas · **1 sola actividad** con explicación de qué hacer (título y «con quién» en los bocadillos de abajo; paso a paso, dónde, cuánto dura, qué datos recogen los sistemas y para qué se usan) · ventajas e inconvenientes · **sin diapositivas** | 2 · 2 |
+| Bloque 3 | UT1_E3 | Producto real: de los 3 primeros tipos de sistema de UT1_E3, **a cada alumno le toca 1 al azar** (campo `producto`, se sortea la primera vez y queda guardado; si ya había escrito en alguno, le toca ese). Solo se ve, se comprueba y sale en el PDF ese · **sin preguntas frecuentes** | 1,5 |
 | Checks | — | 2 pasos, 2 normas y 2 comprobaciones por bloque | — |
+| Cambios 11/11/2026 | — | Fuera la 1.2 (quinta revolución) y la 3.2 (preguntas frecuentes) · 3.1: un solo producto, de un tipo de sistema sorteado · notas 3 · 1,5 · 2 · 2 · 1,5 | — |
 | Cambios 04/11/2026 | — | 4 revoluciones (antes 2) · «Sistema ciberfísico» en lugar de «Tecnología habilitadora» (y fuera la sigla THD) · 1 actividad (antes 2) · sin diapositivas · 5 FAQ (antes 3) | — |
 
 ## Planos de UT2_E4 por especialidad

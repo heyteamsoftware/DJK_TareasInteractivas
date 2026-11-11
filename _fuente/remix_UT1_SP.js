@@ -32,7 +32,10 @@ module.exports = function(){
     D.ciclos[k] = {
       nombre: c1.nombre, centro: c1.centro, pistas: c1.pistas, usuario: c2.usuario,
       contexto: c3.contexto, objetivo: c3.objetivo,
-      f1: { intro: c3.f1.intro, items: c3.f1.items.slice(0, 3), instr: c3.f1.instr },
+      // 3.1: a cada alumno le toca al azar uno de los 3 tipos de sistema (textos en singular)
+      f1: { intro: c3.f1.intro.replace(/^Busca productos reales de los siguientes tipos de sistemas/, 'Busca un producto real del tipo de sistema que te ha tocado al azar'),
+            items: c3.f1.items.slice(0, 3),
+            instr: c3.f1.instr.replace(/^Adjunta capturas o enlaces de los productos/, 'Adjunta una captura o el enlace del producto') },
       f2: { intro: c3.f2.intro, grupos: grupos.filter(g => g.q.length) },
       siglas
     };

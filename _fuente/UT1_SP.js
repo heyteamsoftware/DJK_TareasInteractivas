@@ -24,7 +24,7 @@ const COMUN = {
   ],
   objetivo: 'Entender cómo la digitalización ha cambiado y está cambiando los sectores productivos: las revoluciones industriales y su huella en Canarias (bloque 1), un dispositivo que combina sistemas ciberfísicos (bloque 2) y los sistemas ciberfísicos que se pueden usar en tu centro de trabajo (bloque 3). Es individual.',
   pasos: [
-    'Haz los tres bloques: <b>1</b> las cuatro revoluciones industriales en Canarias, el debate y tu profesión; <b>2</b> tu dispositivo con 2 sistemas ciberfísicos y 1 actividad con usuarios; <b>3</b> tres productos reales para tu centro y cinco preguntas frecuentes.',
+    'Haz los tres bloques: <b>1</b> las cuatro revoluciones industriales en Canarias y tu profesión; <b>2</b> tu dispositivo con 2 sistemas ciberfísicos y 1 actividad con usuarios; <b>3</b> un producto real para tu centro (el tipo de sistema te toca al azar).',
     'Cita tus fuentes, declara si has usado IA, revisa «Antes de entregar, comprueba» y pulsa <b>Descargar PDF</b> para entregarlo en el aula virtual.'
   ],
   normas: [
@@ -34,13 +34,11 @@ const COMUN = {
   numFuentes: '4',
   fuentes: 'Cita todas las fuentes consultadas (título, medio o institución, fecha y enlace) y declara si has usado alguna herramienta de inteligencia artificial: cuál, para qué y cómo has verificado lo que te ha dicho.',
   criterios: [
-    ['1.1 · Revoluciones industriales en Canarias', 'Un ejemplo canario, real y verificable para cada una de las 4 revoluciones, con fecha, fuente y qué cambió en la vida de la gente (0,5 puntos por revolución).', 2],
-    ['1.2 · La quinta revolución industrial', 'Respuesta razonada, con información del vídeo o con conclusiones propias.', 1],
-    ['1.3 · Mi profesión', 'Respuestas concretas y razonadas sobre tu futuro trabajo (0,5 puntos por pregunta).', 1],
-    ['2.1 · Sistemas ciberfísicos y funciones combinadas', 'Dos sistemas ciberfísicos que se puedan instalar en el dispositivo, qué hace cada uno y por qué es útil (0,5 cada uno), y cómo se combinan sus datos (0,5).', 1.5],
-    ['2.2 · Actividad, ventajas e inconvenientes', 'Una actividad concreta con usuarios, bien explicada: con quién, qué hacéis paso a paso y qué aporta el dispositivo (1 punto), y una tabla equilibrada de ventajas e inconvenientes (0,5).', 1.5],
-    ['3.1 · Productos reales', 'Un producto real para cada tipo de sistema, con marca, enlace o captura, justificación y uso en el centro (0,5 puntos por producto).', 1.5],
-    ['3.2 · Preguntas frecuentes (FAQ)', 'Respuestas claras, correctas y tranquilizadoras, sin tecnicismos innecesarios (0,3 puntos por pregunta).', 1.5]
+    ['1.1 · Revoluciones industriales en Canarias', 'Un ejemplo canario, real y verificable para cada una de las 4 revoluciones, con fecha, fuente y qué cambió en la vida de la gente (0,75 puntos por revolución).', 3],
+    ['1.2 · Mi profesión', 'Respuestas concretas y razonadas sobre tu futuro trabajo (0,75 puntos por pregunta).', 1.5],
+    ['2.1 · Sistemas ciberfísicos y funciones combinadas', 'Dos sistemas ciberfísicos que se puedan instalar en el dispositivo, qué hace cada uno y por qué es útil (0,75 cada uno), y cómo se combinan sus datos (0,5).', 2],
+    ['2.2 · Actividad, ventajas e inconvenientes', 'Una actividad concreta con usuarios, bien explicada: con quién, qué hacéis paso a paso y qué aporta el dispositivo (1,5 puntos), y una tabla equilibrada de ventajas e inconvenientes (0,5).', 2],
+    ['3.1 · Producto real', 'Un producto real del tipo de sistema que te ha tocado al azar, con marca, enlace o captura, justificación y uso en el centro.', 1.5]
   ],
   siglas: [
     ['IT/OT', 'Information Technology / Operation Technology: tecnología de la información y tecnología de operación'],
@@ -100,11 +98,8 @@ function construirTarea(C){
     P1.campos.forEach(c => { h += caja(`r${i}_${c.k}`, '', esc(c.t), '', { corta: c.corta, ancha: c.ancha, ph: c.ph }); });
     h += `</div></div>`;
   });
-  h += `<h3>1.2 · La quinta revolución industrial</h3><p>${esc(D.p2.intro)}</p>
-    <div class="video"><a href="${D.p2.video}" target="_blank" rel="noopener">▶ Ver el debate</a><small>${esc(D.p2.video)}</small></div>
-    ${caja('q5', '1.2', esc(D.p2.pregunta))}
-    <h3>1.3 · Y esto, ¿qué tiene que ver con mi profesión?</h3><div class="centro"><b>${esc(C.centro)}</b></div>`;
-  D.p3.preguntas.forEach((q, i) => { h += caja(`prof${i}`, `1.3.${i + 1}`, esc(q), i === 0 ? `<div class="pista"><b>Pistas:</b> ${esc(C.pistas)}</div>` : ''); });
+  h += `<h3>1.2 · Y esto, ¿qué tiene que ver con mi profesión?</h3><div class="centro"><b>${esc(C.centro)}</b></div>`;
+  D.p3.preguntas.forEach((q, i) => { h += caja(`prof${i}`, `1.2.${i + 1}`, esc(q), i === 0 ? `<div class="pista"><b>Pistas:</b> ${esc(C.pistas)}</div>` : ''); });
   h += `<div class="nota">🏝️ ${esc(D.p3.canarias)}</div></div></section>`;
 
   // ===== Bloque 2 · Dispositivo con sistemas ciberfísicos (de UT1_E2)
@@ -138,16 +133,30 @@ function construirTarea(C){
   // ===== Bloque 3 · Sistemas ciberfísicos en tu centro (de UT1_E3)
   h += `<section class="fase f3"><header><h2>Bloque 3 · Sistemas ciberfísicos en tu centro</h2></header><div class="cuerpo">
     <p>${esc(C.contexto)}</p><p><b>Objetivo:</b> ${esc(C.objetivo)}</p>
-    <h3>3.1 · Productos reales</h3><p><b>${esc(C.f1.intro)}</b></p><div class="instr"><b>Instrucciones:</b> ${esc(C.f1.instr)}</div>`;
-  C.f1.items.forEach((t, i) => { h += caja(`f1_${i}`, `3.1.${i + 1}`, esc(t), `<div class="pista">Producto (nombre y marca), enlace o captura, justificación y aplicación en el día a día.</div>`); });
-  h += `<h3>3.2 · Preguntas frecuentes (FAQ)</h3><div class="instr">${esc(C.f2.intro)}</div>`;
-  let n = 0;
-  C.f2.grupos.forEach(g => {
-    h += `<h3 class="grupo">${esc(g.t)}</h3>`;
-    g.q.forEach(q => { n++; h += caja(`f2_${n - 1}`, `3.2.${n}`, esc(q.p), q.ej ? `<div class="ejemplo"><b>Ejemplo de respuesta:</b> ${esc(q.ej)}</div>` : ''); });
-  });
+    <h3>3.1 · Producto real</h3><p><b>${esc(C.f1.intro)}</b></p><div class="instr"><b>Instrucciones:</b> ${esc(C.f1.instr)}</div>
+    <input type="hidden" id="prodDato" data-campo="producto">`;
+  C.f1.items.forEach((t, i) => { h += `<div class="f1alt" data-i="${i}" hidden>` + caja(`f1_${i}`, '3.1', '🎲 Te ha tocado: ' + esc(t), `<div class="pista">Producto (nombre y marca), enlace o captura, justificación y aplicación en el día a día.</div>`) + '</div>'; });
   h += `</div></section>`;
   return h;
+}
+
+// 3.1: el tipo de sistema se sortea la primera vez y queda guardado con el trabajo.
+// Si el alumno ya había escrito en alguno (antes eran 3), le toca ese, para no esconder su trabajo.
+function productoElegido(){ const v = campo('producto'); return /^\d+$/.test(v) && +v < CICLOS[ESP].f1.items.length ? +v : null; }
+function asegurarProducto(){
+  const inp = document.getElementById('prodDato'); if (!inp || productoElegido() !== null) return;
+  const n = CICLOS[ESP].f1.items.length, hecho = [...Array(n).keys()].find(i => llena('f1_' + i));
+  inp.value = String(hecho !== undefined ? hecho : Math.floor(Math.random() * n));
+  programarGuardado();
+}
+function pintarProducto(){
+  const k = productoElegido();
+  document.querySelectorAll('.f1alt').forEach(d => { d.hidden = +d.dataset.i !== k; });
+}
+// Progreso: solo cuentan las cajas que se ven (las de los otros tipos de sistema están ocultas)
+function progresoPropio(){
+  const eds = [...document.querySelectorAll('.ed')].filter(ed => !ed.closest('[hidden]')), ll = eds.filter(tieneContenido).length;
+  return { hechas: ll, total: eds.length, texto: `${ll} de ${eds.length} cajas con respuesta` };
 }
 
 // El dispositivo se asigna al azar la primera vez y queda guardado con el trabajo
@@ -165,7 +174,7 @@ function pintarDispositivo(d){
 // Imagen del dispositivo y textos de los bocadillos
 function alActualizar(){
   const img = document.getElementById('lienzoImg'); if (!img) return;
-  asegurarDispositivo();
+  asegurarDispositivo(); asegurarProducto(); pintarProducto();
   const d = dispositivoElegido(); pintarDispositivo(d);
   document.getElementById('lienzoSin').style.display = d ? 'none' : '';
   img.src = IMAGENES[(d || D.dispositivos[0]).k];
@@ -181,10 +190,8 @@ async function pdfTarea(api, C){
     for (const c of D.p1.campos) await caja(`r${i}_${c.k}`, '', c.t, { compacta: true });
     separador();
   }
-  texto([{ t: 'Debate: ', b: true }, { t: D.p2.video, href: D.p2.video, u: true }], { size: 9.5, tras: 3 });
-  await caja('q5', '1.2', D.p2.pregunta);
   P(C.centro, { size: 9.5, i: true, color: COL.muted, tras: 3 });
-  for (let i = 0; i < D.p3.preguntas.length; i++) await caja(`prof${i}`, `1.3.${i + 1}`, D.p3.preguntas[i]);
+  for (let i = 0; i < D.p3.preguntas.length; i++) await caja(`prof${i}`, `1.2.${i + 1}`, D.p3.preguntas[i]);
 
   // Bloque 2
   banda('Bloque 2 · Combina sistemas ciberfísicos', [226,238,252], COL.sky);
@@ -212,42 +219,35 @@ async function pdfTarea(api, C){
   // Bloque 3
   banda('Bloque 3 · Sistemas ciberfísicos en tu centro', [255,233,220], COL.peach);
   P(C.f1.instr, { size: 9.5, i: true, color: COL.muted, tras: 3 });
-  for (let i = 0; i < C.f1.items.length; i++) await caja(`f1_${i}`, `3.1.${i + 1}`, C.f1.items[i]);
-  P(C.f2.intro, { size: 9.5, i: true, color: COL.muted, tras: 3 });
-  let n = 0;
-  for (const g of C.f2.grupos){
-    sitio(24); P(g.t, { size: 11.5, b: true, color: COL.peach, tras: 2 });
-    for (const q of g.q){ n++; await caja(`f2_${n - 1}`, `3.2.${n}`, q.p, { ejemplo: q.ej }); }
-  }
+  const kp = productoElegido();
+  await caja(`f1_${kp === null ? 0 : kp}`, '3.1', 'Tipo de sistema (asignado al azar): ' + C.f1.items[kp === null ? 0 : kp]);
 }
 
 // Antes de entregar: 2 comprobaciones por bloque
 function listaChecks(C){
   const nrev = D.p1.revs.length;
   const rev = D.p1.revs.filter((_, i) => D.p1.campos.every(c => llena(`r${i}_${c.k}`))).length;
-  const b1b = cuentaLlenas(['q5', 'prof0', 'prof1']);
+  const b1b = cuentaLlenas(['prof0', 'prof1']);
   const tec = [0, 1].filter(i => llena(`t${i}_nom`) && llena(`t${i}_just`)).length;
-  const f1 = cuentaLlenas(C.f1.items.map((_, i) => `f1_${i}`)), nf2 = faqDe(C).length, f2 = cuentaLlenas(faqDe(C).map((_, i) => `f2_${i}`));
+  const kp = productoElegido(), f1 = kp !== null && llena('f1_' + kp) ? 1 : 0;
   const b2a = tec + (llena('combinadas') ? 1 : 0);
   const b2b = (ACT.every(llena) ? 1 : 0) + (llena('ventajas') && llena('inconvenientes') ? 1 : 0);
   return [
     { ok: rev === nrev, t: `Bloque 1 · Las ${nrev} revoluciones en Canarias`, cuenta: `${rev}/${nrev}`, falta: 'Rellena ejemplo, fecha, fuente y qué cambió en cada revolución.' },
-    { ok: b1b === 3, t: 'Bloque 1 · Quinta revolución y tu profesión', cuenta: `${b1b}/3`, falta: 'Responde a la pregunta del debate y a las 2 de tu profesión.' },
+    { ok: b1b === 2, t: 'Bloque 1 · Tu profesión', cuenta: `${b1b}/2`, falta: 'Responde a las 2 preguntas sobre tu profesión.' },
     { ok: b2a === 3, t: 'Bloque 2 · Los 2 sistemas ciberfísicos y funciones combinadas', cuenta: `${b2a}/3`, falta: 'Completa los 2 sistemas ciberfísicos y explica cómo se combinan.' },
     { ok: b2b === 2, t: 'Bloque 2 · La actividad, ventajas e inconvenientes', cuenta: `${b2b}/2`, falta: 'Completa la actividad (título, con quién y explicación) y las ventajas e inconvenientes.' },
-    { ok: f1 === C.f1.items.length, t: `Bloque 3 · ${C.f1.items.length} productos reales`, cuenta: `${f1}/${C.f1.items.length}`, falta: 'Busca un producto real para cada tipo de sistema.' },
-    { ok: f2 === nf2, t: `Bloque 3 · ${nf2} preguntas frecuentes`, cuenta: `${f2}/${nf2}`, falta: 'Responde a todas las preguntas frecuentes.' }
+    { ok: f1 === 1, t: 'Bloque 3 · Producto real', cuenta: `${f1}/1`, falta: 'Busca un producto real del tipo de sistema que te ha tocado.' }
   ];
 }
 
-function ejemploCampos(){ return { dispositivo: 'pulsera' }; }
+function ejemploCampos(){ return { dispositivo: 'pulsera', producto: '0' }; }
 function ejemploRespuesta(id){
   const t = s => `<p>${s}</p>`;
   if (/^r\d_ej$/.test(id)) return t('[Texto de muestra] El hecho canario que has elegido para esta revolución y la isla donde ocurrió.');
   if (/^r\d_fecha$/.test(id)) return t('[Año o época]');
   if (/^r\d_fuente$/.test(id)) return t('[Título del artículo] · [Medio o institución] · [Fecha] · <a href="https://www.ejemplo.es" target="_blank">https://www.ejemplo.es</a>');
   if (/^r\d_cambio$/.test(id)) return t('[Texto de muestra] Cómo vivía la gente antes de este cambio y qué cambió después.');
-  if (id === 'q5') return t('[Texto de muestra] Tu respuesta razonada, con ideas del debate o con tus propias conclusiones.');
   if (/^prof\d$/.test(id)) return t('[Texto de muestra] Tu respuesta centrada en tu futuro puesto de trabajo en Canarias.');
   if (/^t\d_nom$/.test(id)) return t(`[Sistema ciberfísico ${+id[1] + 1}]`);
   if (/^t\d_just$/.test(id)) return t('[Texto de muestra] Qué hace este sistema ciberfísico por separado y por qué es útil para el usuario.');
@@ -258,7 +258,6 @@ function ejemploRespuesta(id){
   if (id === 'ventajas') return '<ul><li>[Ventaja 1]</li><li>[Ventaja 2]</li></ul>';
   if (id === 'inconvenientes') return '<ul><li>[Inconveniente 1]</li><li>[Inconveniente 2]</li></ul>';
   if (/^f1_/.test(id)) return '<p><b>[Nombre del producto · Marca]</b></p><p>[Enlace a la web del producto o captura]</p><p>[Texto de muestra] Por qué lo elegirías para el centro y cómo se usaría en el día a día.</p>';
-  if (/^f2_/.test(id)) return t('[Texto de muestra] Respuesta clara y tranquilizadora, sin tecnicismos.');
   if (id === 'fuentes') return '<ul><li>[Fuente 1: título · web o institución · fecha · enlace]</li><li>[Fuente 2: título · web o institución · fecha · enlace]</li></ul><p>Uso de IA: [herramienta, para qué la usaste y cómo comprobaste su contenido] o «No he usado IA».</p>';
   return '';
 }
