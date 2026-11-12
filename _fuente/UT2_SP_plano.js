@@ -608,6 +608,69 @@ function onPinDown(e){
 const PLANO_CSS = "#plSec,.plghost{--bg:#faf8f5; --card:#fff; --ink:#1d1b20; --muted:#6c6672; --line:#e8e3ea; --soft:#f4f1f6;\n  --lav:#ebe6fd; --lav-ink:#5a4ab5;\n  --peach:#fde7da; --peach-ink:#a3542a;\n  --mint:#dcf2e6; --mint-ink:#2e7752;\n  --sky:#dcecfb; --sky-ink:#2b689e;\n  --rose:#fbe3ec; --rose-ink:#a23a63;\n  --butter:#fdf3d0; --butter-ink:#8a6a10;}\n#plSec .work{display:grid;grid-template-columns:minmax(290px,370px) 1fr;gap:18px;align-items:start}\n#plSec .mapcol{position:sticky;top:72px}\n@media (max-width:940px){#plSec .work{grid-template-columns:1fr}\n#plSec .mapcol{position:static}\n}\n#plSec .panel h3{font-size:15px;font-weight:700;display:flex;align-items:center;gap:8px;margin-bottom:8px}\n#plSec .count{font-size:12px;font-weight:700;background:var(--ink);color:#fff;border-radius:999px;padding:2px 8px}\n#plSec .search{width:100%;border:1px solid var(--line);border-radius:10px;padding:8px 12px;margin-bottom:10px;background:#fff}\n#plSec .search:focus{outline:2px solid var(--lav);border-color:var(--lav-ink)}\n#plSec .bank{display:flex;flex-wrap:wrap;gap:6px;max-height:300px;overflow:auto;padding:2px 2px 6px;touch-action:pan-y}\n#plSec .chip{border:1px solid #dcd6df;background:#fff;border-radius:999px;padding:5px 11px;font-size:13px;font-weight:500;display:inline-flex;align-items:center;gap:6px;user-select:none;-webkit-user-select:none;transition:background .15s,border-color .15s,opacity .15s}\n#plSec .chip:hover{border-color:var(--ink)}\n#plSec .chip.on{background:var(--ink);color:#fff;border-color:var(--ink)}\n#plSec .chip.on .n{background:#fff;color:var(--ink)}\n#plSec .chip .n{font-size:11px;font-weight:800;border-radius:999px;min-width:18px;height:18px;display:inline-grid;place-items:center;padding:0 4px}\n#plSec .chip.off{opacity:.4;cursor:not-allowed}\n#plSec .chip[hidden]{display:none}\n#plSec .tray{list-style:none;margin:0;padding:0;display:grid;gap:6px}\n#plSec .tray li{display:flex;align-items:center;gap:8px;border:1px solid var(--line);border-radius:12px;padding:7px 8px;background:#fff;cursor:grab;user-select:none;-webkit-user-select:none;touch-action:none}\n#plSec .tray li.armed{outline:2px solid var(--lav-ink);background:var(--lav)}\n#plSec .tray li .num{width:24px;height:24px;border-radius:50%;background:var(--ink);color:#fff;font-size:12px;font-weight:800;display:grid;place-items:center;flex:none}\n#plSec .tray li .nm{flex:1;font-size:13px;font-weight:600;line-height:1.25;min-width:0}\n#plSec .tray li .nm small{display:block;font-weight:400;font-size:11.5px;color:var(--muted);margin-top:2px}\n#plSec .tray li .x{border:none;background:none;width:26px;height:26px;border-radius:8px;color:var(--muted);flex:none}\n#plSec .tray li .x:hover{background:var(--soft);color:var(--ink)}\n#plSec .tray .empty{font-size:13px;color:var(--muted);border:1px dashed var(--line);border-radius:12px;padding:14px;text-align:center;cursor:default;background:none;touch-action:auto}\n#plSec .zt{font-size:11px;font-weight:700;border-radius:999px;padding:2px 8px;white-space:nowrap}\n#plSec .zt.aula{background:var(--lav);color:var(--lav-ink)}\n#plSec .zt.despacho{background:var(--peach);color:var(--peach-ink)}\n#plSec .zt.patio{background:var(--mint);color:var(--mint-ink)}\n#plSec .zt.cancha{background:var(--sky);color:var(--sky-ink)}\n#plSec .zt.none{background:var(--butter);color:var(--butter-ink)}\n#plSec .hint{font-size:12px;color:var(--muted);margin:8px 0 0}\n#plSec .mapbox{position:relative;background:#fff;border:1px solid var(--line);border-radius:18px;overflow:hidden}\n#plSec .mapbox svg{display:block;width:100%;height:auto;user-select:none;-webkit-user-select:none}\n#plSec .mapbox svg .zone{transition:fill .18s}\n#plSec .mapbox svg .zone.hl[data-zone=aula]{fill:#efeafe}\n#plSec .mapbox svg .zone.hl[data-zone=despacho]{fill:#feeee4}\n#plSec .mapbox svg .zone.hl[data-zone=patio]{fill:#e6f6ed}\n#plSec .mapbox svg .zone.hl[data-zone=cancha]{fill:#e6f1fc}\n#plSec .mapbox svg.placing{cursor:crosshair}\n#plSec .mapbox .scene{pointer-events:none}\n#plSec .pin{cursor:grab;touch-action:none}\n#plSec .pin .plabel{display:none}\n#plSec .pin:hover .plabel,#plSec .pin.act .plabel{display:inline}\n#plSec .pin.act circle.head{fill:#5a4ab5}\n#plSec .banner{position:absolute;left:12px;right:12px;top:12px;background:var(--ink);color:#fff;border-radius:12px;padding:8px 12px;font-size:13px;display:flex;align-items:center;gap:10px}\n#plSec .banner[hidden]{display:none}\n#plSec .banner button{margin-left:auto;background:#fff;color:var(--ink);border:none;border-radius:8px;padding:4px 10px;font-weight:700;font-size:12px}\n#plSec .legend{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}\n#plSec .legend .lg{display:flex;align-items:center;gap:8px;border-radius:12px;padding:6px 10px;font-size:13px;font-weight:600}\n#plSec .legend .lg.low{outline:2px dashed currentColor;outline-offset:-2px}\n#plSec .legend .lg em{font-style:normal;font-size:11px;font-weight:800;background:#fff;border-radius:999px;padding:1px 7px}\n#plSec .legend .lg b{min-width:30px!important;background:#fff;border-radius:999px;min-width:22px;height:22px;display:grid;place-items:center;font-size:12px}\n#plSec .checks{list-style:none;padding:0;margin:14px 0 0;display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:6px}\n#plSec .checks li{font-size:13px;display:flex;gap:8px;align-items:center;color:var(--muted)}\n#plSec .checks li i{width:18px;height:18px;border-radius:50%;border:1.5px solid #c9c2cd;flex:none;display:grid;place-items:center;font-style:normal;font-size:11px;color:#fff}\n#plSec .checks li.ok{color:var(--ink)}\n#plSec .bloques-chk{display:grid;gap:10px;margin-top:14px}\n#plSec .bloque-chk b{display:block;font-size:13px;margin-bottom:4px}\n#plSec .bloque-chk .checks{margin-top:0}\n#plSec .checks li.ok i{background:var(--mint-ink);border-color:var(--mint-ink)}\n.plghost{position:fixed;z-index:100;pointer-events:none;background:var(--ink);color:#fff;border-radius:999px;padding:6px 12px;font-size:13px;font-weight:600;transform:translate(-50%,-130%);box-shadow:0 8px 24px rgba(0,0,0,.18);white-space:nowrap}\n#plSec .fichas{display:grid;gap:16px}\n#plSec .ficha{border:1px solid var(--line);border-radius:16px;overflow:hidden;background:#fff}\n#plSec .ficha header{display:flex;align-items:center;gap:10px;padding:12px 16px;flex-wrap:wrap}\n#plSec .ficha header .num{width:30px;height:30px;border-radius:50%;background:var(--ink);color:#fff;font-weight:800;display:grid;place-items:center;flex:none}\n#plSec .ficha header h3{font-size:17px;font-weight:700;flex:1;min-width:150px}\n#plSec .ficha.z-aula header{background:var(--lav)}\n#plSec .ficha.z-despacho header{background:var(--peach)}\n#plSec .ficha.z-patio header{background:var(--mint)}\n#plSec .ficha.z-cancha header{background:var(--sky)}\n#plSec .ficha.z-none header{background:var(--soft)}\n#plSec .ficha .body{padding:14px 16px 16px;display:grid;gap:12px}\n#plSec .purpose{background:var(--soft);border-left:4px solid var(--ink);border-radius:8px;padding:10px 12px;font-size:14px}\n#plSec .nofichas{border:1px dashed var(--line);border-radius:16px;padding:26px;text-align:center;color:var(--muted)}\n#plSec .pl-ver{border:1px solid var(--line);background:#fff;border-radius:10px;padding:6px 12px;font-weight:700;font-size:13px;min-height:36px}\n#plSec .pl-tit{margin:1.4rem 0 .4rem}\n#plSec .ficha[hidden],#plSec .nofichas[hidden]{display:none}\n@media (max-width:1023px),(pointer:coarse){#plSec .pl-ver,#plSec .chip,#plSec .tray li .x{min-height:44px;min-width:44px}}\n";
 
 // ---- pegamento con el motor común
+// ===== Bancos propios de cada especialidad semipresencial (EI SP, IS SP y MC SP) =====
+// Cada banco tiene 20 tecnologías pensadas para su sector y para los 4 espacios de su plano: algunas de las 50 generales
+// (por su nombre) y otras propias de la especialidad, que se añaden aquí a la lista (solo en el ejercicio semipresencial).
+const BANCOS_SP = {
+  ei: [ // escuela infantil: aula grande, despacho, patio y cancha
+    'Pizarra digital interactiva', 'Tablets', 'Medidor de CO2', 'Videoportero', 'Detector de humo', 'Riego automático', 'Microscopio digital', 'Marcador electrónico',
+    ['Agenda digital con las familias', 'Contar a las familias en una app cómo ha ido el día: comidas, siesta, actividades y fotos.'],
+    ['Vigilabebés con sensor de respiración', 'Vigilar el sueño y la respiración de los bebés durante la siesta y avisar si algo va mal.'],
+    ['Mesa de luz digital', 'Explorar colores, formas y transparencias con luz para aprender jugando.'],
+    ['Robot programable para infantil', 'Aprender a programar y a orientarse dándole órdenes sencillas a un robot de juguete.'],
+    ['Suelo interactivo', 'Proyectar en el suelo juegos que reaccionan cuando los niños y niñas se mueven encima.'],
+    ['Termómetro sin contacto', 'Tomar la temperatura en un segundo sin tocar al niño o a la niña.'],
+    ['Cuentos con realidad aumentada', 'Ver en 3D los personajes de un cuento al apuntar con la tablet a sus páginas.'],
+    ['Altavoz inteligente', 'Poner canciones, cuentos y sonidos de la naturaleza pidiéndolos con la voz.'],
+    ['Pulsera de localización', 'Saber dónde está cada niño o niña durante una salida o en el patio.'],
+    ['Fuente de agua con sensor', 'Dar agua sin tocar el grifo, solo acercando las manos o el vaso.'],
+    ['Toldo automático con sensor de sol', 'Dar sombra en el patio cuando aprieta el sol y recogerse si hace viento.'],
+    ['Purificador de aire con sensor', 'Limpiar el aire del aula de virus y polen y avisar cuando empeora.']
+  ],
+  is: [ // centro de día: sala de actividades, despacho, jardín y huerto y comedor
+    'Videoconferencia', 'Tablets', 'Firma electrónica', 'Desfibrilador (DEA)', 'Detector de humo', 'Pantalla de avisos digital', 'Sensor de presencia',
+    ['Pulsera de teleasistencia', 'Pedir ayuda con un botón desde cualquier sitio y avisar si la persona se cae.'],
+    ['Sensor de caídas en el suelo', 'Detectar que alguien se ha caído y avisar al personal al momento.'],
+    ['Pastillero inteligente', 'Recordar y dar la medicación de cada persona a su hora, y avisar si no se toma.'],
+    ['Mesa interactiva de estimulación cognitiva', 'Hacer juegos de memoria, atención y cálculo en una pantalla táctil grande.'],
+    ['Historia social digital', 'Registrar en una app la evolución, el plan de atención y las actividades de cada persona.'],
+    ['Comunicador con pictogramas', 'Ayudar a comunicarse a las personas que no pueden hablar, tocando imágenes.'],
+    ['Bicicleta estática con pantalla', 'Pedalear mientras se ve en vídeo una ruta por lugares conocidos.'],
+    ['Sensores de humedad del huerto', 'Saber desde el móvil cuándo hay que regar y cómo está la tierra del huerto.'],
+    ['Menú digital adaptado', 'Mostrar el menú con pictogramas y avisar de alergias y dietas especiales.'],
+    ['Báscula y tensiómetro conectados', 'Medir el peso y la tensión y guardarlos solos en el historial de la persona.'],
+    ['Robot de compañía', 'Conversar, recordar citas y proponer actividades a las personas que están solas.'],
+    ['Gafas de realidad virtual para recordar', 'Volver a lugares conocidos de la vida de la persona para estimular la memoria.'],
+    ['Grúa eléctrica para movilizar', 'Levantar y mover con seguridad a personas con movilidad reducida.']
+  ],
+  mc: [ // servicio de mediación: aula de formación, despacho, sala de espera y salón de actos
+    'Videoconferencia', 'Pantalla de avisos digital', 'Tablets', 'Pizarra digital interactiva', 'Iluminación LED',
+    ['Bucle magnético', 'Enviar el sonido directamente a los audífonos y a los implantes cocleares, sin ruido de fondo.'],
+    ['Subtitulado en directo', 'Convertir en texto en una pantalla lo que se dice en una charla o una reunión.'],
+    ['Videointerpretación en lengua de signos', 'Conectar por vídeo con un intérprete de lengua de signos a distancia.'],
+    ['Turnos con aviso luminoso y vibración', 'Avisar a cada persona de su turno sin depender del sonido.'],
+    ['Timbre luminoso', 'Avisar con una luz cuando alguien llama a la puerta del despacho.'],
+    ['Línea braille', 'Leer en braille, con los dedos, lo que aparece en la pantalla del ordenador.'],
+    ['Lupa electrónica', 'Ampliar textos e imágenes para las personas con baja visión.'],
+    ['Lector de pantalla', 'Leer en voz alta lo que aparece en el ordenador o en el móvil.'],
+    ['Comunicador con pictogramas', 'Comunicarse tocando imágenes y pictogramas en una tablet.'],
+    ['Pulsera vibradora de avisos', 'Recibir los avisos, el turno o una alarma como una vibración en la muñeca.'],
+    ['Alarma de incendio con destellos', 'Avisar de un incendio con luces que destellan, además del sonido.'],
+    ['Emisora FM para audífonos', 'Llevar la voz de quien habla hasta el audífono aunque haya mucha gente.'],
+    ['Transcripción automática en el móvil', 'Leer en el móvil, en directo, lo que dice la persona que tienes delante.'],
+    ['Vídeos signados con código QR', 'Ver en lengua de signos la información de un cartel al escanear su código.'],
+    ['Visualizador de documentos', 'Proyectar un documento en grande para leerlo o explicarlo a todo el grupo.']
+  ]
+};
+for (const [tema, lista] of Object.entries(BANCOS_SP)){
+  BANCO[tema] = lista.map(x => {
+    const [n, p] = Array.isArray(x) ? x : [x, null];
+    let i = TECHS.indexOf(n);
+    if (i < 0){ if (!p) throw new Error('Tecnología sin descripción: ' + n); TECH_DATA.push([n, p]); TECHS.push(n); PARA.push(p); i = TECHS.length - 1; }
+    return i;
+  });
+}
+
 const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--){ const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
 const toast = msg => aviso(msg);
 // Estado del plano en el campo oculto «plano»: { v:1, orden:[ids del banco barajados], sel:[{ id, placed, x, y }] }.

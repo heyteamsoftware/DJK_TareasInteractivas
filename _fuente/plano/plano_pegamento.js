@@ -1,3 +1,66 @@
+// ===== Bancos propios de cada especialidad semipresencial (EI SP, IS SP y MC SP) =====
+// Cada banco tiene 20 tecnologías pensadas para su sector y para los 4 espacios de su plano: algunas de las 50 generales
+// (por su nombre) y otras propias de la especialidad, que se añaden aquí a la lista (solo en el ejercicio semipresencial).
+const BANCOS_SP = {
+  ei: [ // escuela infantil: aula grande, despacho, patio y cancha
+    'Pizarra digital interactiva', 'Tablets', 'Medidor de CO2', 'Videoportero', 'Detector de humo', 'Riego automático', 'Microscopio digital', 'Marcador electrónico',
+    ['Agenda digital con las familias', 'Contar a las familias en una app cómo ha ido el día: comidas, siesta, actividades y fotos.'],
+    ['Vigilabebés con sensor de respiración', 'Vigilar el sueño y la respiración de los bebés durante la siesta y avisar si algo va mal.'],
+    ['Mesa de luz digital', 'Explorar colores, formas y transparencias con luz para aprender jugando.'],
+    ['Robot programable para infantil', 'Aprender a programar y a orientarse dándole órdenes sencillas a un robot de juguete.'],
+    ['Suelo interactivo', 'Proyectar en el suelo juegos que reaccionan cuando los niños y niñas se mueven encima.'],
+    ['Termómetro sin contacto', 'Tomar la temperatura en un segundo sin tocar al niño o a la niña.'],
+    ['Cuentos con realidad aumentada', 'Ver en 3D los personajes de un cuento al apuntar con la tablet a sus páginas.'],
+    ['Altavoz inteligente', 'Poner canciones, cuentos y sonidos de la naturaleza pidiéndolos con la voz.'],
+    ['Pulsera de localización', 'Saber dónde está cada niño o niña durante una salida o en el patio.'],
+    ['Fuente de agua con sensor', 'Dar agua sin tocar el grifo, solo acercando las manos o el vaso.'],
+    ['Toldo automático con sensor de sol', 'Dar sombra en el patio cuando aprieta el sol y recogerse si hace viento.'],
+    ['Purificador de aire con sensor', 'Limpiar el aire del aula de virus y polen y avisar cuando empeora.']
+  ],
+  is: [ // centro de día: sala de actividades, despacho, jardín y huerto y comedor
+    'Videoconferencia', 'Tablets', 'Firma electrónica', 'Desfibrilador (DEA)', 'Detector de humo', 'Pantalla de avisos digital', 'Sensor de presencia',
+    ['Pulsera de teleasistencia', 'Pedir ayuda con un botón desde cualquier sitio y avisar si la persona se cae.'],
+    ['Sensor de caídas en el suelo', 'Detectar que alguien se ha caído y avisar al personal al momento.'],
+    ['Pastillero inteligente', 'Recordar y dar la medicación de cada persona a su hora, y avisar si no se toma.'],
+    ['Mesa interactiva de estimulación cognitiva', 'Hacer juegos de memoria, atención y cálculo en una pantalla táctil grande.'],
+    ['Historia social digital', 'Registrar en una app la evolución, el plan de atención y las actividades de cada persona.'],
+    ['Comunicador con pictogramas', 'Ayudar a comunicarse a las personas que no pueden hablar, tocando imágenes.'],
+    ['Bicicleta estática con pantalla', 'Pedalear mientras se ve en vídeo una ruta por lugares conocidos.'],
+    ['Sensores de humedad del huerto', 'Saber desde el móvil cuándo hay que regar y cómo está la tierra del huerto.'],
+    ['Menú digital adaptado', 'Mostrar el menú con pictogramas y avisar de alergias y dietas especiales.'],
+    ['Báscula y tensiómetro conectados', 'Medir el peso y la tensión y guardarlos solos en el historial de la persona.'],
+    ['Robot de compañía', 'Conversar, recordar citas y proponer actividades a las personas que están solas.'],
+    ['Gafas de realidad virtual para recordar', 'Volver a lugares conocidos de la vida de la persona para estimular la memoria.'],
+    ['Grúa eléctrica para movilizar', 'Levantar y mover con seguridad a personas con movilidad reducida.']
+  ],
+  mc: [ // servicio de mediación: aula de formación, despacho, sala de espera y salón de actos
+    'Videoconferencia', 'Pantalla de avisos digital', 'Tablets', 'Pizarra digital interactiva', 'Iluminación LED',
+    ['Bucle magnético', 'Enviar el sonido directamente a los audífonos y a los implantes cocleares, sin ruido de fondo.'],
+    ['Subtitulado en directo', 'Convertir en texto en una pantalla lo que se dice en una charla o una reunión.'],
+    ['Videointerpretación en lengua de signos', 'Conectar por vídeo con un intérprete de lengua de signos a distancia.'],
+    ['Turnos con aviso luminoso y vibración', 'Avisar a cada persona de su turno sin depender del sonido.'],
+    ['Timbre luminoso', 'Avisar con una luz cuando alguien llama a la puerta del despacho.'],
+    ['Línea braille', 'Leer en braille, con los dedos, lo que aparece en la pantalla del ordenador.'],
+    ['Lupa electrónica', 'Ampliar textos e imágenes para las personas con baja visión.'],
+    ['Lector de pantalla', 'Leer en voz alta lo que aparece en el ordenador o en el móvil.'],
+    ['Comunicador con pictogramas', 'Comunicarse tocando imágenes y pictogramas en una tablet.'],
+    ['Pulsera vibradora de avisos', 'Recibir los avisos, el turno o una alarma como una vibración en la muñeca.'],
+    ['Alarma de incendio con destellos', 'Avisar de un incendio con luces que destellan, además del sonido.'],
+    ['Emisora FM para audífonos', 'Llevar la voz de quien habla hasta el audífono aunque haya mucha gente.'],
+    ['Transcripción automática en el móvil', 'Leer en el móvil, en directo, lo que dice la persona que tienes delante.'],
+    ['Vídeos signados con código QR', 'Ver en lengua de signos la información de un cartel al escanear su código.'],
+    ['Visualizador de documentos', 'Proyectar un documento en grande para leerlo o explicarlo a todo el grupo.']
+  ]
+};
+for (const [tema, lista] of Object.entries(BANCOS_SP)){
+  BANCO[tema] = lista.map(x => {
+    const [n, p] = Array.isArray(x) ? x : [x, null];
+    let i = TECHS.indexOf(n);
+    if (i < 0){ if (!p) throw new Error('Tecnología sin descripción: ' + n); TECH_DATA.push([n, p]); TECHS.push(n); PARA.push(p); i = TECHS.length - 1; }
+    return i;
+  });
+}
+
 const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--){ const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
 const toast = msg => aviso(msg);
 // Estado del plano en el campo oculto «plano»: { v:1, orden:[ids del banco barajados], sel:[{ id, placed, x, y }] }.
