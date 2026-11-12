@@ -991,6 +991,9 @@ document.head.insertAdjacentHTML('beforeend', `<style>
 
 // ================= textos de la página =================
 let CC = null;   // ciclo actual (se fija al construir la tarea)
+// Semipresencial: trabajo individual (CICLOS[x].individual): textos en singular, sin integrantes ni presentación en Canva
+const IND = () => !!(CC && CC.individual);
+const T = (pl, sg) => IND() ? sg : pl;
 // Comunes y propias de la especialidad, mezcladas por orden alfabético y sin marca: el alumno no sabe cuáles son las propias
 const piezasDe = C => [...COMUNES, ...C.piezas].sort((a, b) => a.n.localeCompare(b.n, 'es'));
 const pieza = id => CC && piezasDe(CC).find(p => p.id === id);
@@ -1004,25 +1007,25 @@ function introHTML(C){
 function construirTarea(C){
   CC = C;
   const servicios = [
-    ['Canva · «Magic Media» (texto a imagen)', 'Dentro de la misma Canva donde haréis la presentación. Con la cuenta de Canva para Educación es gratis.', 'https://www.canva.com/'],
+    ['Canva · «Magic Media» (texto a imagen)', T('Dentro de la misma Canva donde haréis la presentación. Con la cuenta de Canva para Educación es gratis.', 'Con la cuenta de Canva para Educación es gratis.'), 'https://www.canva.com/'],
     ['Microsoft Designer / Copilot', 'Gratis con una cuenta de Microsoft.', 'https://designer.microsoft.com/'],
     ['Adobe Firefly', 'Gratis con una cuenta de Adobe, con un número limitado de imágenes al mes.', 'https://firefly.adobe.com/'],
     ['Google Gemini', 'Gratis con una cuenta de Google: se le pide la imagen en el chat.', 'https://gemini.google.com/'],
     ['Ideogram', 'Plan gratuito con imágenes cada día; escribe bien los textos dentro de la imagen.', 'https://ideogram.ai/']
   ];
   return `
-  <section class="fase f1"><header><h2>Parte 1 · Vuestro equipo y vuestro reto</h2></header><div class="cuerpo">
+  <section class="fase f1"><header><h2>${T('Parte 1 · Vuestro equipo y vuestro reto', 'Parte 1 · Tu reto')}</h2></header><div class="cuerpo">
     <div class="rb-reto"><b>El reto</b>${esc(C.reto)}</div>
-    ${caja('grupo', '1.1', 'Integrantes del grupo', '<div class="pista">Nombre y apellidos de cada persona del grupo.</div>', { corta: true, ph: 'Nombre y apellidos de cada integrante…' })}
+    ${IND() ? '' : caja('grupo', '1.1', 'Integrantes del grupo', '<div class="pista">Nombre y apellidos de cada persona del grupo.</div>', { corta: true, ph: 'Nombre y apellidos de cada integrante…' })}
   </div></section>
 
-  <section class="fase f2"><header><h2>Parte 2 · Montad vuestro robot</h2></header><div class="cuerpo">
-    ${caja('nombre', '2.1', 'Nombre del robot', '', { corta: true, ph: 'Inventad un nombre…' })}
-    <p><b>2.2 · Montaje.</b> Elegid una pieza del almacén y tocad su sitio en el robot (o arrastradla encima, como en un puzle; en tablet, mantened el dedo pulsado un momento). Cada pieza solo encaja en su zona: <b>3 en la cabeza</b> (antena, orejas y ojos), <b>3 en el torso</b>, <b>una en cada brazo</b> (podéis poner de 2 a 4 brazos) y <b>una para moverse</b>.</p>
+  <section class="fase f2"><header><h2>${T('Parte 2 · Montad vuestro robot', 'Parte 2 · Monta tu robot')}</h2></header><div class="cuerpo">
+    ${caja('nombre', '2.1', 'Nombre del robot', '', { corta: true, ph: T('Inventad un nombre…', 'Inventa un nombre…') })}
+    <p><b>2.2 · Montaje.</b> ${T('Elegid una pieza del almacén y tocad su sitio en el robot (o arrastradla encima, como en un puzle; en tablet, mantened el dedo pulsado un momento).', 'Elige una pieza del almacén y toca su sitio en el robot (o arrástrala encima, como en un puzle; en tablet, mantén el dedo pulsado un momento).')} Cada pieza solo encaja en su zona: <b>3 en la cabeza</b> (antena, orejas y ojos), <b>3 en el torso</b>, <b>una en cada brazo</b> (${T('podéis', 'puedes')} poner de 2 a 4 brazos) y <b>una para moverse</b>.</p>
     <input type="hidden" id="rbDato" data-campo="robot">
     <div class="rb-taller">
       <div class="rb-escena">
-        <svg id="rbSvg" viewBox="0 0 400 520" role="img" aria-label="Vuestro robot"></svg>
+        <svg id="rbSvg" viewBox="0 0 400 520" role="img" aria-label="${T('Vuestro robot', 'Tu robot')}"></svg>
         <div class="rb-estado" id="rbEstado"></div>
         <div class="rb-ctrl">
           <div class="brz">Brazos: <button type="button" id="rbMenos" aria-label="Quitar un brazo">−</button><b id="rbNB">2</b><button type="button" id="rbMas" aria-label="Añadir un brazo">+</button></div>
@@ -1038,20 +1041,20 @@ function construirTarea(C){
     <div class="rb-lista" id="rbLista"></div>
   </div></section>
 
-  <section class="fase f3"><header><h2>Parte 3 · Justificad el montaje</h2></header><div class="cuerpo">
-    ${caja('justificacion', '3.1', 'Justificación del robot', '<div class="pista">Explicad para qué sirve vuestro robot en el centro, por qué habéis elegido esas piezas y no otras, quién lo usaría y en qué momentos, y qué ventajas y qué riesgos tiene.</div>', { ph: 'Escribid aquí vuestra justificación…' })}
+  <section class="fase f3"><header><h2>${T('Parte 3 · Justificad el montaje', 'Parte 3 · Justifica el montaje')}</h2></header><div class="cuerpo">
+    ${caja('justificacion', '3.1', 'Justificación del robot', '<div class="pista">' + T('Explicad para qué sirve vuestro robot en el centro, por qué habéis elegido esas piezas y no otras, quién lo usaría y en qué momentos, y qué ventajas y qué riesgos tiene.', 'Explica para qué sirve tu robot en el centro, por qué has elegido esas piezas y no otras, quién lo usaría y en qué momentos, y qué ventajas y qué riesgos tiene.') + '</div>', { ph: T('Escribid aquí vuestra justificación…', 'Escribe aquí tu justificación…') })}
   </div></section>
 
-  <section class="fase f4"><header><h2>Parte 4 · Vuestro robot en su entorno, con IA</h2></header><div class="cuerpo">
-    <p>Cread con inteligencia artificial una imagen de vuestro robot <b>trabajando en ${esc(C.entorno)}</b>. Tiene que parecerse al que habéis montado (mismas piezas). Algunas herramientas gratuitas:</p>
+  <section class="fase f4"><header><h2>${T('Parte 4 · Vuestro robot en su entorno, con IA', 'Parte 4 · Tu robot en su entorno, con IA')}</h2></header><div class="cuerpo">
+    <p>${T('Cread con inteligencia artificial una imagen de vuestro robot', 'Crea con inteligencia artificial una imagen de tu robot')} <b>trabajando en ${esc(C.entorno)}</b>. ${T('Tiene que parecerse al que habéis montado', 'Tiene que parecerse al que has montado')} (mismas piezas). Algunas herramientas gratuitas:</p>
     <table class="rb-ia"><thead><tr><th>Herramienta</th><th>Cómo es gratis</th></tr></thead><tbody>${servicios.map(s => `<tr><td><a href="${s[2]}" target="_blank" rel="noopener">${esc(s[0])} ↗</a></td><td>${esc(s[1])}</td></tr>`).join('')}</tbody></table>
-    <p class="pista">Las condiciones gratuitas de estos servicios cambian a menudo: si una no os deja, probad con otra.</p>
-    <div class="rb-prompt"><b>✨ Descripción para la IA (hecha con vuestras piezas)</b><p id="rbPrompt"></p><button type="button" id="rbCopiar">📋 Copiar descripción</button></div>
-    ${caja('imagen_ia', '4.1', 'Imagen creada con IA', '<div class="pista">Pegad aquí la imagen (Ctrl+V) o arrastradla.</div>', { ph: 'Pegad o arrastrad aquí la imagen…' })}
-    ${caja('herramienta', '4.2', 'Herramienta usada y descripción que le escribisteis', '', { ph: 'Herramienta y texto (prompt) que usasteis…' })}
+    <p class="pista">Las condiciones gratuitas de estos servicios cambian a menudo: ${T('si una no os deja, probad con otra.', 'si una no te deja, prueba con otra.')}</p>
+    <div class="rb-prompt"><b>✨ Descripción para la IA (hecha con ${T('vuestras', 'tus')} piezas)</b><p id="rbPrompt"></p><button type="button" id="rbCopiar">📋 Copiar descripción</button></div>
+    ${caja('imagen_ia', '4.1', 'Imagen creada con IA', '<div class="pista">' + T('Pegad aquí la imagen (Ctrl+V) o arrastradla.', 'Pega aquí la imagen (Ctrl+V) o arrástrala.') + '</div>', { ph: T('Pegad o arrastrad aquí la imagen…', 'Pega o arrastra aquí la imagen…') })}
+    ${caja('herramienta', '4.2', T('Herramienta usada y descripción que le escribisteis', 'Herramienta usada y descripción que le escribiste'), '', { ph: T('Herramienta y texto (prompt) que usasteis…', 'Herramienta y texto (prompt) que usaste…') })}
   </div></section>
 
-  <section class="fase f1"><header><h2>Parte 5 · La presentación en Canva</h2></header><div class="cuerpo">
+  ${IND() ? '' : `<section class="fase f1"><header><h2>Parte 5 · La presentación en Canva</h2></header><div class="cuerpo">
     <p>Haced la presentación <b>en grupo en Canva</b>. Tiene que llevar la imagen del robot que habéis montado aquí (botón <b>⬇ Descargar robot</b>) y la imagen hecha con IA. <b>La presentación es lo que se entrega en el aula virtual</b> y lo que expondréis en clase. Una estructura que funciona:</p>
     <ol class="rb-canva">
       <li><b>Portada</b>Nombre del robot, especialidad e integrantes.</li>
@@ -1061,7 +1064,7 @@ function construirTarea(C){
       <li><b>El robot en acción</b>La imagen hecha con IA.</li>
       <li><b>Ventajas, riesgos y conclusión</b>Lo que aporta y lo que hay que vigilar.</li>
     </ol>
-  </div></section>
+  </div></section>`}
   <div class="rb-pill" id="rbPill" hidden role="status"><span id="rbPillTx"></span><button type="button" id="rbPillQuitar" hidden>Quitar</button><button type="button" id="rbPillX" aria-label="Cancelar">✕</button></div>`;
 }
 
@@ -1103,12 +1106,18 @@ function alActualizar(){
 const nombreRobot = () => textoDe('nombre');
 function piezasPuestas(){ return slotsActivos().filter(s => R && R.s[s]).length; }
 function progresoPropio(){
-  const cajas = ['grupo', 'nombre', 'justificacion', 'imagen_ia', 'herramienta'], ll = cuentaLlenas(cajas);
+  const cajas = [...(IND() ? [] : ['grupo']), 'nombre', 'justificacion', 'imagen_ia', 'herramienta'], ll = cuentaLlenas(cajas);
   const p = R ? piezasPuestas() : 0, t = slotsActivos().length;
   return { hechas: p + ll, total: t + cajas.length, texto: `Robot ${p}/${t} piezas · ${ll}/${cajas.length} respuestas` };
 }
 function listaChecks(){
   const p = R ? piezasPuestas() : 0, t = slotsActivos().length;
+  if (IND()) return [
+    { ok: llena('nombre'), t: 'Nombre del robot', falta: 'Escribe cómo se llama tu robot.' },
+    { ok: p === t, t: 'Robot montado', cuenta: `${p}/${t} piezas`, falta: 'Pon una pieza en cada sitio del robot (cabeza, torso, brazos y movimiento).' },
+    { ok: llena('justificacion'), t: 'Justificación del montaje', falta: 'Explica para qué sirve el robot y por qué lleva esas piezas.' },
+    { ok: llena('imagen_ia') && llena('herramienta'), t: 'Imagen con IA y herramienta usada', falta: 'Pega la imagen hecha con IA y di qué herramienta y descripción usaste.' }
+  ];
   return [
     { ok: llena('grupo') && llena('nombre'), t: 'Integrantes del grupo y nombre del robot', falta: 'Escribid quiénes sois y cómo se llama vuestro robot.' },
     { ok: p === t, t: 'Robot montado', cuenta: `${p}/${t} piezas`, falta: 'Poned una pieza en cada sitio del robot (cabeza, torso, brazos y movimiento).' },
@@ -1235,7 +1244,7 @@ function rbPintar(){
   slotsActivos().forEach(sl => { if (R.s[sl]) z[zonaDeTipo(TIPO_SLOT[sl])][0]++; });
   document.getElementById('rbEstado').innerHTML = Object.keys(z).map(k => `<span class="${z[k][0] === z[k][1] ? 'ok' : ''}">${ZONAS[k]} ${z[k][0]}/${z[k][1]}</span>`).join('');
   // Lista de piezas del robot
-  document.getElementById('rbLista').innerHTML = `<h4>Las piezas de vuestro robot</h4>` + slotsActivos().map(sl => {
+  document.getElementById('rbLista').innerHTML = `<h4>Las piezas de ${T('vuestro', 'tu')} robot</h4>` + slotsActivos().map(sl => {
     const p = pieza(R.s[sl]);
     return p ? `<div><span>${p.e}</span><b>${esc(NOMBRE_SLOT[sl])} · ${esc(p.n)}</b><em>${esc(p.d)}</em></div>` : `<div><span>➕</span><b>${esc(NOMBRE_SLOT[sl])}</b><em class="falta">Falta una pieza</em></div>`;
   }).join('');
@@ -1270,8 +1279,8 @@ function rbPromptPintar(){ const e = document.getElementById('rbPrompt'); if (e)
 function rbPill(){
   const p = document.getElementById('rbPill'); if (!p) return;
   const tx = document.getElementById('rbPillTx'), q = document.getElementById('rbPillQuitar');
-  if (SELP){ const pz = pieza(SELP); tx.textContent = `${pz.e} ${pz.n} → tocad su sitio: ${TIPOS[pz.t].n}`; q.hidden = true; p.hidden = false; return; }
-  if (SELS){ const pz = pieza(R.s[SELS]); tx.textContent = pz ? `${pz.e} ${pz.n} · ${NOMBRE_SLOT[SELS]}` : `Elegid una pieza para: ${NOMBRE_SLOT[SELS]}`; q.hidden = !pz; p.hidden = false; return; }
+  if (SELP){ const pz = pieza(SELP); tx.textContent = `${pz.e} ${pz.n} → ${T('tocad', 'toca')} su sitio: ${TIPOS[pz.t].n}`; q.hidden = true; p.hidden = false; return; }
+  if (SELS){ const pz = pieza(R.s[SELS]); tx.textContent = pz ? `${pz.e} ${pz.n} · ${NOMBRE_SLOT[SELS]}` : `${T('Elegid', 'Elige')} una pieza para: ${NOMBRE_SLOT[SELS]}`; q.hidden = !pz; p.hidden = false; return; }
   p.hidden = true;
 }
 
@@ -1338,7 +1347,7 @@ async function rbDescargar(){
     const a = document.createElement('a'); a.href = url; a.download = `UT2_E2_Robot_${limpio(nombreRobot()) || 'grupo'}.png`;
     document.body.appendChild(a); a.click(); a.remove();
     if (!EJEMPLO && !R.png){ R.png = true; rbGuardar(); }
-    aviso(piezasPuestas() === slotsActivos().length ? 'Imagen del robot descargada. Ya podéis ponerla en Canva.' : 'Imagen descargada, pero al robot aún le faltan piezas.');
+    aviso(piezasPuestas() === slotsActivos().length ? T('Imagen del robot descargada. Ya podéis ponerla en Canva.', 'Imagen del robot descargada.') : 'Imagen descargada, pero al robot aún le faltan piezas.');
   } catch(e){ aviso('No se ha podido crear la imagen en este navegador.'); }
 }
 
@@ -1355,7 +1364,7 @@ document.addEventListener('click', e => {
   if (e.target.closest('#rbPillX')){ SELP = SELS = null; rbAlmacen(); rbPintar(); rbPill(); return; }
   if (e.target.closest('#rbCopiar')){
     const t = rbPromptTexto();
-    (navigator.clipboard ? navigator.clipboard.writeText(t) : Promise.reject()).then(() => aviso('Descripción copiada. Pegadla en la herramienta de IA.')).catch(() => prompt('Copiad la descripción:', t));
+    (navigator.clipboard ? navigator.clipboard.writeText(t) : Promise.reject()).then(() => aviso(T('Descripción copiada. Pegadla en la herramienta de IA.', 'Descripción copiada. Pégala en la herramienta de IA.'))).catch(() => prompt('Copiad la descripción:', t));
   }
 });
 document.addEventListener('keydown', e => { if (e.key === 'Escape' && (SELP || SELS)){ SELP = SELS = null; rbAlmacen(); rbPintar(); rbPill(); } });
@@ -1408,16 +1417,17 @@ function rbArrSoltar(){
 // ================= PDF =================
 async function pdfTarea(api, C){
   const { banda, P, texto, caja, sitio, separador, COL, doc } = api;
-  banda('Parte 1 · Vuestro equipo y vuestro reto', [223,243,234], COL.mint);
+  CC = C;
+  banda(T('Parte 1 · Vuestro equipo y vuestro reto', 'Parte 1 · Tu reto'), [223,243,234], COL.mint);
   P(C.reto, { size: 9.5, i: true, color: COL.muted, tras: 3 });
-  await caja('grupo', '1.1', 'Integrantes del grupo', { compacta: true });
-  banda('Parte 2 · Vuestro robot', [223,243,234], COL.mint);
+  if (!IND()) await caja('grupo', '1.1', 'Integrantes del grupo', { compacta: true });
+  banda(T('Parte 2 · Vuestro robot', 'Parte 2 · Tu robot'), [223,243,234], COL.mint);
   P('Robot: ' + (nombreRobot() || '(sin nombre)'), { size: 12, b: true, color: COL.mint, tras: 2 });
   try {
     const url = await rbImagen(), w = 95, h = w * 560 / 400;
     sitio(h + 4); doc.addImage(url, 'PNG', 18 + (api.CW - w) / 2, api.y, w, h); api.y = api.y + h + 4;
   } catch(e){ P('[No se ha podido dibujar el robot en este navegador]', { i: true, color: COL.muted }); }
-  sitio(20); P('Las piezas de vuestro robot', { size: 11.5, b: true, color: COL.mint, tras: 2 });
+  sitio(20); P(T('Las piezas de vuestro robot', 'Las piezas de tu robot'), { size: 11.5, b: true, color: COL.mint, tras: 2 });
   for (const sl of slotsActivos()){
     const p = pieza(R && R.s[sl]);
     texto([{ t: NOMBRE_SLOT[sl] + ': ', b: true }, p ? { t: p.n + '. ' } : { t: '(sin pieza)', i: true }, ...(p ? [{ t: p.d, i: true }] : [])], { size: 9.6, tras: 0.8 });
@@ -1427,7 +1437,7 @@ async function pdfTarea(api, C){
   await caja('justificacion', '3.1', 'Justificación del robot');
   banda('Parte 4 · El robot en su entorno, con IA', [226,238,252], COL.sky);
   await caja('imagen_ia', '4.1', 'Imagen creada con IA');
-  await caja('herramienta', '4.2', 'Herramienta usada y descripción que le escribisteis');
+  await caja('herramienta', '4.2', T('Herramienta usada y descripción que le escribisteis', 'Herramienta usada y descripción que le escribiste'));
 }
 
 // ================= ejemplo relleno =================

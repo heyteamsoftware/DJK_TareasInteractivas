@@ -14,7 +14,9 @@ const EJERCICIOS = [
   { cod: 'UT1_SP', dir: 'SEMI', archivo: 'UT1_SP_Digitalizacion_Sectores_Productivos.html', titulo: 'UT1 · Digitalización de los sectores productivos', img: 'UT1_E2', remix: 'remix_UT1_SP.js' },
   { cod: 'UT2_E1', dir: 'UT2', archivo: 'UT2_E1_Parejas_Tecnologias_Habilitadoras.html', titulo: 'UT2 · E1 · Parejas de tecnologías habilitadoras' },
   { cod: 'UT2_E3', dir: 'UT2', archivo: 'UT2_E3_App_Realidad_Virtual_Mixta.html', titulo: 'UT2 · E3 · Diseña tu app de realidad virtual o mixta' },
-  { cod: 'UT2_E2', dir: 'UT2', archivo: 'UT2_E2_Disenad_Vuestro_Robot.html', titulo: 'UT2 · E2 · Diseñad vuestro robot' }
+  { cod: 'UT2_E2', dir: 'UT2', archivo: 'UT2_E2_Disenad_Vuestro_Robot.html', titulo: 'UT2 · E2 · Diseñad vuestro robot' },
+  // Semipresencial UT2: los 4 ejercicios presenciales en uno (incluye UT2_E1, UT2_E2, UT2_E3 y el plano con /*__INCLUYE:X__*/)
+  { cod: 'UT2_SP', dir: 'SEMI', archivo: 'UT2_SP_Tecnologias_Habilitadoras.html', titulo: 'UT2 · Tecnologías habilitadoras digitales' }
 ];
 
 // Imágenes del ejercicio: _fuente/img/UTn_Em/*.jpg|png → const IMAGENES = { nombre: dataURL }
@@ -35,7 +37,9 @@ const cabecera = leer('comun_head.html'), libPDF = leer('jspdf.html'), motor = l
 for (const e of EJERCICIOS){
   const unidad = e.cod.split('_')[0].toLowerCase();   // ut1, ut2… → color de la unidad
   // Remix semipresencial: su contenido se saca de los ejercicios originales (ver _fuente/remix_*.js)
-  const datos = e.remix ? leer(e.cod + '.js').replace('__DATOS__', () => JSON.stringify(require(path.join(F, e.remix))())) : leer(e.cod + '.js');
+  let datos = e.remix ? leer(e.cod + '.js').replace('__DATOS__', () => JSON.stringify(require(path.join(F, e.remix))())) : leer(e.cod + '.js');
+  // /*__INCLUYE:X__*/ → contenido de _fuente/X.js (para juntar ejercicios en uno, cada uno dentro de su función)
+  datos = datos.replace(/\/\*__INCLUYE:(\w+)__\*\//g, (_, n) => leer(n + '.js'));
   const cab = cabecera.split('{{TITULO}}').join(e.titulo).replace('{{ICONO_COLOR}}', COLOR_ICONO[e.cod.split('_')[0]]).replace('{{ICONO}}', siglasIcono(e.cod));
   const html = cab.replace('<body>', `<body class="${unidad}">`) + libPDF + '\n<script>\n' + imagenes(e.img || e.cod) + datos + '\n' + motor + '\n</script>\n</body>\n</html>\n';
   const dir = path.join(RAIZ, e.dir); fs.mkdirSync(dir, { recursive: true });

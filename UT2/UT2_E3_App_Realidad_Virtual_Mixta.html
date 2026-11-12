@@ -1136,8 +1136,8 @@ function construirTarea(C){
     <div class="e3-fb" id="e3Fb" role="status" aria-live="polite"></div>
     <details class="e3-lista"><summary>📋 Tus situaciones clasificadas</summary><ol id="e3Hechas"></ol></details>
   </div></section>`;
-  // Parte 2
-  h += `<section class="fase f2"><header><h2>Parte 2 · Mi experiencia con las gafas</h2></header><div class="cuerpo">
+  // Parte 2 (no sale en semipresencial: allí no se prueban las gafas en clase)
+  if (!C.sinGafas) h += `<section class="fase f2"><header><h2>Parte 2 · Mi experiencia con las gafas</h2></header><div class="cuerpo">
     <p>Hazla <b>después de probar las gafas en clase</b>. No hay respuestas buenas ni malas: cuenta lo que sentiste.</p>
     <h3 class="e3-sub">2.1 · ¿Qué probaste? <small>Puedes marcar varias.</small></h3>${chipsHTML('x.prob', P2.prob)}
     <h3 class="e3-sub">2.2 · Valora la experiencia</h3>
@@ -1587,10 +1587,11 @@ function tarjetaCanvas(){
 }
 
 // ================= comprobaciones y progreso =================
+const SIN_GAFAS = () => !!(CICLOS[ESP] && CICLOS[ESP].sinGafas);
 function piezasE3(){
   if (!S) return null;
   const P2 = COMUN.p2;
-  const p2 = [
+  const p2 = SIN_GAFAS() ? [] : [
     ['qué probaste', S.x.prob.length > 0],
     ['las 4 valoraciones', P2.escalas.every(([k]) => S.x.val[k])],
     ['qué te sorprendió', S.x.sor.length > 0],
@@ -1631,7 +1632,7 @@ function listaChecks(){
   const fila = (t, l, falta) => { const n = l.filter(x => x[1]).length; return { ok: n === l.length, t, cuenta: `${n}/${l.length}`, falta: falta + l.filter(x => !x[1]).map(x => x[0]).join(', ') + '.' }; };
   return [
     { ok: p.p1 >= NSIT, t: `Parte 1 · Las ${NSIT} situaciones clasificadas`, cuenta: `${p.p1}/${NSIT}`, falta: 'Sigue clasificando hasta terminar el juego.' },
-    fila('Parte 2 · Tu experiencia con las gafas', p.p2, 'Falta: '),
+    ...(SIN_GAFAS() ? [] : [fila('Parte 2 · Tu experiencia con las gafas', p.p2, 'Falta: ')]),
     fila('Parte 3 · Tu app montada', p.p3, 'Falta: '),
     fila('Parte 4 · La ficha de la tienda', p.p4, 'Falta: '),
     fila('Parte 5 · Ventajas, riesgos y mercado', p.p5, 'Falta: ')
@@ -1650,14 +1651,16 @@ async function pdfTarea(api, C){
   let k = 1;
   for (const n of j.orden.slice(0, j.n)) texto([{ t: C.sit[n][0] + ' ' }, { t: '= ' + TIPOS[C.sit[n][1]].n, b: true }, { t: j.fallos.includes(n) ? ' (con algún fallo)' : '', i: true }], { size: 9.4, marca: (k++) + '.', tras: 0.6 });
   if (j.n < NSIT) P(`Quedan ${NSIT - j.n} situaciones sin clasificar.`, { size: 9.4, i: true, color: COL.muted });
-  // Parte 2
-  banda('Parte 2 · Mi experiencia con las gafas', [226,238,252], COL.sky);
-  linea('Qué probé', S.x.prob.join(', '));
-  for (const [kk, t, , txt] of COMUN.p2.escalas) linea(t, S.x.val[kk] ? `${S.x.val[kk]} de 5 (${txt[S.x.val[kk] - 1]})` : '');
-  linea('Lo que me sorprendió', S.x.sor.join(', '));
-  linea('Lo que cambiaría', S.x.cam.join(', '));
-  api.y = api.y + 2;
-  await caja('p2_frase', '2.5', 'Cómo me sentí dentro de las gafas', { compacta: true });
+  // Parte 2 (no en semipresencial)
+  if (!C.sinGafas){
+    banda('Parte 2 · Mi experiencia con las gafas', [226,238,252], COL.sky);
+    linea('Qué probé', S.x.prob.join(', '));
+    for (const [kk, t, , txt] of COMUN.p2.escalas) linea(t, S.x.val[kk] ? `${S.x.val[kk]} de 5 (${txt[S.x.val[kk] - 1]})` : '');
+    linea('Lo que me sorprendió', S.x.sor.join(', '));
+    linea('Lo que cambiaría', S.x.cam.join(', '));
+    api.y = api.y + 2;
+    await caja('p2_frase', '2.5', 'Cómo me sentí dentro de las gafas', { compacta: true });
+  }
   // Parte 3
   banda('Parte 3 · Constructor de la app', [255,233,220], COL.peach);
   const tp = S.a.mezOk ? tipoMezcla(S.a.mez) : null;

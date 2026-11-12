@@ -22,6 +22,7 @@
 | UT1_E2 | Combinación de sistemas ciberfísicos | RA1 | e, f, g | AF, AS, EI, HB, IS + EI SP, IS SP, MC SP | A (bocadillos + diapositivas) | [UT1_E2](UT1/UT1_E2_Combinacion_Sistemas_Ciberfisicos.html) | [Ejemplo](UT1/UT1_E2_EJEMPLO_relleno.html) | Sí (4·2·2·1·1) | Sí | Hecho |
 | UT1_E3 | Sistemas ciberfísicos y digitalización del sector | RA1 | c, d, e, f | AF, AS, EI, HB, IS + EI SP, IS SP, MC SP | A | [UT1_E3](UT1/UT1_E3_Digitalizacion_Sistemas_CiberFisicos.html) | [Ejemplo](UT1/UT1_E3_EJEMPLO_relleno.html) | Sí | Sí | Hecho |
 | UT1_SP | Digitalización de los sectores productivos (semipresencial: reúne E1, E2 y E3 en versión corta) | RA1 | a, b, c, d, e, f, g | Solo EI SP, IS SP y MC SP | A (remix) | [UT1_SP](SEMI/UT1_SP_Digitalizacion_Sectores_Productivos.html) | [Ejemplo](SEMI/UT1_SP_EJEMPLO_relleno.html) | Sí (3·1,5·2·2·1,5) | Sí | Hecho |
+| UT2_SP | Tecnologías habilitadoras digitales (semipresencial: reúne E1, E2, E3 y E4 enteros, pendiente de recortar) | RA2 | a, b, c, d, e, g | Solo EI SP, IS SP y MC SP | C (los 4 ejercicios en bloques) | [UT2_SP](SEMI/UT2_SP_Tecnologias_Habilitadoras.html) | [Ejemplo](SEMI/UT2_SP_EJEMPLO_relleno.html) | Sí (2,5 por bloque, provisional) | Sí | Hecho (11-11-2026), pendiente de recortar |
 | UT2_E1 | Parejas de tecnologías y su uso en tu profesión (juego + escritura) | RA2 | a | AF, AS, EI, HB, IS + EI SP, IS SP, MC SP | C (juego en el motor común) | [UT2_E1](UT2/UT2_E1_Parejas_Tecnologias_Habilitadoras.html) | [Ejemplo](UT2/UT2_E1_EJEMPLO_relleno.html) | Sí (5 rondas × 2) | Sí | Hecho |
 | UT2_E2 | Diseñad vuestro robot (trabajo en grupo; se entrega la presentación de Canva) | RA2 | b, g | AF, AS, EI, HB, IS | C (constructor por piezas en el motor común) | [UT2_E2](UT2/UT2_E2_Disenad_Vuestro_Robot.html) | [Ejemplo](UT2/UT2_E2_EJEMPLO_relleno.html) | Sí (3·3·2·2) | Sí | Hecho |
 | UT2_E3 | Diseña tu app de realidad virtual o mixta (tras probar las gafas en clase) | RA2 | b, d, g | AF, AS, EI, HB, IS | C (juego + constructor en el motor común) | [UT2_E3](UT2/UT2_E3_App_Realidad_Virtual_Mixta.html) | [Ejemplo](UT2/UT2_E3_EJEMPLO_relleno.html) | Sí (1,5·1·3,5·1,5·2,5) | Sí | Hecho (sustituye al Word «Informe técnico») |
@@ -119,6 +120,16 @@ En semipresencial solo hay un ejercicio por unidad: un «remix» de los ejercici
 | Checks | — | 2 pasos, 2 normas y 2 comprobaciones por bloque | — |
 | Cambios 11/11/2026 | — | Fuera la 1.2 (quinta revolución) y la 3.2 (preguntas frecuentes) · 3.1: un solo producto, de un tipo de sistema sorteado · notas 3 · 1,5 · 2 · 2 · 1,5 | — |
 | Cambios 04/11/2026 | — | 4 revoluciones (antes 2) · «Sistema ciberfísico» en lugar de «Tecnología habilitadora» (y fuera la sigla THD) · 1 actividad (antes 2) · sin diapositivas · 5 FAQ (antes 3) | — |
+
+| UT2_SP | De dónde sale | Qué tiene | Puntos |
+|---|---|---|---|
+| Bloque 1 | UT2_E1 entero | Juego de parejas (50 tecnologías) y las 5 tecnologías en tu profesión. La nota que se guarda es la del juego, sobre 10 | 2,5 |
+| Bloque 2 | UT2_E2 entero, **individual** | Robot por piezas, justificación e imagen con IA. Sin integrantes ni presentación en Canva (en el robot: `individual` en el ciclo; textos en singular con `T(plural, singular)`) | 2,5 |
+| Bloque 3 | UT2_E3 entero, **sin la Parte 2** | Clasificar situaciones, constructor de la app, ficha de la tienda y ventajas/riesgos/mercado. Sin «Mi experiencia con las gafas» (`sinGafas` en el ciclo). La numeración salta de la Parte 1 a la 3 | 2,5 |
+| Bloque 4 | El plano de UT2_E4, **rehecho en el motor común** | Banco de 20, 10 en el plano (al menos 2 por espacio), una ficha por tecnología (2 cajas) y reflexión final. Estado en el campo `plano`; fichas = cajas `pl_<id>_porque` / `pl_<id>_uso` (las 20 del banco, ocultas hasta elegirlas) y `pl_conclusion` | 2,5 |
+| Mediación Comunicativa | Nuevo | Robot (reto, entorno y 10 piezas propias) y app (12 situaciones y 8 retos) escritos para MC SP en `_fuente/UT2_SP.js`; EI SP e IS SP copian EI e IS | — |
+| Cómo se monta | — | `_fuente/UT2_SP.js` incluye cada ejercicio original dentro de su propia función con la marca INCLUYE (construir.js la cambia por el archivo), así sus nombres no chocan y si cambias un original este se actualiza. El plano (`_fuente/UT2_SP_plano.js`) se genera desde la página del plano: `node _fuente/plano/hacer_plano.js .` y después `node _fuente/construir.js` | — |
+| Disponibilidad | — | Se publicó bloqueado para los 3 semis hasta decidir qué se recorta (se abre desde la administración o el panel DJK) | — |
 
 ## Planos de UT2_E4 por especialidad
 
