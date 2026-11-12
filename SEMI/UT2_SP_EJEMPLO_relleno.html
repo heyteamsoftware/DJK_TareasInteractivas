@@ -1799,7 +1799,7 @@ function construirTarea(C){
     <p class="pista">Las condiciones gratuitas de estos servicios cambian a menudo: ${T('si una no os deja, probad con otra.', 'si una no te deja, prueba con otra.')}</p>
     <div class="rb-prompt"><b>✨ Descripción para la IA (hecha con ${T('vuestras', 'tus')} piezas)</b><p id="rbPrompt"></p><button type="button" id="rbCopiar">📋 Copiar descripción</button></div>
     ${caja('imagen_ia', '4.1', 'Imagen creada con IA', '<div class="pista">' + T('Pegad aquí la imagen (Ctrl+V) o arrastradla.', 'Pega aquí la imagen (Ctrl+V) o arrástrala.') + '</div>', { ph: T('Pegad o arrastrad aquí la imagen…', 'Pega o arrastra aquí la imagen…') })}
-    ${caja('herramienta', '4.2', T('Herramienta usada y descripción que le escribisteis', 'Herramienta usada y descripción que le escribiste'), '', { ph: T('Herramienta y texto (prompt) que usasteis…', 'Herramienta y texto (prompt) que usaste…') })}
+    ${caja('herramienta', '4.2', T('Herramienta usada y descripción que le escribisteis', 'Herramienta usada y prompt que le escribiste'), '', { ph: T('Herramienta y texto (prompt) que usasteis…', 'Herramienta y texto (prompt) que usaste…') })}
   </div></section>
 
   ${IND() ? '' : `<section class="fase f1"><header><h2>Parte 5 · La presentación en Canva</h2></header><div class="cuerpo">
@@ -2185,7 +2185,7 @@ async function pdfTarea(api, C){
   await caja('justificacion', '3.1', 'Justificación del robot');
   banda('Parte 4 · El robot en su entorno, con IA', [226,238,252], COL.sky);
   await caja('imagen_ia', '4.1', 'Imagen creada con IA');
-  await caja('herramienta', '4.2', T('Herramienta usada y descripción que le escribisteis', 'Herramienta usada y descripción que le escribiste'));
+  await caja('herramienta', '4.2', T('Herramienta usada y descripción que le escribisteis', 'Herramienta usada y prompt que le escribiste'));
 }
 
 // ================= ejemplo relleno =================
