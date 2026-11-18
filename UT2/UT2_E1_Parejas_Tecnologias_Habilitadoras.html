@@ -809,19 +809,19 @@ const ENCAJE_GENERAL = ['Wi-Fi', 'Fibra óptica', 'Ordenadores portátiles', 'Vi
   'Mensajería instantánea de grupo', 'Firma electrónica', 'Certificado digital', 'Control horario digital', 'Detector de humo', 'Desfibrilador (DEA)',
   'Impresora multifunción', 'Escáner de documentos', 'Copias de seguridad', 'Antivirus', 'Verificación en dos pasos', 'Gestor de contraseñas'];
 const ENCAJE_CICLOS = {
-  'Pizarra digital interactiva': 'ei', 'Tablets': 'ei as', 'Medidor de CO2': 'ei hb', 'Placas solares': 'ei af', 'Riego automático': 'ei as',
-  'Marcador electrónico': 'ei af as', 'Reloj inteligente': 'ei af as', 'Cámaras de videovigilancia': 'ei af is', 'Videoportero': 'ei is',
-  'Iluminación LED': 'ei', 'Persianas motorizadas': 'ei', 'Termostato programable': 'ei hb is', 'Aula virtual': 'ei as hb is', 'Códigos QR': 'ei af as',
-  'Cámara deportiva': 'af as', 'Pago con el móvil': 'af as hb', 'Datáfono (TPV)': 'af as hb', 'Lector de código de barras': 'af hb', 'Bluetooth': 'af as',
-  'Lector de huella dactilar': 'af hb is', 'Tarjeta de acceso': 'af is', 'Sensor de presencia': 'af', 'Drones': 'as', 'Megafonía': 'as',
-  'Pantalla de avisos digital': 'as', 'Microscopio digital': 'hb', 'Impresión 3D': 'hb', 'Cerradura electrónica': 'is'
+  'Pizarra digital interactiva': 'ei', 'Tablets': 'ei as ce', 'Medidor de CO2': 'ei hb', 'Placas solares': 'ei af', 'Riego automático': 'ei as',
+  'Marcador electrónico': 'ei af as', 'Reloj inteligente': 'ei af as ce', 'Cámaras de videovigilancia': 'ei af is ce', 'Videoportero': 'ei is',
+  'Iluminación LED': 'ei', 'Persianas motorizadas': 'ei', 'Termostato programable': 'ei hb is', 'Aula virtual': 'ei as hb is ce', 'Códigos QR': 'ei af as',
+  'Cámara deportiva': 'af as ce', 'Pago con el móvil': 'af as hb', 'Datáfono (TPV)': 'af as hb', 'Lector de código de barras': 'af hb', 'Bluetooth': 'af as',
+  'Lector de huella dactilar': 'af hb is', 'Tarjeta de acceso': 'af is ce', 'Sensor de presencia': 'af ce', 'Drones': 'as ce', 'Megafonía': 'as ce',
+  'Pantalla de avisos digital': 'as ce', 'Microscopio digital': 'hb', 'Impresión 3D': 'hb', 'Cerradura electrónica': 'is'
 };
 const ENCAJE_NINGUNO = ['Alarma antirrobo', 'Enchufe programable', 'Punto de carga eléctrica', 'Etiquetas antirrobo'];
 // 'si' | 'general' | 'no' para la tecnología n y el ciclo esp
 function encaje(n, esp){
   const nom = TEC[n][0];
   if (ENCAJE_GENERAL.includes(nom)) return 'general';
-  return (ENCAJE_CICLOS[nom] || '').split(' ').includes(String(esp).replace('_sp', '')) ? 'si' : 'no';
+  return (ENCAJE_CICLOS[nom] || '').split(' ').includes(String(esp).replace('_sp', '').replace('rec_', '')) ? 'si' : 'no';
 }
 // Comprobación: cada una de las 50 está clasificada una sola vez
 (() => { const vistas = [...ENCAJE_GENERAL, ...Object.keys(ENCAJE_CICLOS), ...ENCAJE_NINGUNO];

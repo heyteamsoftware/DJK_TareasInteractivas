@@ -660,6 +660,23 @@ const BANCOS_SP = {
     ['Transcripción automática en el móvil', 'Leer en el móvil, en directo, lo que dice la persona que tienes delante.'],
     ['Vídeos signados con código QR', 'Ver en lengua de signos la información de un cartel al escanear su código.'],
     ['Visualizador de documentos', 'Proyectar un documento en grande para leerlo o explicarlo a todo el grupo.']
+  ],
+  // Recuperaciones · Coordinación de Emergencias y Protección Civil. Va el último: así no cambian los números de las tecnologías de los demás bancos
+  ce: [ // centro coordinador 112: sala del 112, jefatura de sala, zona de simulacros y parque de vehículos
+    'Drones', 'Megafonía', 'Pantalla de avisos digital', 'Cámaras de videovigilancia', 'Desfibrilador (DEA)', 'Punto de carga eléctrica', 'Videoconferencia',
+    ['Plataforma de gestión de llamadas del 112', 'Recibir cada llamada, clasificarla y enviar el aviso a bomberos, sanitarios o policía desde un mismo programa.'],
+    ['Localización automática de la llamada', 'Saber desde dónde llama una persona al 112 aunque no sepa decir dónde está.'],
+    ['Pantalla mural de la sala', 'Ver en grande, toda la sala a la vez, el mapa, las cámaras y los recursos de cada emergencia.'],
+    ['Radio digital de emergencias', 'Hablar por una red propia y segura con todos los equipos, aunque se caiga la telefonía.'],
+    ['Localizador GPS de vehículos', 'Ver en el mapa dónde está cada vehículo para enviar el que llega antes.'],
+    ['Tablet embarcada en el vehículo', 'Recibir en el vehículo el aviso, la ruta y los datos de la emergencia.'],
+    ['Cámara térmica', 'Ver a las personas y los focos de calor entre el humo o de noche.'],
+    ['Avisos masivos al móvil de la población', 'Enviar un mensaje de alerta a todos los móviles de una zona en peligro.'],
+    ['Sensores de alerta de incendios forestales', 'Detectar humo o calor en el monte y avisar a la sala en los primeros minutos.'],
+    ['Estación meteorológica conectada', 'Medir el viento, la lluvia y la temperatura y enviar los datos a la sala en directo.'],
+    ['Simulador de realidad virtual', 'Entrenar una emergencia peligrosa sin correr ningún riesgo.'],
+    ['Maniquí de reanimación con sensores', 'Practicar la reanimación y ver en una pantalla si se hace bien.'],
+    ['Grupo electrógeno con arranque automático', 'Dar electricidad al centro en segundos si se va la luz.']
   ]
 };
 for (const [tema, lista] of Object.entries(BANCOS_SP)){
@@ -670,6 +687,53 @@ for (const [tema, lista] of Object.entries(BANCOS_SP)){
     return i;
   });
 }
+
+// ===== Plano del centro coordinador 112 (Recuperaciones · Coordinación de Emergencias y Protección Civil) =====
+// Tema propio del ejercicio semipresencial: se añade aquí, sobre los temas que vienen de la página del plano.
+TEMAS_PLANO.ce = { titulo:'PLANO DEL CENTRO COORDINADOR 112', nombres:{aula:'Sala del 112', despacho:'Jefatura de Sala', patio:'Zona de Simulacros', cancha:'Parque de Vehículos'} };
+temaDe = (antes => c => /Emergencias/i.test(String(c || '')) ? 'ce' : antes(c))(temaDe);
+// Sala del 112: pantalla mural en el muro del fondo y dos filas de puestos de operador con dos monitores
+MUEBLES_AULA.ce = function(add){
+  { let p = poly([[2,0.42,1.3],[16.4,0.42,1.3],[16.4,0.42,4.3],[2,0.42,4.3]],'#f3f3f3',1.6);
+    [5.6,9.2,12.8].forEach(x => p += line([x,0.42,1.3],[x,0.42,4.3],.9)); p += line([2,0.42,2.8],[16.4,0.42,2.8],.9); add(1, p); }
+  [4.6,8.4].forEach(y => [1.8,6.6,11.4].forEach(x => {
+    add(x+1.8+y+.6, box(x,y,0,x+3.6,y+1.2,.95,{sw:1.1}) + box(x+.4,y+.15,.95,x+1.6,y+.3,1.75,{sw:1}) + box(x+2,y+.15,.95,x+3.2,y+.3,1.75,{sw:1}));
+    add(x+1.8+y+2.1, silla(x+1.4,y+1.5));
+  }));
+  add(13.2, maceta(1.2,12));
+};
+// Zona de simulacros: escombros, torre de prácticas, conos, puesto de mando avanzado y helisuperficie
+ZONA_INFERIOR.ce = { suelo(){
+    return poly([[1.5,18,.02],[9.5,18,.02],[9.5,24.5,.02],[1.5,24.5,.02]],'url(#dots)',1.1)
+      + poly(ring(21.5,23,3.4,.02),'none',1.8) + line([20.3,21.4,.03],[20.3,24.6,.03],2.6) + line([22.7,21.4,.03],[22.7,24.6,.03],2.6) + line([20.3,23,.03],[22.7,23,.03],2.6); },
+  objetos(add){
+    // escombros
+    [[2.2,18.8,2.2,1.4,.9],[5,19.2,1.6,2,.5],[3,21.6,2.6,1.2,.6],[6.6,22,1.8,1.6,1.2],[7.4,18.6,1.4,1.2,.4]].forEach(([x,y,a,b,h2]) => add(x+a/2+y+b/2, box(x,y,0,x+a,y+b,h2,{sw:1})));
+    // torre de prácticas con ventanas
+    { let t = box(12.2,21,0,15,23.8,3.6); [.5,2.1].forEach(z => { t += poly([[12.8,23.8,z],[13.6,23.8,z],[13.6,23.8,z+1],[12.8,23.8,z+1]],'#fafafa',1) + poly([[15,21.6,z],[15,22.4,z],[15,22.4,z+1],[15,21.6,z+1]],'#e2e2e2',1); }); add(13.6+22.4, t); }
+    // conos
+    [[10.5,26],[12,27.4],[13.8,26.4],[15.4,27.8]].forEach(([x,y]) => add(x+y, poly([[x-.3,y-.3,0],[x+.3,y-.3,0],[x,y,1]],'#fff',1)+poly([[x+.3,y-.3,0],[x+.3,y+.3,0],[x,y,1]],'#ececec',1)));
+    // puesto de mando avanzado (carpa)
+    { const x=3, y=26; add(x+y+2, poly([[x,y,0],[x+4.5,y,0],[x+2.25,y,2.3]],'#f4f4f4',1.2)+poly([[x+4.5,y,0],[x+4.5,y+3,0],[x+2.25,y+3,2.3],[x+2.25,y,2.3]],'#fff',1.2)); }
+  }, arboles:false };
+// Parque de vehículos: plazas marcadas, tres vehículos de emergencia y punto de carga
+ZONA_DERECHA.ce = { suelo(){
+    let g = poly([[31,1,.02],[45,1,.02],[45,29,.02],[31,29,.02]],'#f6f6f6',1.4);
+    [8,15,22].forEach(y => g += line([31,y,.03],[45,y,.03],1.2,'#111','stroke-dasharray="6 4"'));
+    return g; },
+  objetos(add){
+    const vehiculo = (y, largo, alto) => {
+      const x0 = 32.5, xc = x0 + largo;
+      return box(x0,y+1.7,0,xc+2.4,y+5.3,.45,{sw:1}) + box(x0,y+1.5,.45,xc,y+5.5,alto) + box(xc,y+1.7,.45,xc+2.4,y+5.3,alto*.72)
+        + box(xc+.5,y+2.5,alto*.72,xc+1.1,y+4.5,alto*.72+.3,{sw:.9}) + line([x0+.4,y+5.5,alto*.55],[xc-.4,y+5.5,alto*.55],1.6);
+    };
+    add(38+4.5, vehiculo(1,7.5,3.3));      // autobomba
+    add(38+11.5, vehiculo(8,5,2.7));       // ambulancia
+    add(38+18.5, vehiculo(15,3.4,2));      // vehículo de mando
+    // punto de carga y estantería de material
+    add(44.6+25.5, box(44.2,24.8,0,44.9,25.6,1.8)+box(44.25,25.6,1.1,44.85,25.7,1.6,{sw:.8}));
+    add(38+28.4, box(32,27.6,0,40,28.6,1.4)+line([32,28.6,.7],[40,28.6,.7],1));
+  } };
 
 const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--){ const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
 const toast = msg => aviso(msg);
@@ -753,10 +817,11 @@ function updateFichaZones(){
     const t = f.querySelector('.zt'); t.className = 'zt ' + (z || 'none'); t.textContent = z ? ZONES[z].name : 'Sin colocar en el plano';
   });
 }
-// Montaje (una vez, cuando el bloque ya está en la página)
+// Montaje: una vez por cada vez que se pinta el bloque (al volver de «cambiar datos» la página se pinta de nuevo y hay que montarlo otra vez)
 function init(){
-  if (LISTO || !document.getElementById('plMapHolder')) return;
-  LISTO = true;
+  const hueco = document.getElementById('plMapHolder');
+  if (!hueco || hueco.dataset.listo) return false;
+  hueco.dataset.listo = '1';
   $('#plMapHolder').innerHTML = buildMap();
   const svg = $('#plMap');
   svg.addEventListener('pointermove', e => { if (drag || pinDrag) return; const w = worldFromClient(e.clientX, e.clientY); highlightZone(armed !== null || e.pointerType === 'mouse' ? zoneAt(w.x, w.y) : null); });
@@ -776,12 +841,13 @@ function init(){
     if (!s.placed){ arm(id); return; }
     setTimeout(() => { const g = document.querySelector(`#plPins .pin[data-id="${id}"]`); if (g){ g.classList.add('act'); setTimeout(() => g.classList.remove('act'), 2200); } }, 400);
   });
-  document.addEventListener('input', e => { if (e.target.closest && e.target.closest('#plSec .ed')) renderLegend(); });
+  if (!LISTO){ LISTO = true; document.addEventListener('input', e => { if (e.target.closest && e.target.closest('#plSec .ed')) renderLegend(); }); }
+  return true;
 }
 function alActualizar(){
   const i = document.getElementById('plDato'); if (!i) return;
-  init();
-  if (i.value !== ULT || !state.orden.length){
+  const nuevo = init();
+  if (nuevo || i.value !== ULT || !state.orden.length){
     plCargar(i.value);
     if (EJEMPLO) ULT = i.value; else dirty();   // primera vez: se guarda el orden barajado del banco
     refreshAll(); renderFichas();

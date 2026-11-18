@@ -50,7 +50,7 @@ const COMUN = {
 
 // Solo ciclos semipresenciales (individual)
 const CICLOS = {};
-const ORDEN = ['ei_sp', 'is_sp', 'mc_sp'];
+const ORDEN = ['ei_sp', 'is_sp', 'mc_sp', 'rec_ce', 'rec_is'];   // rec_*: Recuperaciones (hacen los ejercicios semipresenciales)
 for (const k of ORDEN) CICLOS[k] = Object.assign({ semipresencial: true }, D.ciclos[k]);
 
 const dispositivoElegido = () => D.dispositivos.find(d => d.k === campo('dispositivo'));

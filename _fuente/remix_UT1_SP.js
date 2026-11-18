@@ -19,8 +19,8 @@ module.exports = function(){
     ciclos: {}
   };
   const base = [['IT/OT', 'Information Technology / Operation Technology: tecnología de la información y tecnología de operación'], ['IA', 'Inteligencia artificial']];
-  for (const k of ['ei_sp', 'is_sp', 'mc_sp']){
-    const c1 = e1.CICLOS[k], c2 = e2.CICLOS[k], c3 = e3.CICLOS[k];
+  // c1, c2 y c3: el contenido del ciclo en UT1_E1, UT1_E2 y UT1_E3
+  const remix = (c1, c2, c3) => {
     // E3: 3 productos (antes 5) y 5 preguntas frecuentes, una de cada grupo por turnos
     const grupos = c3.f2.grupos.map(g => ({ t: g.t, q: [] })); let n = 0;
     for (let r = 0; n < 5; r++){
@@ -29,7 +29,7 @@ module.exports = function(){
       if (!alguna) break;
     }
     const siglas = [...base]; (c3.siglas || []).forEach(s => { if (!siglas.some(x => x[0] === s[0])) siglas.push(s); });
-    D.ciclos[k] = {
+    return {
       nombre: c1.nombre, centro: c1.centro, pistas: c1.pistas, usuario: c2.usuario,
       contexto: c3.contexto, objetivo: c3.objetivo,
       // 3.1: a cada alumno le toca al azar uno de los 3 tipos de sistema (textos en singular)
@@ -39,6 +39,11 @@ module.exports = function(){
       f2: { intro: c3.f2.intro, grupos: grupos.filter(g => g.q.length) },
       siglas
     };
-  }
+  };
+  for (const k of ['ei_sp', 'is_sp', 'mc_sp']) D.ciclos[k] = remix(e1.CICLOS[k], e2.CICLOS[k], e3.CICLOS[k]);
+  // Recuperaciones: Integración Social copia el contenido de IS SP; Emergencias y Protección Civil tiene el suyo (recuperacion_UT1.js)
+  const ce = require('./recuperacion_UT1.js');
+  D.ciclos.rec_ce = remix(ce, ce, ce);
+  D.ciclos.rec_is = Object.assign(JSON.parse(JSON.stringify(D.ciclos.is_sp)), { nombre: 'Recuperación Integración Social' });
   return D;
 };

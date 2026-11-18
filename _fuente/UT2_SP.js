@@ -49,8 +49,10 @@ const COMUN = {
 };
 
 // Solo ciclos semipresenciales (individual)
-const ORDEN = ['ei_sp', 'is_sp', 'mc_sp'];
-const NOMBRES_SP = { ei_sp: 'Educación Infantil Semipresencial', is_sp: 'Integración Social Semipresencial', mc_sp: 'Mediación Comunicativa Semipresencial' };
+// rec_*: Recuperaciones (hacen los ejercicios semipresenciales). rec_is copia Integración Social; rec_ce tiene contenido propio (centro coordinador 112)
+const ORDEN = ['ei_sp', 'is_sp', 'mc_sp', 'rec_ce', 'rec_is'];
+const NOMBRES_SP = { ei_sp: 'Educación Infantil Semipresencial', is_sp: 'Integración Social Semipresencial', mc_sp: 'Mediación Comunicativa Semipresencial',
+  rec_ce: 'Recuperación Coordinación de Emergencias y Protección Civil', rec_is: 'Recuperación Integración Social' };
 const CICLOS = {};
 for (const k of ORDEN) CICLOS[k] = { nombre: NOMBRES_SP[k], semipresencial: true };
 
@@ -71,25 +73,46 @@ const MC_ROBOT = {
     { id: 'mc_guia',       t: 'piernas', v: 'ruedas',      e: '🦯', n: 'Base de guía',                              d: 'Acompañar y guiar a una persona sordociega por el edificio.' }
   ]
 };
-// Añade a los CICLOS de un ejercicio las tres versiones semipresenciales (EI SP e IS SP copian las presenciales; MC SP usa su contenido)
-function versionesSemi(C, mc, extra){
+// ===== Recuperaciones · Coordinación de Emergencias y Protección Civil: contenido propio para el robot =====
+const CE_ROBOT = {
+  reto: 'Tu centro coordinador de emergencias 112 quiere un robot que apoye a los equipos de intervención y de protección civil: que entre donde es peligroso para las personas, localice a las víctimas, informe a la sala y ayude a avisar y a evacuar a la población.',
+  entorno: 'una zona de intervención en una emergencia en Canarias, con un equipo de bomberos y de protección civil y un puesto de mando avanzado al fondo',
+  piezas: [
+    { id: 'ce_megafono',  t: 'antena',  v: 'baliza',      e: '📢', n: 'Megafonía de avisos a la población',    d: 'Dar a los vecinos mensajes de voz: confinamiento, evacuación o punto de encuentro.' },
+    { id: 'ce_escucha',   t: 'orejas',  v: 'micro',       e: '👂', n: 'Micrófonos de escucha',                 d: 'Oír golpes y voces de personas atrapadas entre los escombros.' },
+    { id: 'ce_radar',     t: 'ojos',    v: 'visor',       e: '🔎', n: 'Radar que detecta la respiración',      d: 'Detectar a una persona atrapada detrás de una pared o bajo los escombros.' },
+    { id: 'ce_mapa',      t: 'torso',   v: 'panel',       e: '🗺️', n: 'Mapa de la emergencia en directo',      d: 'Mostrar dónde están los recursos, las víctimas y las zonas de peligro.' },
+    { id: 'ce_radio',     t: 'torso',   v: 'panel',       e: '📡', n: 'Repetidor de comunicaciones',           d: 'Dar cobertura de radio y de datos donde no llega la señal.' },
+    { id: 'ce_gases',     t: 'torso',   v: 'panel',       e: '☣️', n: 'Detector de gases y humo',              d: 'Medir gases tóxicos, humo y temperatura antes de que entre el equipo.' },
+    { id: 'ce_corte',     t: 'brazo',   v: 'herramienta', e: '🛠️', n: 'Herramienta de corte y separación',     d: 'Abrir puertas o cortar hierros para llegar hasta una persona atrapada.' },
+    { id: 'ce_botiquin',  t: 'brazo',   v: 'mano',        e: '🩹', n: 'Brazo con botiquín y desfibrilador',    d: 'Acercar el material de primeros auxilios a la víctima o al equipo.' },
+    { id: 'ce_arrastre',  t: 'brazo',   v: 'pinza',       e: '🧲', n: 'Pinza para retirar escombros',          d: 'Apartar objetos pesados y despejar el paso con seguridad.' },
+    { id: 'ce_anfibia',   t: 'piernas', v: 'ruedas',      e: '🌊', n: 'Base anfibia',                          d: 'Avanzar por agua, barro y barrancos inundados.' }
+  ]
+};
+// Añade a los CICLOS de un ejercicio las versiones semipresenciales (EI SP e IS SP copian las presenciales; MC SP usa su contenido)
+// y las de Recuperaciones (rec_is copia Integración Social; rec_ce usa su contenido)
+function versionesSemi(C, mc, extra, ce){
   if (!C.ei_sp) C.ei_sp = structuredClone(C.ei);
   if (!C.is_sp) C.is_sp = structuredClone(C.is);
   if (!C.mc_sp) C.mc_sp = structuredClone(mc);
+  if (!C.rec_is) C.rec_is = structuredClone(C.is);
+  if (!C.rec_ce) C.rec_ce = structuredClone(ce);
   for (const k of ORDEN) Object.assign(C[k], { nombre: NOMBRES_SP[k], semipresencial: true }, extra);
 }
 
 // ===== Bloque 1 · UT2_E1 (juego de parejas + las tecnologías en tu profesión) =====
 const E1 = (() => {
 /*__INCLUYE:UT2_E1__*/
-;return { CICLOS, siglas: COMUN.siglas, construirTarea, pdfTarea, listaChecks, alActualizar, progresoPropio, notaD, ejemploCampos, ejemploRespuesta };
+;versionesSemi(CICLOS, CICLOS.mc_sp, null, { centro: 'un centro coordinador de emergencias (112)' });
+return { CICLOS, siglas: COMUN.siglas, construirTarea, pdfTarea, listaChecks, alActualizar, progresoPropio, notaD, ejemploCampos, ejemploRespuesta };
 })();
 
 // ===== Bloque 2 · UT2_E2 (robot), individual y sin Canva =====
 const E2 = (() => {
 /*__INCLUYE:UT2_E2__*/
-;versionesSemi(CICLOS, MC_ROBOT, { individual: true });
-for (const k of ['ei_sp', 'is_sp', 'mc_sp']) CICLOS[k].reto = CICLOS[k].reto.replace(/^Vuestr[oa] /, 'Tu ');   // aquí ORDEN es el del robot
+;versionesSemi(CICLOS, MC_ROBOT, { individual: true }, CE_ROBOT);
+for (const k of ['ei_sp', 'is_sp', 'mc_sp', 'rec_ce', 'rec_is']) CICLOS[k].reto = CICLOS[k].reto.replace(/^Vuestr[oa] /, 'Tu ');   // aquí ORDEN es el del robot
 return { CICLOS, siglas: COMUN.siglas, construirTarea, pdfTarea, listaChecks, alActualizar, progresoPropio, ejemploCampos, ejemploRespuesta };
 })();
 

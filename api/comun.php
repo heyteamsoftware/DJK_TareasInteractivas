@@ -8,7 +8,9 @@ header('X-Content-Type-Options: nosniff');
 
 const DIR_DATOS = '/var/www/djk_datos';
 const CICLOS = ['Acondicionamiento Físico', 'Animación Sociodeportiva', 'Educación Infantil', 'Higiene Bucodental', 'Integración Social',
-    'Educación Infantil Semipresencial', 'Integración Social Semipresencial', 'Mediación Comunicativa Semipresencial'];
+    'Educación Infantil Semipresencial', 'Integración Social Semipresencial', 'Mediación Comunicativa Semipresencial',
+    // Recuperaciones: hacen los ejercicios semipresenciales (UTn_SP)
+    'Recuperación Coordinación de Emergencias y Protección Civil', 'Recuperación Integración Social'];
 
 function salir(int $codigo, array $datos): never
 {
@@ -37,7 +39,8 @@ function bd(): PDO
 // Los ejercicios del motor común mandan la clave del ciclo (hb, is_sp…); el plano (UT2_E4) manda el nombre. Se guarda siempre el nombre.
 const CLAVES_CICLO = ['af' => 'Acondicionamiento Físico', 'as' => 'Animación Sociodeportiva', 'ei' => 'Educación Infantil',
     'hb' => 'Higiene Bucodental', 'is' => 'Integración Social', 'ei_sp' => 'Educación Infantil Semipresencial',
-    'is_sp' => 'Integración Social Semipresencial', 'mc_sp' => 'Mediación Comunicativa Semipresencial'];
+    'is_sp' => 'Integración Social Semipresencial', 'mc_sp' => 'Mediación Comunicativa Semipresencial',
+    'rec_ce' => 'Recuperación Coordinación de Emergencias y Protección Civil', 'rec_is' => 'Recuperación Integración Social'];
 function nombreCiclo(string $c): string { return CLAVES_CICLO[$c] ?? $c; }
 
 // Base de datos de las copias de los borradores (quién ha empezado cada tarea, su código y su trabajo)

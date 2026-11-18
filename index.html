@@ -150,6 +150,7 @@ const LISTA = [
   // Semipresencial: un ejercicio por unidad, «remix» de los de la unidad (solo EI SP, IS SP y MC SP)
   { cod: 'UT1_SP', semi: true, titulo: 'Digitalización de los sectores productivos', ra: 'RA1 · CE a–g · reúne E1, E2 y E3 en versión corta', url: 'SEMI/UT1_SP_Digitalizacion_Sectores_Productivos.html', ejemplo: 'SEMI/UT1_SP_EJEMPLO_relleno.html' },
   { cod: 'UT2_SP', semi: true, titulo: 'Tecnologías habilitadoras digitales', ra: 'RA2 · CE a, b, c, d, e, g · reúne E1, E2 y el plano (E4)', url: 'SEMI/UT2_SP_Tecnologias_Habilitadoras.html', ejemplo: 'SEMI/UT2_SP_EJEMPLO_relleno.html' },
+  { cod: 'UT3_SP', semi: true, titulo: 'La nube en tu profesión', ra: 'RA3 · CE b, e · caso práctico de la nube por especialidad', url: 'SEMI/UT3_SP_La_Nube_En_Tu_Profesion.html', ejemplo: 'SEMI/UT3_SP_EJEMPLO_relleno.html' },
 ];
 const ICO = n => `<svg class="ic" aria-hidden="true"><use href="/DJK/ui/iconos.svg#${n}"/></svg>`;
 const COPIAR = ICO('copiar') + 'Copiar enlace';
@@ -193,7 +194,7 @@ function ejerciciosConocidos(){
 }
 const bloqueado = (ej, c) => DATOS.bloqueos.some(b => b.ejercicio === ej && b.ciclo === c);
 // Qué ejercicios son de cada ciclo: los semipresenciales solo hacen UTn_SP; los presenciales, los UTn_Em
-const esSemi = c => /Semipresencial/i.test(c);
+const esSemi = c => /Semipresencial|^Recuperación/i.test(c);   // Recuperaciones hace los ejercicios semipresenciales
 const aplica = (ej, c) => /_SP$/.test(ej) ? esSemi(c) : !esSemi(c);
 const celdaNo = '<td class="num n0" title="Este ejercicio no es para este ciclo">—</td>';
 function pintarDisponibilidad(){

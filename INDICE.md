@@ -23,6 +23,7 @@
 | UT1_E3 | Sistemas ciberfísicos y digitalización del sector | RA1 | c, d, e, f | AF, AS, EI, HB, IS + EI SP, IS SP, MC SP | A | [UT1_E3](UT1/UT1_E3_Digitalizacion_Sistemas_CiberFisicos.html) | [Ejemplo](UT1/UT1_E3_EJEMPLO_relleno.html) | Sí | Sí | Hecho |
 | UT1_SP | Digitalización de los sectores productivos (semipresencial: reúne E1, E2 y E3 en versión corta) | RA1 | a, b, c, d, e, f, g | Solo EI SP, IS SP y MC SP | A (remix) | [UT1_SP](SEMI/UT1_SP_Digitalizacion_Sectores_Productivos.html) | [Ejemplo](SEMI/UT1_SP_EJEMPLO_relleno.html) | Sí (3·1,5·2·2·1,5) | Sí | Hecho |
 | UT2_SP | Tecnologías habilitadoras digitales (semipresencial: reúne E1, E2 y el plano de E4; sin la app de E3) | RA2 | a, b, c, d, e, g | Solo EI SP, IS SP y MC SP | C (3 ejercicios en bloques) | [UT2_SP](SEMI/UT2_SP_Tecnologias_Habilitadoras.html) | [Ejemplo](SEMI/UT2_SP_EJEMPLO_relleno.html) | Sí (3 · 3,5 · 3,5, provisional) | Sí | Hecho (12-11-2026), pendiente de ajustar |
+| UT3_SP | La nube en tu profesión (adaptación interactiva del antiguo «UT3 · E1 · La nube y…»: buena práctica o riesgo, comparador de planes, montar la nube con carpetas, quién puede ver qué y carpeta real) | RA3 | b, e | EI SP, IS SP, MC SP y Recuperaciones (REC CE, REC IS) | A + partes interactivas propias (`_fuente/UT3_SP.js`) | [UT3_SP](SEMI/UT3_SP_La_Nube_En_Tu_Profesion.html) | [Ejemplo](SEMI/UT3_SP_EJEMPLO_relleno.html) | Sí (2·2·2·2·1·1, rúbrica del Word) | Sí | Hecho (18-11-2026), bloqueado hasta que lo revise el profesor |
 | UT2_E1 | Parejas de tecnologías y su uso en tu profesión (juego + escritura) | RA2 | a | AF, AS, EI, HB, IS + EI SP, IS SP, MC SP | C (juego en el motor común) | [UT2_E1](UT2/UT2_E1_Parejas_Tecnologias_Habilitadoras.html) | [Ejemplo](UT2/UT2_E1_EJEMPLO_relleno.html) | Sí (5 rondas × 2) | Sí | Hecho |
 | UT2_E2 | Diseñad vuestro robot (trabajo en grupo; se entrega la presentación de Canva) | RA2 | b, g | AF, AS, EI, HB, IS | C (constructor por piezas en el motor común) | [UT2_E2](UT2/UT2_E2_Disenad_Vuestro_Robot.html) | [Ejemplo](UT2/UT2_E2_EJEMPLO_relleno.html) | Sí (3·3·2·2) | Sí | Hecho |
 | UT2_E3 | Diseña tu app de realidad virtual o mixta (tras probar las gafas en clase) | RA2 | b, d, g | AF, AS, EI, HB, IS | C (juego + constructor en el motor común) | [UT2_E3](UT2/UT2_E3_App_Realidad_Virtual_Mixta.html) | [Ejemplo](UT2/UT2_E3_EJEMPLO_relleno.html) | Sí (1,5·1·3,5·1,5·2,5) | Sí | Hecho (sustituye al Word «Informe técnico») |
@@ -40,6 +41,8 @@
 | EI SP | Educación Infantil Semipresencial · mismo contenido que EI · trabajo individual |
 | IS SP | Integración Social Semipresencial · mismo contenido que IS · trabajo individual |
 | MC SP | Mediación Comunicativa Semipresencial · contenido propio (personas sordas, sordociegas o con dificultades de comunicación) · trabajo individual |
+| REC CE (`rec_ce`) | Recuperación Coordinación de Emergencias y Protección Civil · Recuperaciones · solo hace los UTn_SP · contenido propio basado en el centro coordinador 112 (CECOES 112 Canarias): `_fuente/recuperacion_UT1.js`, `CE_ROBOT` en `_fuente/UT2_SP.js` y tema `ce` del plano en `_fuente/plano/plano_pegamento.js` |
+| REC IS (`rec_is`) | Recuperación Integración Social · Recuperaciones · solo hace los UTn_SP · mismo contenido que IS SP |
 
 ## Modelos de ejercicio
 

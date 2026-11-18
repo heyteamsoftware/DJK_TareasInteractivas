@@ -1,5 +1,5 @@
 // Genera los HTML de los ejercicios a partir de las piezas comunes.
-// Uso:  node _fuente/construir.js
+// Uso:  node _fuente/construir.js   (todos)  ·  node _fuente/construir.js UT3_SP   (solo uno)
 // Para añadir un ejercicio: crea _fuente/UTn_Em.js con sus datos y añádelo a la lista EJERCICIOS.
 // Semipresencial: un ejercicio por unidad (UTn_SP) en la carpeta SEMI/, «remix» de los ejercicios de la unidad.
 // Opcionales: img (carpeta de imágenes de otro ejercicio) y remix (módulo que saca los datos de los originales).
@@ -16,7 +16,9 @@ const EJERCICIOS = [
   { cod: 'UT2_E3', dir: 'UT2', archivo: 'UT2_E3_App_Realidad_Virtual_Mixta.html', titulo: 'UT2 · E3 · Diseña tu app de realidad virtual o mixta' },
   { cod: 'UT2_E2', dir: 'UT2', archivo: 'UT2_E2_Disenad_Vuestro_Robot.html', titulo: 'UT2 · E2 · Diseñad vuestro robot' },
   // Semipresencial UT2: los 4 ejercicios presenciales en uno (incluye UT2_E1, UT2_E2, UT2_E3 y el plano con /*__INCLUYE:X__*/)
-  { cod: 'UT2_SP', dir: 'SEMI', archivo: 'UT2_SP_Tecnologias_Habilitadoras.html', titulo: 'UT2 · Tecnologías habilitadoras digitales' }
+  { cod: 'UT2_SP', dir: 'SEMI', archivo: 'UT2_SP_Tecnologias_Habilitadoras.html', titulo: 'UT2 · Tecnologías habilitadoras digitales' },
+  // Semipresencial y Recuperaciones UT3: la nube (adaptación interactiva del antiguo «UT3 · E1 · La nube y…»)
+  { cod: 'UT3_SP', dir: 'SEMI', archivo: 'UT3_SP_La_Nube_En_Tu_Profesion.html', titulo: 'UT3 · La nube en tu profesión' }
 ];
 
 // Imágenes del ejercicio: _fuente/img/UTn_Em/*.jpg|png → const IMAGENES = { nombre: dataURL }
@@ -34,7 +36,10 @@ const COLOR_ICONO = { UT1: '%23D97706', UT2: '%230E7F96', UT3: '%237C3AED', UT4:
 const siglasIcono = cod => cod.replace(/^UT(\d)_E?/, 'U$1E').replace('ESP', 'SP');
 
 const cabecera = leer('comun_head.html'), libPDF = leer('jspdf.html'), motor = leer('motor.js');
+// Con un código detrás (node _fuente/construir.js UT3_SP) solo se construye ese ejercicio
+const SOLO = process.argv[2];
 for (const e of EJERCICIOS){
+  if (SOLO && e.cod !== SOLO) continue;
   const unidad = e.cod.split('_')[0].toLowerCase();   // ut1, ut2… → color de la unidad
   // Remix semipresencial: su contenido se saca de los ejercicios originales (ver _fuente/remix_*.js)
   let datos = e.remix ? leer(e.cod + '.js').replace('__DATOS__', () => JSON.stringify(require(path.join(F, e.remix))())) : leer(e.cod + '.js');
