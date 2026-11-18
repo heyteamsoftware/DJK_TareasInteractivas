@@ -202,6 +202,10 @@ const C_ACT = () => CICLOS[ESP] || CICLOS[ORDEN[0]];
 const clasif = () => leeJSON('clasif', {});
 const nube = () => { const o = leeJSON('nube', {}); return { c: Array.isArray(o.c) ? o.c.filter(x => x && x.id).slice(0, MAX_CARPETAS) : [], d: o.d && typeof o.d === 'object' ? o.d : {} }; };
 const permisos = () => leeJSON('permisos', {});
+// partes que puntúan ya entregadas (no se pueden cambiar): { clasif, permisos, r1, aud, r3, pasos, r5 }
+const entregado = () => leeJSON('entregado', {});
+const fin = k => entregado()[k] === true;
+const AVISO_PUNTUA = '<p class="nb-punt">⚠️ <b>Esta parte puntúa y solo tienes un intento.</b> Elige con calma: puedes cambiar lo que quieras hasta que pulses «Entregar respuestas». Entonces se corrige y ya no se puede cambiar.</p>';
 const aciertosClasif = C => { const r = clasif(); return C.situaciones.filter((s, i) => r[i] === s[1]).length; };
 const hechasClasif = C => { const r = clasif(); return C.situaciones.filter((s, i) => r[i] === 'b' || r[i] === 'r').length; };
 const colocados = C => { const n = nube(), ids = new Set(n.c.map(x => x.id)); return C.arch.filter(a => ids.has(n.d[a[0]])).length; };
@@ -259,6 +263,9 @@ document.head.insertAdjacentHTML('beforeend', `<style>
 .nb-fila.mal{border-color:#f1b3c3;background:#fff6f8}
 .nb-fila .fb{grid-column:1/-1;font-size:.86rem;margin:0}
 .nb-comp{min-height:44px;border-radius:10px;border:0;background:var(--lav3);color:#fff;font-weight:700;padding:.4rem 1.1rem;cursor:pointer;margin-top:.7rem}
+.nb-punt{background:#fff6dc;border:1.5px solid #e2b93b;border-radius:10px;padding:.5rem .7rem;margin:.5rem 0;font-size:.92rem;color:#5c4300}
+.nb-juego button:disabled,.nb-juego select:disabled{cursor:default;opacity:1;color:inherit}
+.nb-nota{background:var(--lav);border:1.5px solid var(--lav2);border-radius:14px;padding:.7rem 1rem;margin:1rem 0;font-weight:600}
 .nb-pasos{margin:.4rem 0 .2rem;padding-left:1.2rem}
 @media (max-width:760px){.nb-nube{grid-template-columns:1fr}.nb-fila{grid-template-columns:1fr}.nb-plan tbody th{width:auto}.nb-plan thead{display:none}.nb-plan tr{display:block;border-bottom:1px solid var(--line)}.nb-plan th,.nb-plan td{display:block;border:0;padding:.3rem .5rem}.nb-plan td::before{content:attr(data-t);display:block;font-size:.78rem;color:var(--muted);font-weight:600}}
 </style>`);
@@ -273,10 +280,10 @@ function construirTarea(C){
   let h = '';
   // ===== Parte 1
   h += `<section class="fase f1"><header><h2>Parte 1 · La nube en tu profesión</h2></header><div class="cuerpo">
-    <div class="nb-juego" id="nbClasif">${oculto('clasif')}
+    <div class="nb-juego" id="nbClasif">${oculto('clasif')}${oculto('entregado')}
       <h3><span class="n">1.1</span>¿Buena práctica o riesgo? <span class="nb-marc" id="nbClasifM"></span></h3>
-      <p class="pista">Para calentar: lee cada situación y decide si es una buena práctica o un riesgo. Se corrige al momento y puedes cambiar tu respuesta.</p>
-      <div class="nb-sits" id="nbSits"></div>
+      <p class="pista">Lee cada situación y decide si es una buena práctica o un riesgo.</p>${AVISO_PUNTUA}
+      <div class="nb-sits" id="nbSits"></div><div id="nbClasifA"></div>
     </div>
     ${caja('p1_porque', '1.2', esc(`¿Por qué el uso de herramientas en la nube puede facilitar el trabajo de un ${C.prof}?`), `<div class="pista">${esc(C.piensa1)}</div>`)}
     ${caja('p1_app', '1.3', 'Escribe el nombre de una aplicación o servicio en la nube que pueda ser útil en tu sector y explica para qué la usarías.', '<div class="pista">Tiene que ser una aplicación real que tenga planes de pago (la necesitas para el punto siguiente).</div>')}
@@ -308,9 +315,9 @@ function construirTarea(C){
     ${caja('p2_organiza', '', 'Explica tu organización: por qué has hecho esas carpetas y qué más añadirías (formularios, álbumes, calendarios, materiales descargables…).')}
     <div class="nb-juego" id="nbPerm">${oculto('permisos')}
       <h3><span class="n">2.3</span>¿Quién puede ver qué? <span class="nb-marc" id="nbPermM"></span></h3>
-      <p class="pista">Decide el permiso de cada archivo. Las «personas invitadas» son ${esc(C.dest)}. Cuando termines, pulsa <b>Comprobar</b>.</p>
+      <p class="pista">Decide el permiso de cada archivo. Las «personas invitadas» son ${esc(C.dest)}. </p>${AVISO_PUNTUA}
       <div class="nb-perm" id="nbPermL"></div>
-      <button type="button" class="nb-comp" id="nbComp">Comprobar</button>
+      <div id="nbPermA"></div>
     </div>
     ${caja('p2_ventajas', '2.4', '¿Qué ventajas tiene usar la nube frente a entregar toda la información en papel? Indica al menos tres.')}
     ${caja('p2_precauciones', '2.5', '¿Qué precauciones tomarías para garantizar la privacidad y la confidencialidad?', '<div class="pista">Ten en cuenta contraseñas, permisos de acceso, fotografías, datos personales, información sensible, protección de datos y uso de dispositivos compartidos.</div>')}
@@ -324,18 +331,25 @@ function construirTarea(C){
 }
 
 // ===== pintado de las partes interactivas (cada vez que cambia algo) =====
-let PINT = { clasif: null, nube: null, permisos: null, mision: null }, COMPROBADO = false, ARCH_SEL = null, FOCO = null;
+let PINT = { clasif: null, nube: null, permisos: null, mision: null }, ARCH_SEL = null, FOCO = null;
+// Partes que puntúan: se elige con calma y, al pulsar «Entregar respuestas», se corrigen y quedan fijadas (un solo intento).
+// accionEntrega: el botón de entregar o, si ya se entregó, el candado con el resultado.
+const accionEntrega = (k, resultado) => fin(k)
+  ? `<p class="nb-fbg">🔒 <b>Respuestas entregadas:</b> ${esc(resultado)}. Ya no se pueden cambiar.</p>`
+  : `<div class="nb-acc"><button type="button" class="nb-comp" style="margin-top:0" data-entrega="${k}">Entregar respuestas</button></div>`;
+const bloq = k => fin(k) ? ' disabled' : '';
 function pintarClasif(C){
-  const v = campo('clasif'); if (PINT.clasif === v && document.getElementById('nbSits').children.length) return;
-  PINT.clasif = v; const r = clasif();
+  const v = campo('clasif') + campo('entregado'); if (PINT.clasif === v && document.getElementById('nbSits').children.length) return;
+  PINT.clasif = v; const r = clasif(), f = fin('clasif');
   document.getElementById('nbSits').innerHTML = C.situaciones.map((s, i) => {
-    const e = r[i], hecho = e === 'b' || e === 'r', ok = e === s[1];
-    return `<div class="nb-sit${hecho ? (ok ? ' ok' : ' mal') : ''}"><p>${esc(s[0])}</p>
-      ${hecho ? `<p class="fb">${ok ? '✅ ' : '❌ Piénsalo otra vez. '}${ok ? esc(s[2]) : ''}</p>` : ''}
-      <div class="ops"><button type="button" class="b" data-sit="${i}" data-v="b" aria-pressed="${e === 'b'}">👍 Buena práctica</button>
-      <button type="button" class="r" data-sit="${i}" data-v="r" aria-pressed="${e === 'r'}">⚠️ Riesgo</button></div></div>`;
+    const e = r[i], ok = e === s[1];
+    return `<div class="nb-sit${f ? (ok ? ' ok' : ' mal') : ''}"><p>${esc(s[0])}</p>
+      ${f ? `<p class="fb">${ok ? '✅ ' : `❌ Era ${s[1] === 'b' ? 'una buena práctica' : 'un riesgo'}. `}${esc(s[2])}</p>` : ''}
+      <div class="ops"><button type="button" class="b" data-sit="${i}" data-v="b" aria-pressed="${e === 'b'}"${bloq('clasif')}>👍 Buena práctica</button>
+      <button type="button" class="r" data-sit="${i}" data-v="r" aria-pressed="${e === 'r'}"${bloq('clasif')}>⚠️ Riesgo</button></div></div>`;
   }).join('');
-  document.getElementById('nbClasifM').textContent = `${aciertosClasif(C)} de ${C.situaciones.length} bien`;
+  document.getElementById('nbClasifA').innerHTML = accionEntrega('clasif', `${aciertosClasif(C)} de ${C.situaciones.length} bien`);
+  document.getElementById('nbClasifM').textContent = f ? `${aciertosClasif(C)} de ${C.situaciones.length} puntos` : `${hechasClasif(C)} de ${C.situaciones.length} elegidas`;
 }
 const archHTML = a => `<button type="button" class="nb-arch${ARCH_SEL === a[0] ? ' sel' : ''}" draggable="true" data-arch="${a[0]}" aria-pressed="${ARCH_SEL === a[0]}"><span class="ic">${a[1]}</span><span>${esc(a[2])}</span></button>`;
 function pintarNube(C){
@@ -354,15 +368,16 @@ function pintarNube(C){
   if (FOCO){ const i = document.querySelector(`#nbCarps input[data-nom="${FOCO}"]`); FOCO = null; if (i) i.focus(); }
 }
 function pintarPermisos(C){
-  const v = campo('permisos') + '|' + COMPROBADO; if (PINT.permisos === v && document.getElementById('nbPermL').children.length) return;
-  PINT.permisos = v; const p = permisos();
+  const v = campo('permisos') + campo('entregado'); if (PINT.permisos === v && document.getElementById('nbPermL').children.length) return;
+  PINT.permisos = v; const p = permisos(), f = fin('permisos');
   document.getElementById('nbPermL').innerHTML = C.arch.map(a => {
-    const e = p[a[0]], ok = a[3].includes(e), cls = COMPROBADO && PERMISOS[e] ? (ok ? ' ok' : ' mal') : '';
+    const e = p[a[0]], ok = a[3].includes(e), cls = f ? (ok ? ' ok' : ' mal') : '';
     return `<div class="nb-fila${cls}"><div class="nom"><span>${a[1]}</span><span>${esc(a[2])}</span></div>
-      <select data-perm="${a[0]}" aria-label="Quién puede ver: ${esc(a[2])}"><option value="">Elige quién puede verlo…</option>${Object.entries(PERMISOS).map(([k, t]) => `<option value="${k}"${e === k ? ' selected' : ''}>${esc(t)}</option>`).join('')}</select>
-      ${cls ? `<p class="fb">${ok ? '✅ ' + esc(a[4]) : '❌ Revísalo: piensa quién necesita de verdad este archivo y si tiene que cambiarlo.'}</p>` : ''}</div>`;
+      <select data-perm="${a[0]}" aria-label="Quién puede ver: ${esc(a[2])}"${bloq('permisos')}><option value="">Elige quién puede verlo…</option>${Object.entries(PERMISOS).map(([k, t]) => `<option value="${k}"${e === k ? ' selected' : ''}>${esc(t)}</option>`).join('')}</select>
+      ${f ? `<p class="fb">${ok ? '✅ ' : `❌ Lo correcto: ${esc(a[3].map(k => PERMISOS[k]).join(', o bien: '))}. `}${esc(a[4])}</p>` : ''}</div>`;
   }).join('');
-  document.getElementById('nbPermM').textContent = COMPROBADO ? `${permBien(C)} de ${C.arch.length} bien` : `${permHechos(C)} de ${C.arch.length} decididos`;
+  document.getElementById('nbPermA').innerHTML = accionEntrega('permisos', `${permBien(C)} de ${C.arch.length} bien`);
+  document.getElementById('nbPermM').textContent = f ? `${permBien(C)} de ${C.arch.length} puntos` : `${permHechos(C)} de ${C.arch.length} decididos`;
 }
 function alActualizar(){
   if (!document.getElementById('nbSits')) return;
@@ -378,7 +393,9 @@ function mover(arch, carpeta){
 document.addEventListener('click', e => {
   const t = e.target.closest ? e.target : null; if (!t) return;
   const s = t.closest('#nbSits [data-sit]');
-  if (s){ const r = clasif(); r[s.dataset.sit] = s.dataset.v; pon('clasif', r); alActualizar(); return; }
+  if (s){ if (fin('clasif')) return; const r = clasif(); r[s.dataset.sit] = s.dataset.v; pon('clasif', r); alActualizar(); return; }
+  const en = t.closest('[data-entrega]');
+  if (en){ entregar(en.dataset.entrega); return; }
   if (t.closest('#nbMas')){
     const n = nube(); if (n.c.length >= MAX_CARPETAS) return;
     const id = 'c' + Date.now().toString(36) + Math.floor(Math.random() * 1e3); n.c.push({ id, n: '' }); FOCO = id; pon('nube', n); alActualizar(); return;
@@ -389,14 +406,19 @@ document.addEventListener('click', e => {
   if (a){ ARCH_SEL = ARCH_SEL === a.dataset.arch ? null : a.dataset.arch; alActualizar(); if (ARCH_SEL) aviso('Ahora toca la carpeta donde quieres guardarlo.', 2200); return; }
   const z = t.closest('#nbNube [data-carpeta]');
   if (z && ARCH_SEL && !t.closest('input,button')){ mover(ARCH_SEL, z.dataset.carpeta); return; }
-  if (t.closest('#nbComp')){
-    const C = C_ACT(); if (permHechos(C) < C.arch.length){ aviso('Decide primero el permiso de todos los archivos.'); return; }
-    COMPROBADO = true; alActualizar(); return;
-  }
 });
+// Entregar una parte que puntúa: tiene que estar completa, se avisa de que es definitivo y queda fijada
+async function entregar(k){
+  if (fin(k) || EJEMPLO) return;
+  const C = C_ACT(), falta = faltaPara(k, C);
+  if (falta){ aviso(falta); return; }
+  const si = await pregunta('Vas a entregar estas respuestas. Se corrigen ahora, cuentan para la nota y ya no podrás cambiarlas. ¿Las entregas?', [['Seguir pensando', false], ['Entregar respuestas', true, 'btn-main']]);
+  if (!si) return;
+  const e = entregado(); e[k] = true; pon('entregado', e); alActualizar(); guardarYa();
+}
 document.addEventListener('change', e => {
   const t = e.target;
-  if (t.matches && t.matches('#nbPermL select[data-perm]')){ const p = permisos(); if (t.value) p[t.dataset.perm] = t.value; else delete p[t.dataset.perm]; COMPROBADO = false; pon('permisos', p); alActualizar(); const n = document.querySelector(`#nbPermL select[data-perm="${t.dataset.perm}"]`); if (n) n.focus(); }
+  if (t.matches && t.matches('#nbPermL select[data-perm]')){ if (fin('permisos')) return; const p = permisos(); if (t.value) p[t.dataset.perm] = t.value; else delete p[t.dataset.perm]; pon('permisos', p); alActualizar(); const n = document.querySelector(`#nbPermL select[data-perm="${t.dataset.perm}"]`); if (n) n.focus(); }
 });
 document.addEventListener('input', e => {
   const t = e.target;
@@ -421,9 +443,11 @@ document.addEventListener('drop', e => {
 // ===== PDF =====
 async function pdfTarea(api, C){
   const { banda, P, texto, caja, separador, sitio, COL } = api;
+  { const n = puntosAuto(C);
+    P(`Preguntas autocorregidas (un solo intento): ${n.p} de ${n.t} puntos · nota ${String(notaEntrega()).replace('.', ',')} sobre 10`, { size: 11, b: true, color: COL.lav, tras: 3 }); }
   banda('Parte 1 · La nube en tu profesión', [255,233,220], COL.peach);
   { const r = clasif();
-    sitio(20); P(`1.1 · ¿Buena práctica o riesgo? · ${aciertosClasif(C)} de ${C.situaciones.length} bien`, { size: 11, b: true, color: COL.peach, tras: 2 });
+    sitio(20); P(`1.1 · ¿Buena práctica o riesgo? · ${fin('clasif') ? `${aciertosClasif(C)} de ${C.situaciones.length} puntos` : 'SIN ENTREGAR (0 puntos)'}`, { size: 11, b: true, color: COL.peach, tras: 2 });
     C.situaciones.forEach((s, i) => {
       const e = r[i], resp = e === 'b' ? 'Buena práctica' : e === 'r' ? 'Riesgo' : 'Sin responder';
       texto([{ t: resp + (e ? (e === s[1] ? ' (bien)' : ' (mal)') : '') + ': ', b: true }, { t: s[0] }], { size: 9.5, sang: 3, marca: '·' });
@@ -459,7 +483,7 @@ async function pdfTarea(api, C){
   }
   await caja('p2_organiza', '', 'Explicación de la organización');
   { const p = permisos();
-    sitio(30); P(`2.3 · ¿Quién puede ver qué? · ${permBien(C)} de ${C.arch.length} bien`, { size: 11, b: true, color: COL.sky, tras: 2 });
+    sitio(30); P(`2.3 · ¿Quién puede ver qué? · ${fin('permisos') ? `${permBien(C)} de ${C.arch.length} puntos` : 'SIN ENTREGAR (0 puntos)'}`, { size: 11, b: true, color: COL.sky, tras: 2 });
     C.arch.forEach(a => {
       const e = p[a[0]];
       texto([{ t: a[2] + ': ', b: true }, { t: (PERMISOS[e] || 'Sin decidir') + (PERMISOS[e] ? (a[3].includes(e) ? ' (bien)' : ' (mal)') : '') }], { size: 9.5, sang: 3, marca: '·' });
@@ -480,11 +504,11 @@ function listaChecks(C){
   const cn = carpetasConNombre(), col = colocados(C), na = C.arch.length, ph = permHechos(C);
   const p2 = cuentaLlenas(['p2_herr', 'p2_organiza', 'p2_ventajas', 'p2_precauciones', 'p2_explica', 'p2_otra']);
   return [
-    { ok: hc === ns, t: 'Parte 1 · Buena práctica o riesgo', cuenta: `${hc}/${ns}`, falta: 'Clasifica las 8 situaciones.' },
+    { ok: fin('clasif'), t: 'Parte 1 · Buena práctica o riesgo (puntúa)', cuenta: fin('clasif') ? 'entregado' : `${hc}/${ns}`, falta: 'Clasifica las 8 situaciones y pulsa «Entregar respuestas».' },
     { ok: pl === np, t: 'Parte 1 · Comparación de planes', cuenta: `${pl}/${np}`, falta: 'Rellena todas las casillas del plan más barato y del más caro.' },
     { ok: p1 === 4, t: 'Parte 1 · Preguntas', cuenta: `${p1}/4`, falta: 'Responde a las preguntas 1.2, 1.3, 1.5 y 1.6.' },
     { ok: cn >= MIN_CARPETAS && col === na && cn === nube().c.length, t: 'Parte 2 · Tu nube montada', cuenta: `${cn} carpetas · ${col}/${na} archivos`, falta: `Crea al menos ${MIN_CARPETAS} carpetas, ponles nombre a todas y mete cada archivo en la suya.` },
-    { ok: ph === na, t: 'Parte 2 · Quién puede ver qué', cuenta: `${ph}/${na}`, falta: 'Decide el permiso de todos los archivos.' },
+    { ok: fin('permisos'), t: 'Parte 2 · Quién puede ver qué (puntúa)', cuenta: fin('permisos') ? 'entregado' : `${ph}/${na}`, falta: 'Decide el permiso de todos los archivos y pulsa «Entregar respuestas».' },
     { ok: p2 === 6, t: 'Parte 2 · Preguntas del caso', cuenta: `${p2}/6`, falta: 'Responde a todas las preguntas del caso práctico.' },
     ...misionChecks(C)
   ];
@@ -506,6 +530,7 @@ function ejemploCampos(){
   o.nube = JSON.stringify({ c, d: Object.fromEntries(C.arch.map((a, i) => [a[0], c[i % 3].id])) });
   o.permisos = JSON.stringify(Object.fromEntries(C.arch.map(a => [a[0], a[3][0]])));
   o.mision = misionEjemplo(C);
+  o.entregado = JSON.stringify({ clasif: true, permisos: true, r1: true, aud: true, r3: true, pasos: true, r5: true });
   for (const p of ['b', 'c']) for (const f of PLAN) o[`plan_${p}_${f[0]}`] = `[${f[1]}]`;
   return o;
 }
@@ -521,3 +546,18 @@ function ejemploRespuesta(id){
   if (/^p\d_/.test(id)) return t('[Texto de muestra] Tu respuesta, con tus palabras y aplicada a tu sector.');
   return '';
 }
+
+// ===== No se puede copiar el texto del ejercicio =====
+// El enunciado, las preguntas y las opciones no se pueden seleccionar, copiar, cortar ni arrastrar, y no sale el menú del botón derecho.
+// Sí se puede dentro de las respuestas del alumno (cajas de texto y casillas), que son suyas.
+document.head.insertAdjacentHTML('beforeend', `<style>
+body{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+.ed,.ed *,input,textarea,select{-webkit-user-select:text;user-select:text;-webkit-touch-callout:default}
+@media print{body{display:none}}
+</style>`);
+{ const propio = e => !!(e.target && e.target.closest && e.target.closest('.ed, input, textarea'));
+  for (const ev of ['copy', 'cut', 'contextmenu', 'selectstart'])
+    document.addEventListener(ev, e => { if (!propio(e)) { e.preventDefault(); if (ev === 'copy' || ev === 'cut') aviso('El texto de este ejercicio no se puede copiar.'); } }, true);
+  document.addEventListener('dragstart', e => { if (!propio(e) && !(e.target.closest && e.target.closest('#nbNube [data-arch]'))) e.preventDefault(); }, true);
+  // Ctrl/Cmd + A, C, X, P, S, U fuera de las respuestas
+  document.addEventListener('keydown', e => { if ((e.ctrlKey || e.metaKey) && !e.altKey && ['a', 'c', 'x', 'p', 's', 'u'].includes(String(e.key).toLowerCase()) && !propio(e)) e.preventDefault(); }, true); }
