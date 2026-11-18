@@ -20,11 +20,11 @@ const COMUN = {
     ['b', 'Se han identificado las principales funciones de la cloud/nube (procesamiento de datos, intercambio de información, ejecución de aplicaciones, entre otros).'],
     ['e', 'Se han identificado las ventajas que proporciona la utilización de la cloud/nube en los sistemas conectados.']
   ],
-  objetivo: 'Usar la nube como lo harías en tu trabajo: saber para qué sirve y qué riesgos tiene, elegir una aplicación real y comparar sus planes, organizar y compartir con seguridad la información de una actividad y montar tu propia carpeta en la nube. Es individual.',
+  objetivo: 'Usar la nube como lo harías en tu trabajo: saber para qué sirve y qué riesgos tiene, elegir una aplicación real y comparar sus planes, organizar y compartir con seguridad la información de una actividad y superar una misión de seis retos, con tu propia carpeta en la nube. Es individual.',
   pasos: [
     '<b>Parte 1:</b> clasifica 8 situaciones (buena práctica o riesgo), elige una aplicación en la nube real, compara su plan más barato y el más caro y explica los riesgos.',
     '<b>Parte 2:</b> resuelve el caso práctico de tu sector: monta la nube creando carpetas y metiendo cada archivo en la suya, decide quién puede ver cada archivo y responde a las preguntas.',
-    '<b>Parte 3:</b> crea de verdad esa carpeta en una nube (Google Drive, OneDrive…) con documentos de ejemplo inventados y pega aquí una captura y el enlace.',
+    '<b>Parte 3:</b> supera la misión: seis retos cortos que se corrigen solos (compartir, auditoría, incidente, guía rápida, nombres y tu carpeta real en una nube).',
     'Cita tus fuentes, revisa «Antes de entregar, comprueba», pulsa <b>Descargar PDF</b> y entrega ese PDF en el aula virtual.'
   ],
   normas: [
@@ -36,7 +36,7 @@ const COMUN = {
     ['Parte 1 · Funciones de la nube y riesgos', 'Explicas para qué sirve la nube en tu sector, citas una aplicación real con su coste (plan más barato y más caro, comparados con criterio) y los riesgos de compartir mal la información.', 2],
     ['Parte 2 · Herramienta y organización de la información', 'Eliges una herramienta rápida y segura y la justificas, y organizas la información del caso en carpetas claras, con cada archivo en su sitio.', 2],
     ['Parte 2 · Ventajas y privacidad', 'Indicas ventajas frente al papel y precauciones de privacidad concretas (permisos, contraseñas, fotografías, datos personales), y explicas a una persona sin conocimientos cómo acceder.', 2],
-    ['Parte 3 · Carpeta en la nube', 'Carpeta real con una estructura clara y profesional, documentos de ejemplo bien elegidos y captura o enlace que funciona.', 2],
+    ['Parte 3 · Misión: pon la nube a salvo', 'Resuelves con criterio los retos (compartir, auditoría, incidente, guía, nombres), tu carpeta real tiene una estructura clara con documentos de ejemplo y el enlace funciona, y la reflexión final es propia.', 2],
     ['Presentación y corrección', 'Trabajo ordenado, bien redactado y sin errores.', 1],
     ['Citación de fuentes y uso declarado de IA', 'Citas todas las fuentes y declaras si has usado IA, para qué y cómo has comprobado lo que te dijo.', 1]
   ],
@@ -318,24 +318,13 @@ function construirTarea(C){
     ${caja('p2_otra', '2.7', '¿Qué información útil podrías compartir mediante la nube en otra actividad de tu sector?', `<div class="pista">Por ejemplo: ${esc(C.otras)}</div>`)}
   </div></section>`;
 
-  // ===== Parte 3
-  h += `<section class="fase f3"><header><h2>Parte 3 · Tu carpeta en la nube, de verdad</h2></header><div class="cuerpo">
-    <p>Ahora monta de verdad la nube que has diseñado en el punto 2.2:</p>
-    <ol class="nb-pasos">
-      <li>Entra en una nube (Google Drive, OneDrive u otra) con tu cuenta.</li>
-      <li>Crea una carpeta para la actividad y, dentro, las carpetas que has diseñado.</li>
-      <li>Sube al menos <b>un documento de ejemplo en cada carpeta</b>. Todo inventado: sin datos ni fotos de personas reales.</li>
-      <li>Comparte la carpeta principal como «solo ver» y copia el enlace.</li>
-    </ol>
-    ${caja('p3_captura', '3.1', 'Captura de pantalla de tu carpeta', '<div class="pista">Tiene que verse la estructura de carpetas y algún documento. Pega la imagen, arrástrala o súbela.</div>', { ph: 'Pega o arrastra aquí la captura de tu carpeta…' })}
-    ${caja('p3_enlace', '3.2', 'Enlace a tu carpeta', '<div class="pista">Comprueba que funciona abriéndolo en una ventana privada del navegador.</div>', { corta: true, ph: 'Escribe aquí el enlace de tu carpeta compartida…' })}
-    ${caja('p3_cambios', '3.3', 'Al montarla de verdad, ¿has cambiado algo respecto a tu diseño? ¿Qué permiso le has dado a cada carpeta y por qué?')}
-  </div></section>`;
+  // ===== Parte 3 · la misión (ver _fuente/UT3_SP_mision.js)
+  h += misionHTML(C);
   return h;
 }
 
 // ===== pintado de las partes interactivas (cada vez que cambia algo) =====
-let PINT = { clasif: null, nube: null, permisos: null }, COMPROBADO = false, ARCH_SEL = null, FOCO = null;
+let PINT = { clasif: null, nube: null, permisos: null, mision: null }, COMPROBADO = false, ARCH_SEL = null, FOCO = null;
 function pintarClasif(C){
   const v = campo('clasif'); if (PINT.clasif === v && document.getElementById('nbSits').children.length) return;
   PINT.clasif = v; const r = clasif();
@@ -377,7 +366,7 @@ function pintarPermisos(C){
 }
 function alActualizar(){
   if (!document.getElementById('nbSits')) return;
-  const C = C_ACT(); pintarClasif(C); pintarNube(C); pintarPermisos(C);
+  const C = C_ACT(); pintarClasif(C); pintarNube(C); pintarPermisos(C); pintarMision(C);
 }
 
 // ===== interacciones (una sola vez, delegadas en el documento) =====
@@ -426,6 +415,8 @@ document.addEventListener('drop', e => {
   e.preventDefault(); e.stopPropagation(); document.querySelectorAll('#nbNube .sobre').forEach(x => x.classList.remove('sobre'));
   mover(d.slice(3), z.dataset.carpeta);
 }, true);
+
+/*__INCLUYE:UT3_SP_mision__*/
 
 // ===== PDF =====
 async function pdfTarea(api, C){
@@ -479,10 +470,7 @@ async function pdfTarea(api, C){
   await caja('p2_explica', '2.6', `Explicación sencilla para ${C.quien} que no sabe usar la nube`);
   await caja('p2_otra', '2.7', 'Otra actividad del sector: qué información compartirías');
 
-  banda('Parte 3 · Tu carpeta en la nube', [223,243,234], COL.mint);
-  await caja('p3_captura', '3.1', 'Captura de pantalla de la carpeta');
-  await caja('p3_enlace', '3.2', 'Enlace a la carpeta', { compacta: true });
-  await caja('p3_cambios', '3.3', 'Cambios respecto al diseño y permisos de cada carpeta');
+  await misionPDF(api, C);
 }
 
 // ===== Antes de entregar =====
@@ -491,7 +479,6 @@ function listaChecks(C){
   const p1 = cuentaLlenas(['p1_porque', 'p1_app', 'p1_plan', 'p1_riesgos']);
   const cn = carpetasConNombre(), col = colocados(C), na = C.arch.length, ph = permHechos(C);
   const p2 = cuentaLlenas(['p2_herr', 'p2_organiza', 'p2_ventajas', 'p2_precauciones', 'p2_explica', 'p2_otra']);
-  const p3 = cuentaLlenas(['p3_captura', 'p3_enlace', 'p3_cambios']);
   return [
     { ok: hc === ns, t: 'Parte 1 · Buena práctica o riesgo', cuenta: `${hc}/${ns}`, falta: 'Clasifica las 8 situaciones.' },
     { ok: pl === np, t: 'Parte 1 · Comparación de planes', cuenta: `${pl}/${np}`, falta: 'Rellena todas las casillas del plan más barato y del más caro.' },
@@ -499,14 +486,14 @@ function listaChecks(C){
     { ok: cn >= MIN_CARPETAS && col === na && cn === nube().c.length, t: 'Parte 2 · Tu nube montada', cuenta: `${cn} carpetas · ${col}/${na} archivos`, falta: `Crea al menos ${MIN_CARPETAS} carpetas, ponles nombre a todas y mete cada archivo en la suya.` },
     { ok: ph === na, t: 'Parte 2 · Quién puede ver qué', cuenta: `${ph}/${na}`, falta: 'Decide el permiso de todos los archivos.' },
     { ok: p2 === 6, t: 'Parte 2 · Preguntas del caso', cuenta: `${p2}/6`, falta: 'Responde a todas las preguntas del caso práctico.' },
-    { ok: p3 === 3, t: 'Parte 3 · Carpeta en la nube', cuenta: `${p3}/3`, falta: 'Pega la captura, el enlace y explica los cambios y permisos.' }
+    ...misionChecks(C)
   ];
 }
 // Progreso: las cajas y, además, las partes interactivas
 function progresoPropio(){
   const C = C_ACT(), eds = [...document.querySelectorAll('.ed')], ll = eds.filter(tieneContenido).length;
-  const jt = C.situaciones.length + PLAN.length * 2 + C.arch.length * 2;
-  const jh = hechasClasif(C) + planLlenos() + colocados(C) + permHechos(C);
+  const jt = C.situaciones.length + PLAN.length * 2 + C.arch.length * 2 + misionTotal(C);
+  const jh = hechasClasif(C) + planLlenos() + colocados(C) + permHechos(C) + misionHechas(C);
   const total = eds.length + 4, hechas = ll + (jt ? jh / jt * 4 : 0);
   return { hechas, total, texto: `${Math.round(hechas / total * 100)} % del ejercicio hecho` };
 }
@@ -518,6 +505,7 @@ function ejemploCampos(){
   const c = [{ id: 'c1', n: '[Carpeta 1]' }, { id: 'c2', n: '[Carpeta 2]' }, { id: 'c3', n: '[Carpeta 3]' }];
   o.nube = JSON.stringify({ c, d: Object.fromEntries(C.arch.map((a, i) => [a[0], c[i % 3].id])) });
   o.permisos = JSON.stringify(Object.fromEntries(C.arch.map(a => [a[0], a[3][0]])));
+  o.mision = misionEjemplo(C);
   for (const p of ['b', 'c']) for (const f of PLAN) o[`plan_${p}_${f[0]}`] = `[${f[1]}]`;
   return o;
 }
@@ -528,7 +516,6 @@ function ejemploRespuesta(id){
   if (id === 'p2_ventajas') return '<ul><li>[Ventaja 1]</li><li>[Ventaja 2]</li><li>[Ventaja 3]</li></ul>';
   if (id === 'p2_precauciones') return '<ul><li>[Precaución 1]</li><li>[Precaución 2]</li><li>[Precaución 3]</li></ul>';
   if (id === 'p2_explica') return '<ol><li>[Paso 1]</li><li>[Paso 2]</li><li>[Paso 3]</li></ol>';
-  if (id === 'p3_captura') return t('[Aquí va la captura de pantalla de tu carpeta]');
   if (id === 'p3_enlace') return t('[Enlace a tu carpeta compartida]');
   if (id === 'fuentes') return '<ul><li>[Fuente 1: título · web o institución · fecha · enlace]</li><li>[Página de precios de la aplicación · enlace]</li></ul><p>Uso de IA: [herramienta, para qué la usaste y cómo comprobaste su contenido] o «No he usado IA».</p>';
   if (/^p\d_/.test(id)) return t('[Texto de muestra] Tu respuesta, con tus palabras y aplicada a tu sector.');
