@@ -1174,7 +1174,8 @@ document.addEventListener('input', e => {
 });
 // arrastrar y soltar (ordenador)
 document.addEventListener('dragstart', e => { const a = e.target.closest && e.target.closest('#nbNube [data-arch]'); if (a){ e.dataTransfer.setData('text/plain', 'nb:' + a.dataset.arch); e.dataTransfer.effectAllowed = 'move'; } });
-document.addEventListener('dragover', e => { const z = e.target.closest && e.target.closest('#nbNube [data-carpeta]'); if (z){ e.preventDefault(); document.querySelectorAll('#nbNube .sobre').forEach(x => x.classList.remove('sobre')); z.classList.add('sobre'); } });
+// Sobre una carpeta se permite soltar y el motor común no llega a decir «aquí no» (su dragover solo admite imágenes en las cajas)
+document.addEventListener('dragover', e => { const z = e.target.closest && e.target.closest('#nbNube [data-carpeta]'); if (z){ e.preventDefault(); e.stopImmediatePropagation(); if (e.dataTransfer) e.dataTransfer.dropEffect = 'move'; document.querySelectorAll('#nbNube .sobre').forEach(x => x.classList.remove('sobre')); z.classList.add('sobre'); } });
 document.addEventListener('dragend', () => document.querySelectorAll('#nbNube .sobre').forEach(x => x.classList.remove('sobre')));
 document.addEventListener('drop', e => {
   const z = e.target.closest && e.target.closest('#nbNube [data-carpeta]'); if (!z) return;
