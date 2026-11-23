@@ -18,7 +18,11 @@ const EJERCICIOS = [
   // Semipresencial UT2: los 4 ejercicios presenciales en uno (incluye UT2_E1, UT2_E2, UT2_E3 y el plano con /*__INCLUYE:X__*/)
   { cod: 'UT2_SP', dir: 'SEMI', archivo: 'UT2_SP_Tecnologias_Habilitadoras.html', titulo: 'UT2 · Tecnologías habilitadoras digitales' },
   // Semipresencial y Recuperaciones UT3: la nube (adaptación interactiva del antiguo «UT3 · E1 · La nube y…»)
-  { cod: 'UT3_SP', dir: 'SEMI', archivo: 'UT3_SP_La_Nube_En_Tu_Profesion.html', titulo: 'UT3 · La nube en tu profesión' }
+  { cod: 'UT3_SP', dir: 'SEMI', archivo: 'UT3_SP_La_Nube_En_Tu_Profesion.html', titulo: 'UT3 · La nube en tu profesión' },
+  // Semipresencial y Recuperaciones UT4: pelea por turnos contra una IA + reflexión escrita
+  { cod: 'UT4_SP', dir: 'SEMI', archivo: 'UT4_SP_Humanos_Contra_La_IA.html', titulo: 'UT4 · Humanos contra la IA' },
+  // Semipresencial y Recuperaciones UT5: 24 horas de datos (reloj interactivo de la huella digital + perfil de big data + noticia)
+  { cod: 'UT5_SP', dir: 'SEMI', archivo: 'UT5_SP_24_Horas_De_Datos.html', titulo: 'UT5 · 24 horas de datos' }
 ];
 
 // Imágenes del ejercicio: _fuente/img/UTn_Em/*.jpg|png → const IMAGENES = { nombre: dataURL }

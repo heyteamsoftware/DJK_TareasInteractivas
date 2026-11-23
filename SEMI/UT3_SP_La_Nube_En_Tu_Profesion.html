@@ -746,7 +746,8 @@ const IMAGENES = {};
 // Adaptación interactiva del ejercicio «UT3 · E1 · La nube y…» (Word de EI SEMI e IS SEMI).
 // Partes interactivas (se guardan en campos ocultos, en JSON):
 //   clasif   → 1.1 ¿Buena práctica o riesgo?   { i: 'b' | 'r' }
-//   plan_*   → 1.4 Comparador de planes (campos de texto)
+//   plan_ms_* y plan_gw_* → 1.4 Comparación de los planes de Microsoft 365 y Google Workspace (campos de texto)
+//   (hasta el 23-11-2026 el 1.4 comparaba el plan barato y el caro de una app cualquiera: plan_b_*, plan_c_*; ya no se usan)
 //   nube     → 2.2 Monta tu nube              { c: [{ id, n }], d: { archivo: carpeta } }
 //   permisos → 2.3 ¿Quién puede ver qué?       { archivo: 'A' | 'B' | 'C' | 'D' }
 
@@ -764,20 +765,20 @@ const COMUN = {
     ['b', 'Se han identificado las principales funciones de la cloud/nube (procesamiento de datos, intercambio de información, ejecución de aplicaciones, entre otros).'],
     ['e', 'Se han identificado las ventajas que proporciona la utilización de la cloud/nube en los sistemas conectados.']
   ],
-  objetivo: 'Usar la nube como lo harías en tu trabajo: saber para qué sirve y qué riesgos tiene, elegir una aplicación real y comparar sus planes, organizar y compartir con seguridad la información de una actividad y superar una misión de seis retos, con tu propia carpeta en la nube. Es individual.',
+  objetivo: 'Usar la nube como lo harías en tu trabajo: saber para qué sirve y qué riesgos tiene, elegir una aplicación real, comparar los planes de pago de Microsoft 365 y Google Workspace, organizar y compartir con seguridad la información de una actividad y superar una misión de seis retos, con tu propia carpeta en la nube. Es individual.',
   pasos: [
-    '<b>Parte 1:</b> clasifica 8 situaciones (buena práctica o riesgo), elige una aplicación en la nube real, compara su plan más barato y el más caro y explica los riesgos.',
+    '<b>Parte 1:</b> clasifica 8 situaciones (buena práctica o riesgo), elige una aplicación en la nube real, compara los planes de pago de Microsoft 365 y Google Workspace y explica los riesgos.',
     '<b>Parte 2:</b> resuelve el caso práctico de tu sector: monta la nube creando carpetas y metiendo cada archivo en la suya, decide quién puede ver cada archivo y responde a las preguntas.',
     '<b>Parte 3:</b> supera la misión: seis retos cortos que se corrigen solos (compartir, auditoría, incidente, guía rápida, nombres y tu carpeta real en una nube).',
     'Cita tus fuentes, revisa «Antes de entregar, comprueba», pulsa <b>Descargar PDF</b> y entrega ese PDF en el aula virtual.'
   ],
   normas: [
     'Es individual: escribe con tus palabras (pegar texto está desactivado). Sí puedes pegar, arrastrar o subir imágenes.',
-    'Los precios y los planes tienen que ser reales y de ahora: búscalos en la web oficial de la aplicación y copia el enlace.',
+    'Los precios y los planes tienen que ser reales y de ahora: sácalos de las páginas oficiales de Microsoft 365 y Google Workspace que te enlazamos.',
     'En tu carpeta de la nube no pongas nunca datos ni fotos de personas reales: todo tiene que ser inventado.'
   ],
   criterios: [
-    ['Parte 1 · Funciones de la nube y riesgos', 'Explicas para qué sirve la nube en tu sector, citas una aplicación real con su coste (plan más barato y más caro, comparados con criterio) y los riesgos de compartir mal la información.', 2],
+    ['Parte 1 · Funciones de la nube y riesgos', 'Explicas para qué sirve la nube en tu sector, citas una aplicación real, comparas con datos reales y con criterio los planes de pago de Microsoft 365 y Google Workspace y explicas los riesgos de compartir mal la información.', 2],
     ['Parte 2 · Herramienta y organización de la información', 'Eliges una herramienta rápida y segura y la justificas, y organizas la información del caso en carpetas claras, con cada archivo en su sitio.', 2],
     ['Parte 2 · Ventajas y privacidad', 'Indicas ventajas frente al papel y precauciones de privacidad concretas (permisos, contraseñas, fotografías, datos personales), y explicas a una persona sin conocimientos cómo acceder.', 2],
     ['Parte 3 · Misión: pon la nube a salvo', 'Resuelves con criterio los retos (compartir, auditoría, incidente, guía, nombres), tu carpeta real tiene una estructura clara con documentos de ejemplo y el enlace funciona, y la reflexión final es propia.', 2],
@@ -785,7 +786,7 @@ const COMUN = {
     ['Citación de fuentes y uso declarado de IA', 'Citas todas las fuentes y declaras si has usado IA, para qué y cómo has comprobado lo que te dijo.', 1]
   ],
   numFuentes: '4',
-  fuentes: 'Cita todas las fuentes consultadas (título, web o institución, fecha y enlace), incluida la página de precios de la aplicación, y declara si has usado alguna herramienta de inteligencia artificial: cuál, para qué y cómo has verificado lo que te ha dicho.',
+  fuentes: 'Cita todas las fuentes consultadas (título, web o institución, fecha y enlace), incluidas las páginas de precios que hayas usado, y declara si has usado alguna herramienta de inteligencia artificial: cuál, para qué y cómo has verificado lo que te ha dicho.',
   siglas: [
     ['RGPD', 'Reglamento General de Protección de Datos'],
     ['IA', 'Inteligencia artificial'],
@@ -909,12 +910,20 @@ const PERMISOS = {
   C: 'Personas invitadas con su cuenta · pueden rellenar o editar',
   D: 'Cualquiera que tenga el enlace'
 };
-const PLAN = [   // comparador de planes: filas × (plan más barato, plan más caro)
-  ['nombre', 'Nombre del plan', 'Por ejemplo: Básico'],
-  ['precio', 'Precio', 'Por ejemplo: 5,75 € al mes por persona'],
-  ['espacio', 'Espacio de almacenamiento', 'Por ejemplo: 30 GB por persona'],
-  ['usuarios', 'Cuántas personas pueden usarlo', 'Por ejemplo: hasta 300'],
-  ['extras', 'Qué más incluye', 'Por ejemplo: videollamadas, copias de seguridad…']
+// 1.4 · Comparación de planes: las dos suites en la nube más usadas, con el enlace a su página oficial de precios
+const PLAN_SERV = [
+  ['ms', 'Microsoft 365', 'Outlook, Word, Excel, Teams, OneDrive…', 'https://www.microsoft.com/es-es/microsoft-365/business/microsoft-365-plans-and-pricing'],
+  ['gw', 'Google Workspace', 'Gmail, Documentos, Hojas de cálculo, Meet, Drive…', 'https://workspace.google.com/intl/es/pricing']
+];
+const PLAN_GRUPOS = { b: 'El plan para empresas más barato', c: 'El plan más caro que tenga el precio publicado' };
+const PLAN = [   // filas de la tabla: [campo, qué se pide, ejemplo, grupo]
+  ['bnombre', 'Nombre del plan', 'Nombre del plan', 'b'],
+  ['bprecio', 'Precio por persona y mes', 'Por ejemplo: 0,00 € sin impuestos, pagando un año', 'b'],
+  ['bespacio', 'Almacenamiento en la nube por persona', 'Por ejemplo: 0 GB o 0 TB', 'b'],
+  ['bvideo', 'Personas que caben en una videollamada', 'Por ejemplo: hasta 000', 'b'],
+  ['cnombre', 'Nombre del plan', 'Nombre del plan', 'c'],
+  ['cprecio', 'Precio por persona y mes', 'Por ejemplo: 0,00 € sin impuestos, pagando un año', 'c'],
+  ['cextra', 'Qué tiene que no tenga el barato', 'Una o dos cosas que te parezcan importantes', 'c']
 ];
 const MAX_CARPETAS = 8, MIN_CARPETAS = 3;
 
@@ -956,7 +965,7 @@ const colocados = C => { const n = nube(), ids = new Set(n.c.map(x => x.id)); re
 const carpetasConNombre = () => nube().c.filter(x => String(x.n || '').trim()).length;
 const permHechos = C => { const p = permisos(); return C.arch.filter(a => PERMISOS[p[a[0]]]).length; };
 const permBien = C => { const p = permisos(); return C.arch.filter(a => a[3].includes(p[a[0]])).length; };
-const planLlenos = () => ['b', 'c'].reduce((n, p) => n + PLAN.filter(f => campo(`plan_${p}_${f[0]}`).trim()).length, 0);
+const planLlenos = () => PLAN_SERV.reduce((n, p) => n + PLAN.filter(f => campo(`plan_${p[0]}_${f[0]}`).trim()).length, 0);
 
 document.head.insertAdjacentHTML('beforeend', `<style>
 .nb-juego{background:#fff;border:1px solid var(--line);border-radius:16px;padding:.9rem 1rem;margin:.8rem 0 1.1rem}
@@ -979,6 +988,15 @@ document.head.insertAdjacentHTML('beforeend', `<style>
 .nb-plan thead th{background:var(--lav);color:var(--lav3)}
 .nb-plan tbody th{width:28%;font-weight:600;background:#fffaf5}
 .nb-plan input{width:100%;min-height:44px;border:1.5px solid var(--line);border-radius:9px;padding:.35rem .55rem;font:inherit;background:#fff}
+.nb-plan tr.gr th{background:var(--lav);color:var(--lav3);font-weight:800;font-size:.85rem;text-transform:uppercase;letter-spacing:.03em}
+.nb-plan thead th small{display:block;font-weight:500;font-size:.78rem;color:var(--muted)}
+.nb-enl{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:.6rem;margin:.7rem 0}
+.nb-enl a{display:flex;gap:.6rem;align-items:center;min-height:52px;padding:.55rem .8rem;border:2px solid var(--lav2);border-radius:12px;background:#fff;color:inherit;text-decoration:none;font-weight:700}
+.nb-enl a:hover,.nb-enl a:focus-visible{border-color:var(--lav3);background:var(--lav)}
+.nb-enl a small{display:block;font-weight:500;color:var(--muted);font-size:.82rem}
+.nb-enl a .ic{font-size:1.4rem;flex:none}
+.nb-que{margin:.5rem 0 .2rem;padding-left:1.2rem}
+.nb-que li{margin:.2rem 0}
 .nb-plan input:focus{outline:2px solid var(--lav2);border-color:var(--lav3)}
 .nb-caso{background:var(--lav);border:1px solid var(--lav2);border-radius:14px;padding:.8rem 1rem;margin:.6rem 0}
 .nb-caso b.t{display:block;color:var(--lav3);font-size:.8rem;text-transform:uppercase;letter-spacing:.05em;margin-bottom:.2rem}
@@ -1030,15 +1048,24 @@ function construirTarea(C){
       <div class="nb-sits" id="nbSits"></div><div id="nbClasifA"></div>
     </div>
     ${caja('p1_porque', '1.2', esc(`¿Por qué el uso de herramientas en la nube puede facilitar el trabajo de un ${C.prof}?`), `<div class="pista">${esc(C.piensa1)}</div>`)}
-    ${caja('p1_app', '1.3', 'Escribe el nombre de una aplicación o servicio en la nube que pueda ser útil en tu sector y explica para qué la usarías.', '<div class="pista">Tiene que ser una aplicación real que tenga planes de pago (la necesitas para el punto siguiente).</div>')}
+    ${caja('p1_app', '1.3', 'Escribe el nombre de una aplicación o servicio en la nube que pueda ser útil en tu sector y explica para qué la usarías.', '<div class="pista">Puede ser cualquier aplicación real: para guardar archivos, comunicarse, organizar el trabajo, atender a las personas…</div>')}
     <div class="nb-juego" id="nbPlan">
-      <h3><span class="n">1.4</span>Compara sus planes de pago</h3>
-      <p class="pista">Busca en la web oficial de la aplicación que has elegido el plan de pago <b>más barato</b> y el <b>más caro</b> y rellena la tabla.</p>
-      <table class="nb-plan"><thead><tr><th></th><th>Plan más barato</th><th>Plan más caro</th></tr></thead><tbody>
-      ${PLAN.map(f => `<tr><th scope="row">${esc(f[1])}</th>${['b', 'c'].map(p => `<td data-t="${p === 'b' ? 'Plan más barato' : 'Plan más caro'}"><input type="text" maxlength="120" data-campo="plan_${p}_${f[0]}" placeholder="${esc(f[2])}" aria-label="${esc(f[1] + ' · ' + (p === 'b' ? 'plan más barato' : 'plan más caro'))}"></td>`).join('')}</tr>`).join('')}
+      <h3><span class="n">1.4</span>Compara los planes de pago de Microsoft 365 y Google Workspace</h3>
+      <p>Casi todas las empresas y entidades trabajan en la nube con una de estas dos «suites»: <b>Microsoft 365</b> o <b>Google Workspace</b>. Las dos se pagan <b>por persona y por mes</b> y tienen varios planes: cuanto más caro, más espacio y más funciones. Antes de contratar una, hay que saber comparar.</p>
+      <p><b>Qué tienes que hacer:</b></p>
+      <ol class="nb-que">
+        <li>Abre las <b>dos páginas oficiales de precios</b> con estos botones (se abren en otra pestaña).</li>
+        <li>En cada una, busca el <b>plan para empresas más barato</b> y el <b>más caro que tenga el precio publicado</b> (si en vez de precio pone «contactar con ventas», no vale: coge el anterior).</li>
+        <li>Rellena la tabla con lo que encuentres <b>hoy</b>: los precios cambian a menudo.</li>
+        <li>Fíjate en la letra pequeña: si el precio es <b>sin impuestos</b> y si obliga a <b>pagar un año entero</b>.</li>
+      </ol>
+      <div class="nb-enl">${PLAN_SERV.map(p => `<a href="${p[3]}" target="_blank" rel="noopener"><span class="ic">🔗</span><span>Planes y precios de ${esc(p[1])}<small>${esc(p[2])}</small></span></a>`).join('')}</div>
+      <table class="nb-plan"><thead><tr><th></th>${PLAN_SERV.map(p => `<th>${esc(p[1])}<small>${esc(p[2])}</small></th>`).join('')}</tr></thead><tbody>
+      ${PLAN.map((f, i) => (i === 0 || PLAN[i - 1][3] !== f[3] ? `<tr class="gr"><th colspan="3" scope="colgroup">${esc(PLAN_GRUPOS[f[3]])}</th></tr>` : '')
+        + `<tr><th scope="row">${esc(f[1])}</th>${PLAN_SERV.map(p => `<td data-t="${esc(p[1])}"><input type="text" maxlength="140" data-campo="plan_${p[0]}_${f[0]}" placeholder="${esc(f[2])}" aria-label="${esc(p[1] + ' · ' + PLAN_GRUPOS[f[3]] + ' · ' + f[1])}"></td>`).join('')}</tr>`).join('')}
       </tbody></table>
     </div>
-    ${caja('p1_plan', '1.5', esc(`¿Cuál de los dos planes elegirías para ${C.entidad}? Justifica tu respuesta.`), '<div class="pista">Explica las diferencias que más pesan (precio, espacio, número de personas, seguridad) y pega el enlace de la página de precios.</div>')}
+    ${caja('p1_plan', '1.5', esc(`Con lo que has comparado: ¿qué servicio y qué plan elegirías para ${C.entidad}? Justifica tu respuesta.`), '<div class="pista">Calcula cuánto costaría <b>al mes y al año</b> para un equipo de <b>8 personas</b> con el plan que eliges, y explica qué ha pesado más en tu decisión: el precio, el espacio, las videollamadas, las aplicaciones que el equipo ya conoce, la seguridad…</div>')}
     ${caja('p1_riesgos', '1.6', '¿Qué riesgos puede tener guardar o compartir información en la nube de forma incorrecta?', `<div class="pista">${esc(C.piensa4)}</div>`)}
   </div></section>`;
 
@@ -1438,14 +1465,17 @@ async function pdfTarea(api, C){
     separador(); }
   await caja('p1_porque', '1.2', `¿Por qué la nube puede facilitar el trabajo de un ${C.prof}?`);
   await caja('p1_app', '1.3', 'Aplicación o servicio en la nube y para qué la usarías');
-  sitio(34); P('1.4 · Comparación de planes de pago', { size: 11, b: true, color: COL.peach, tras: 2 });
-  for (const [p, t] of [['b', 'Plan más barato'], ['c', 'Plan más caro']]){
-    P(t, { size: 10, b: true, sang: 3, tras: .6 });
-    for (const f of PLAN) texto([{ t: f[1] + ': ', b: true }, { t: campo(`plan_${p}_${f[0]}`).trim() || '(sin rellenar)' }], { size: 9.5, sang: 7, tras: .4 });
+  sitio(34); P('1.4 · Planes de pago de Microsoft 365 y Google Workspace', { size: 11, b: true, color: COL.peach, tras: 2 });
+  for (const p of PLAN_SERV){
+    sitio(40); P(p[1], { size: 10.5, b: true, sang: 3, tras: .6 });
+    PLAN.forEach((f, i) => {
+      if (i === 0 || PLAN[i - 1][3] !== f[3]) P(PLAN_GRUPOS[f[3]], { size: 9.5, i: true, color: COL.muted, sang: 5, tras: .4 });
+      texto([{ t: f[1] + ': ', b: true }, { t: campo(`plan_${p[0]}_${f[0]}`).trim() || '(sin rellenar)' }], { size: 9.5, sang: 8, tras: .4 });
+    });
     api.y += 1.5;
   }
   separador();
-  await caja('p1_plan', '1.5', `¿Cuál elegirías para ${C.entidad}? Justificación`);
+  await caja('p1_plan', '1.5', `Qué servicio y qué plan elegirías para ${C.entidad}, con su coste y la justificación`);
   await caja('p1_riesgos', '1.6', 'Riesgos de guardar o compartir mal la información en la nube');
 
   banda('Parte 2 · Caso práctico: ' + C.casoT.toLowerCase(), [226,238,252], COL.sky);
@@ -1488,7 +1518,7 @@ function listaChecks(C){
   const p2 = cuentaLlenas(['p2_herr', 'p2_organiza', 'p2_ventajas', 'p2_precauciones', 'p2_explica', 'p2_otra']);
   return [
     { ok: fin('clasif'), t: 'Parte 1 · Buena práctica o riesgo (puntúa)', cuenta: fin('clasif') ? 'entregado' : `${hc}/${ns}`, falta: 'Clasifica las 8 situaciones y pulsa «Entregar respuestas».' },
-    { ok: pl === np, t: 'Parte 1 · Comparación de planes', cuenta: `${pl}/${np}`, falta: 'Rellena todas las casillas del plan más barato y del más caro.' },
+    { ok: pl === np, t: 'Parte 1 · Comparación de planes', cuenta: `${pl}/${np}`, falta: 'Rellena todas las casillas de la tabla de Microsoft 365 y Google Workspace.' },
     { ok: p1 === 4, t: 'Parte 1 · Preguntas', cuenta: `${p1}/4`, falta: 'Responde a las preguntas 1.2, 1.3, 1.5 y 1.6.' },
     { ok: cn >= MIN_CARPETAS && col === na && cn === nube().c.length, t: 'Parte 2 · Tu nube montada', cuenta: `${cn} carpetas · ${col}/${na} archivos`, falta: `Crea al menos ${MIN_CARPETAS} carpetas, ponles nombre a todas y mete cada archivo en la suya.` },
     { ok: fin('permisos'), t: 'Parte 2 · Quién puede ver qué (puntúa)', cuenta: fin('permisos') ? 'entregado' : `${ph}/${na}`, falta: 'Decide el permiso de todos los archivos y pulsa «Entregar respuestas».' },
@@ -1514,18 +1544,18 @@ function ejemploCampos(){
   o.permisos = JSON.stringify(Object.fromEntries(C.arch.map(a => [a[0], a[3][0]])));
   o.mision = misionEjemplo(C);
   o.entregado = JSON.stringify({ clasif: true, permisos: true, r1: true, aud: true, r3: true, pasos: true, r5: true });
-  for (const p of ['b', 'c']) for (const f of PLAN) o[`plan_${p}_${f[0]}`] = `[${f[1]}]`;
+  for (const p of PLAN_SERV) for (const f of PLAN) o[`plan_${p[0]}_${f[0]}`] = `[${f[1]}]`;
   return o;
 }
 function ejemploRespuesta(id){
   const t = s => `<p>${s}</p>`;
   if (id === 'p1_app') return '<p><b>[Nombre de la aplicación]</b></p><p>[Texto de muestra] Para qué la usarías en tu trabajo.</p>';
-  if (id === 'p1_plan') return '<p>[Texto de muestra] Qué plan elegirías y por qué.</p><p>[Enlace a la página de precios]</p>';
+  if (id === 'p1_plan') return '<p><b>[Servicio y plan que eliges]</b></p><p>[Cuánto costaría al mes y al año para 8 personas]</p><p>[Texto de muestra] Por qué lo eliges.</p>';
   if (id === 'p2_ventajas') return '<ul><li>[Ventaja 1]</li><li>[Ventaja 2]</li><li>[Ventaja 3]</li></ul>';
   if (id === 'p2_precauciones') return '<ul><li>[Precaución 1]</li><li>[Precaución 2]</li><li>[Precaución 3]</li></ul>';
   if (id === 'p2_explica') return '<ol><li>[Paso 1]</li><li>[Paso 2]</li><li>[Paso 3]</li></ol>';
   if (id === 'p3_enlace') return t('[Enlace a tu carpeta compartida]');
-  if (id === 'fuentes') return '<ul><li>[Fuente 1: título · web o institución · fecha · enlace]</li><li>[Página de precios de la aplicación · enlace]</li></ul><p>Uso de IA: [herramienta, para qué la usaste y cómo comprobaste su contenido] o «No he usado IA».</p>';
+  if (id === 'fuentes') return '<ul><li>[Fuente 1: título · web o institución · fecha · enlace]</li><li>[Páginas de precios de Microsoft 365 y Google Workspace · fecha en que las consultaste]</li></ul><p>Uso de IA: [herramienta, para qué la usaste y cómo comprobaste su contenido] o «No he usado IA».</p>';
   if (/^p\d_/.test(id)) return t('[Texto de muestra] Tu respuesta, con tus palabras y aplicada a tu sector.');
   return '';
 }
