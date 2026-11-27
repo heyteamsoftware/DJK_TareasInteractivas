@@ -47,7 +47,7 @@ try {
         $id = (int) ($in['id'] ?? 0);
         $codigo = (string) ($in['codigo'] ?? '');
         $ejercicio = (string) ($in['ejercicio'] ?? '');
-        $hayCopia = preg_match('/^[A-HJ-NP-Z2-9]{4}-[A-HJ-NP-Z2-9]{4}-[A-HJ-NP-Z2-9]{2}$/', $codigo) && preg_match('/^UT\d{1,2}_(E\d{1,2}|SP)$/', $ejercicio);
+        $hayCopia = preg_match('/^(\d{4}[BCDFGHJKLMNPRSTVWXYZ]|[A-HJ-NP-Z2-9]{4}-[A-HJ-NP-Z2-9]{4}-[A-HJ-NP-Z2-9]{2})$/', $codigo) && preg_match('/^UT\d{1,2}_(E\d{1,2}|SP)$/', $ejercicio);
         if ($id <= 0 && !$hayCopia) salir(400, ['ok' => false]);
         if ($id > 0) $db->prepare('DELETE FROM entregas WHERE id = ?')->execute([$id]);
         if ($hayCopia) bdb()->prepare('DELETE FROM borradores WHERE codigo = ? AND ejercicio = ?')->execute([$codigo, $ejercicio]);

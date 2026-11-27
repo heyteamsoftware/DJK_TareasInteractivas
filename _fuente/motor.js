@@ -367,9 +367,14 @@ $('#btnGuardar').addEventListener('click', () => { guardar(true); subirCopia(); 
 
 // ================= copia en el servidor (para seguir en otro dispositivo) =================
 // Cada navegador tiene un código de recuperación (sirve para todos los ejercicios); sin él no se puede leer la copia.
-const ALFA = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
 const enServidor = () => !EJEMPLO && /^https?:$/.test(location.protocol);
-function nuevoCodigo(){ const a = new Uint8Array(10); crypto.getRandomValues(a); const s = [...a].map(n => ALFA[n % 32]).join(''); return s.slice(0, 4) + '-' + s.slice(4, 8) + '-' + s.slice(8); }
+// Código tipo matrícula: 4 números y una consonante (sin vocales, Ñ ni Q), p. ej. 4821K. Los antiguos (K7QF-M2XR-9P) siguen valiendo.
+// El servidor comprueba que no lo tenga otro alumno: si ya está cogido, contesta 409 y se saca otro.
+const LETRAS_COD = 'BCDFGHJKLMNPRSTVWXYZ';
+function nuevoCodigo(){ const a = new Uint32Array(2); crypto.getRandomValues(a); return String(a[0] % 10000).padStart(4, '0') + LETRAS_COD[a[1] % LETRAS_COD.length]; }
+// Lo que escribe el alumno para recuperar → código (nuevo o antiguo), o null si no tiene la forma de ninguno
+function leerCodigo(v){ const s = String(v).toUpperCase().replace(/[^A-Z0-9]/g, ''); if (/^\d{4}[A-Z]$/.test(s)) return s; if (s.length === 10) return s.slice(0, 4) + '-' + s.slice(4, 8) + '-' + s.slice(8); return null; }
+const MSG_FORMATO = 'El código tiene 4 números y una letra, por ejemplo 4821K.';
 // Un código por alumno, aunque varios compartan el navegador (vale para todos los ejercicios)
 function codigos(){ try { return JSON.parse(localStorage.getItem('djk_codigos') || '{}') || {}; } catch(e){ return {}; } }
 function miCodigo(){
@@ -382,16 +387,19 @@ function miCodigo(){
   }
   return m[k];
 }
+// El servidor dice que ese código ya es de otro alumno: este alumno pasa a tener uno nuevo
+function cambiarCodigo(){ const m = codigos(); m[normNombre(NOMBRE, APELLIDOS) || '_'] = nuevoCodigo(); try { localStorage.setItem('djk_codigos', JSON.stringify(m)); } catch(e){} }
 function adoptarCodigo(n, a, codigo){ const m = codigos(); m[normNombre(n, a) || '_'] = codigo; try { localStorage.setItem('djk_codigos', JSON.stringify(m)); } catch(e){} }
 let nubeSucia = false, nubeEnCurso = false;
 function cuerpoCopia(){ return JSON.stringify({ codigo: miCodigo(), ejercicio: COMUN.codigo, ciclo: ESP, nombre: NOMBRE, apellidos: APELLIDOS, datos: JSON.stringify(regActual()) }); }
-async function subirCopia(){
+async function subirCopia(intento = 0){
   if (!ESP || !enServidor() || nubeEnCurso || $('#editor').classList.contains('hidden')) return;
   nubeEnCurso = true; nubeSucia = false;
   const n = $('#nube'), cuerpo = cuerpoCopia();
   if (cuerpo.length > 6 * 1024 * 1024){ n.textContent = '⚠ Tienes demasiadas imágenes para la copia en el servidor: reduce alguna.'; nubeEnCurso = false; return; }
   try {
     const r = await fetch('../api/borradores.php', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: cuerpo });
+    if (r.status === 409 && intento < 3){ cambiarCodigo(); nubeEnCurso = false; return subirCopia(intento + 1); }
     if (!r.ok) throw new Error(r.status);
     n.textContent = '☁ Última copia en el servidor: ' + new Date().toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
   } catch(e){ nubeSucia = true; n.textContent = '☁ Sin conexión: se copiará al servidor cuando vuelva.'; }
@@ -420,9 +428,8 @@ $('#codCopiar').addEventListener('click', async () => { try { await navigator.cl
 // Recuperar el trabajo desde otro dispositivo con el código
 $('#btnRecuperar').addEventListener('click', async () => {
   const err = $('#errRec'); err.textContent = '';
-  const s = $('#codRec').value.toUpperCase().replace(/[^A-Z0-9]/g, '');
-  if (s.length !== 10){ err.textContent = 'El código tiene 10 letras y números, por ejemplo K7QF-M2XR-9P.'; return; }
-  const codigo = s.slice(0, 4) + '-' + s.slice(4, 8) + '-' + s.slice(8);
+  const codigo = leerCodigo($('#codRec').value);
+  if (!codigo){ err.textContent = MSG_FORMATO; return; }
   try {
     const r = await fetch('../api/borradores.php?codigo=' + encodeURIComponent(codigo) + '&ejercicio=' + COMUN.codigo, { cache: 'no-store' });
     const d = await r.json();
