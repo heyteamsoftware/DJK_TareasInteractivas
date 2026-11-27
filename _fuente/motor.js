@@ -665,7 +665,8 @@ async function descargarPDF(){
     UT2: { claro: [223,243,234], medio: [159,216,189], osc: [47,125,92] },
     UT3: { claro: [255,233,220], medio: [246,191,158], osc: [163,83,42] },
     UT4: { claro: [226,238,252], medio: [169,200,239], osc: [47,95,152] },
-    UT5: { claro: [253,228,234], medio: [241,179,195], osc: [163,60,88] }
+    UT5: { claro: [253,228,234], medio: [241,179,195], osc: [163,60,88] },
+    UT6: { claro: [255,241,214], medio: [240,200,120], osc: [150,98,10] }
   };
   const TEMA = TEMAS[COMUN.codigo.split('_')[0]] || TEMAS.UT1;
   const COL = { ink: [47,45,58], muted: [108,104,120], lav: TEMA.osc, sky: [47,95,152], mint: [47,125,92], peach: [163,83,42] };

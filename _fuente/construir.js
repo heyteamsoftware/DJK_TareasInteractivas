@@ -22,7 +22,9 @@ const EJERCICIOS = [
   // Semipresencial y Recuperaciones UT4: pelea por turnos contra una IA + reflexión escrita
   { cod: 'UT4_SP', dir: 'SEMI', archivo: 'UT4_SP_Humanos_Contra_La_IA.html', titulo: 'UT4 · Humanos contra la IA' },
   // Semipresencial y Recuperaciones UT5: 24 horas de datos (reloj interactivo de la huella digital + perfil de big data + noticia)
-  { cod: 'UT5_SP', dir: 'SEMI', archivo: 'UT5_SP_24_Horas_De_Datos.html', titulo: 'UT5 · 24 horas de datos' }
+  { cod: 'UT5_SP', dir: 'SEMI', archivo: 'UT5_SP_24_Horas_De_Datos.html', titulo: 'UT5 · 24 horas de datos' },
+  // Semipresencial y Recuperaciones UT6: de analógico a digital (proyecto de transformación digital en 8 fases, vale por toda la unidad)
+  { cod: 'UT6_SP', dir: 'SEMI', archivo: 'UT6_SP_De_Analogico_A_Digital.html', titulo: 'UT6 · De analógico a digital' }
 ];
 
 // Imágenes del ejercicio: _fuente/img/UTn_Em/*.jpg|png → const IMAGENES = { nombre: dataURL }
@@ -36,7 +38,7 @@ function imagenes(cod){
 }
 
 // Icono de la pestaña: siglas UXEX (U1E1, U1SP…) sobre el color de la unidad, igual que en las pruebas de DJK_Unidades
-const COLOR_ICONO = { UT1: '%23D97706', UT2: '%230E7F96', UT3: '%237C3AED', UT4: '%23BE185D', UT5: '%2315803D' };
+const COLOR_ICONO = { UT1: '%23D97706', UT2: '%230E7F96', UT3: '%237C3AED', UT4: '%23BE185D', UT5: '%2315803D', UT6: '%23B45309' };
 const siglasIcono = cod => cod.replace(/^UT(\d)_E?/, 'U$1E').replace('ESP', 'SP');
 
 const cabecera = leer('comun_head.html'), libPDF = leer('jspdf.html'), motor = leer('motor.js');
