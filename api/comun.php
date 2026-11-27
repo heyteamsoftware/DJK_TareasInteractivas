@@ -31,6 +31,12 @@ function bd(): PDO
     // Nota de los ejercicios que se corrigen solos (p. ej. UT2_E1): la de la última vez que se descargó el PDF
     $cols = array_column($db->query('PRAGMA table_info(entregas)')->fetchAll(PDO::FETCH_ASSOC), 'name');
     if (!in_array('nota', $cols, true)) $db->exec('ALTER TABLE entregas ADD COLUMN nota REAL');
+    // Tiempo de trabajo en segundos (ejercicios con COMUN.cronometro): el que llevaba la última vez que descargó el PDF
+    if (!in_array('segundos', $cols, true)) $db->exec('ALTER TABLE entregas ADD COLUMN segundos INTEGER');
+    // Copia del PDF en el servidor (api/pdf.php): nombre con el que lo descargó, tamaño y hora (el archivo está en DIR_DATOS/pdfs)
+    if (!in_array('pdf', $cols, true)) $db->exec('ALTER TABLE entregas ADD COLUMN pdf TEXT');
+    if (!in_array('pdf_bytes', $cols, true)) $db->exec('ALTER TABLE entregas ADD COLUMN pdf_bytes INTEGER');
+    if (!in_array('pdf_hora', $cols, true)) $db->exec('ALTER TABLE entregas ADD COLUMN pdf_hora INTEGER');
     $db->exec('CREATE TABLE IF NOT EXISTS limites (tipo TEXT NOT NULL, ip TEXT NOT NULL, hora INTEGER NOT NULL)');
     $db->exec('CREATE TABLE IF NOT EXISTS bloqueos (ejercicio TEXT NOT NULL, ciclo TEXT NOT NULL, desde INTEGER NOT NULL, PRIMARY KEY (ejercicio, ciclo))');
     return $db;
@@ -56,7 +62,17 @@ function bdb(): PDO
     // Bases creadas antes de existir la columna «creado»
     $cols = array_column($db->query('PRAGMA table_info(borradores)')->fetchAll(PDO::FETCH_ASSOC), 'name');
     if (!in_array('creado', $cols, true)) $db->exec('ALTER TABLE borradores ADD COLUMN creado INTEGER NOT NULL DEFAULT 0');
+    // Tiempo de trabajo que lleva (segundos), sacado del borrador (reg.tiempo) en los ejercicios con COMUN.cronometro
+    if (!in_array('segundos', $cols, true)) $db->exec('ALTER TABLE borradores ADD COLUMN segundos INTEGER');
     return $db;
+}
+
+// Segundos de trabajo válidos (entero de 0 a 1000 horas) o null
+const MAX_SEGUNDOS = 1000 * 3600;
+function segundos_validos(mixed $v): ?int
+{
+    if (is_float($v) && $v == floor($v)) $v = (int) $v;
+    return is_int($v) && $v >= 0 && $v <= MAX_SEGUNDOS ? $v : null;
 }
 
 // Cuenta un intento de este tipo para esta IP; devuelve false si se ha pasado del tope en la ventana de tiempo.

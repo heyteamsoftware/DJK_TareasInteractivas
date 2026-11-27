@@ -126,6 +126,9 @@ a.enlace:hover{background:var(--dk-s3);border-color:var(--dk-line3)}
     <section class="card"><h2>Resumen</h2><div class="tabla"><table id="tResumen"></table></div>
       <p class="nota">En cada casilla: personas que han descargado el PDF / personas que han empezado la tarea.</p></section>
 
+    <section class="card"><h2>Tiempo de trabajo</h2><div id="tiempos"></div>
+      <p class="nota">Tiempo medio que han tardado quienes han descargado el PDF (entre paréntesis, cuántos son); pasa el ratón por una casilla para ver el más corto, el más largo y los que aún no han terminado. Cuenta solo el rato con la tarea a la vista y con actividad (escribir, mover el ratón, tocar la pantalla): si la dejan abierta sin tocarla más de 3 minutos, o en otra pestaña, deja de contar. El alumnado no lo ve. Solo lo llevan los ejercicios con cronómetro (desde UT6_SP); el tiempo de cada alumno está en el detalle.</p></section>
+
     <section class="card">
       <h2>Detalle</h2>
       <div class="chips" id="chipsCiclo" role="tablist" aria-label="Ciclo"></div>
@@ -222,10 +225,11 @@ const claveAl = (ej, c, n, a) => ej + '|' + c + '|' + (n + '|' + a).toLowerCase(
 let PERSONAS = [];
 function unirPersonas(){
   const m = new Map();
-  const nueva = x => ({ ejercicio: x.ejercicio, ciclo: x.ciclo, nombre: x.nombre, apellidos: x.apellidos, codigos: [], creado: 0, actualizado: 0, entrega: null });
+  const nueva = x => ({ ejercicio: x.ejercicio, ciclo: x.ciclo, nombre: x.nombre, apellidos: x.apellidos, codigos: [], creado: 0, actualizado: 0, entrega: null, segCopia: null });
   for (const i of (DATOS.iniciados || [])){
     const k = claveAl(i.ejercicio, i.ciclo, i.nombre, i.apellidos), p = m.get(k) || nueva(i);
     p.codigos.push(i.codigo);
+    if (i.segundos != null) p.segCopia = Math.max(p.segCopia || 0, +i.segundos);
     const ini = +i.creado || +i.actualizado; p.creado = p.creado ? Math.min(p.creado, ini) : ini;
     p.actualizado = Math.max(p.actualizado, +i.actualizado); m.set(k, p);
   }
@@ -237,6 +241,29 @@ function unirPersonas(){
   PERSONAS = [...m.values()].sort((a, b) => (a.apellidos + a.nombre).localeCompare(b.apellidos + b.nombre, 'es'));
   PERSONAS.forEach((p, i) => p.i = i);
 }
+// ---------- Tiempo de trabajo (ejercicios con COMUN.cronometro) ----------
+// El de su entrega (lo que llevaba al descargar el PDF por última vez) o, si aún no lo ha descargado, el de su copia en el servidor
+const tiempoDe = p => p.entrega && p.entrega.segundos != null ? +p.entrega.segundos : p.segCopia;
+const fmtTiempo = s => { const tm = Math.round((+s || 0) / 60); if (tm < 1) return '< 1 min'; const h = Math.floor(tm / 60), m = tm % 60; return h ? `${h} h ${String(m).padStart(2, '0')} min` : `${m} min`; };
+// Media de quienes han descargado el PDF; aparte, cuántos van sin terminar
+function mediaTiempo(l){
+  const t = l.filter(p => p.entrega && tiempoDe(p) > 0).map(tiempoDe), curso = l.filter(p => !p.entrega && tiempoDe(p) > 0).map(tiempoDe);
+  return { n: t.length, media: t.length ? t.reduce((a, b) => a + b, 0) / t.length : 0, min: t.length ? Math.min(...t) : 0, max: t.length ? Math.max(...t) : 0,
+    curso: curso.length, mediaCurso: curso.length ? curso.reduce((a, b) => a + b, 0) / curso.length : 0 };
+}
+const txtMedia = r => r.n ? `${fmtTiempo(r.media)} de media (${r.n} con PDF)` : 'nadie con PDF todavía';
+const tituloMedia = r => [r.n ? `Media ${fmtTiempo(r.media)} de ${r.n} con PDF · más corto ${fmtTiempo(r.min)} · más largo ${fmtTiempo(r.max)}` : 'Nadie ha descargado el PDF todavía',
+  r.curso ? `${r.curso} sin terminar (llevan ${fmtTiempo(r.mediaCurso)} de media)` : ''].filter(Boolean).join('\n');
+function pintarTiempos(ejs){
+  const conT = ejs.filter(ej => PERSONAS.some(p => p.ejercicio === ej && tiempoDe(p) != null));
+  if (!conT.length){ $('#tiempos').innerHTML = '<p class="vacio">Todavía no hay tiempos: aparecerán cuando el alumnado empiece una tarea con cronómetro.</p>'; return; }
+  const celda = l => { const r = mediaTiempo(l); if (!r.n && !r.curso) return '<td class="num n0">—</td>';
+    return `<td class="num" title="${esc(tituloMedia(r))}">${r.n ? `<b>${fmtTiempo(r.media)}</b> <small class="n0">(${r.n})</small>` : `<span class="n0">${r.curso} sin terminar</span>`}</td>`; };
+  const ciclos = DATOS.ciclos.filter(c => conT.some(ej => aplica(ej, c) || PERSONAS.some(p => p.ejercicio === ej && p.ciclo === c)));
+  $('#tiempos').innerHTML = `<div class="tabla"><table><thead><tr><th>Ciclo</th>${conT.map(ej => `<th class="num" title="${esc(EJERCICIOS[ej] || ej)}">${esc(ej.replace('_', ' · '))}</th>`).join('')}</tr></thead>
+    <tbody>${ciclos.map(c => `<tr><td>${esc(c)}</td>${conT.map(ej => !aplica(ej, c) && !PERSONAS.some(p => p.ejercicio === ej && p.ciclo === c) ? celdaNo : celda(PERSONAS.filter(p => p.ejercicio === ej && p.ciclo === c))).join('')}</tr>`).join('')}
+    <tr><td><b>Todos los ciclos</b></td>${conT.map(ej => celda(PERSONAS.filter(p => p.ejercicio === ej))).join('')}</tr></tbody></table></div>`;
+}
 function pintar(){
   pintarLista(); pintarVisitas();
   pintarDisponibilidad();
@@ -245,6 +272,7 @@ function pintar(){
   const de = (c, ej) => PERSONAS.filter(p => p.ciclo === c && (!ej || p.ejercicio === ej));
   $('#tResumen').innerHTML = `<thead><tr><th>Ciclo</th>${ejs.map(ej => `<th class="num" title="${esc(EJERCICIOS[ej] || ej)}">${esc(ej.replace('_', ' · '))}</th>`).join('')}</tr></thead>
     <tbody>${DATOS.ciclos.map(c => `<tr><td>${esc(c)}</td>${ejs.map(ej => { const l = de(c, ej), pdf = l.filter(p => p.entrega).length; if (!aplica(ej, c) && !l.length) return celdaNo; return `<td class="num${l.length ? '' : ' n0'}" title="${pdf} con PDF de ${l.length} que la han empezado">${l.length ? pdf + ' / ' + l.length : '0'}</td>`; }).join('')}</tr>`).join('')}</tbody>`;
+  pintarTiempos(ejs);
   $('#chipsCiclo').innerHTML = DATOS.ciclos.map(c => `<button class="chip${c === CICLO ? ' on' : ''}" role="tab" aria-selected="${c === CICLO}" data-ciclo="${esc(c)}">${esc(c)}<small>${de(c).length}</small></button>`).join('');
   const q = $('#buscar').value.trim().toLowerCase();
   let h = '';
@@ -252,8 +280,10 @@ function pintar(){
     if (!aplica(ej, CICLO) && !de(CICLO, ej).length) continue;   // ejercicio que no es de este ciclo y sin nadie
     const filas = de(CICLO, ej).filter(p => !q || (p.nombre + ' ' + p.apellidos + ' ' + p.codigos.join(' ')).toLowerCase().includes(q));
     const pdf = filas.filter(p => p.entrega).length;
-    h += `<h3 class="ej">${esc(EJERCICIOS[ej] || ej)} · ${filas.length} ${filas.length === 1 ? 'persona' : 'personas'} · ${pdf} con PDF</h3>`;
-    h += filas.length ? `<div class="tabla"><table><thead><tr><th>Apellidos</th><th>Nombre</th><th>Código</th><th>Empezó</th><th>Última actividad</th><th>PDF descargado</th><th></th></tr></thead><tbody>${filas.map(p => `<tr><td>${esc(p.apellidos)}</td><td>${esc(p.nombre)}</td><td class="cod">${p.codigos.length ? p.codigos.map(esc).join('<br>') : '<span class="n0">—</span>'}</td><td>${p.creado ? fecha(p.creado) : '—'}</td><td>${p.actualizado ? fecha(p.actualizado) : '—'}</td><td>${p.entrega ? `${ICO('check')} ${fecha(p.entrega.ultima)}${+p.entrega.veces > 1 ? ` (${p.entrega.veces} veces)` : ''}` : '<span class="n0">No</span>'}</td><td class="num"><button class="borrar" data-borrar="${p.i}" title="Borrar el registro de ${esc(p.nombre + ' ' + p.apellidos)}" aria-label="Borrar el registro de ${esc(p.nombre + ' ' + p.apellidos)}">${ICO('papelera')}</button></td></tr>`).join('')}</tbody></table></div>`
+    // Ejercicio con cronómetro: columna con el tiempo de cada alumno y la media en el título
+    const conT = de(CICLO, ej).some(p => tiempoDe(p) != null);
+    h += `<h3 class="ej">${esc(EJERCICIOS[ej] || ej)} · ${filas.length} ${filas.length === 1 ? 'persona' : 'personas'} · ${pdf} con PDF${conT ? ` · tiempo: ${esc(txtMedia(mediaTiempo(de(CICLO, ej))))}` : ''}</h3>`;
+    h += filas.length ? `<div class="tabla"><table><thead><tr><th>Apellidos</th><th>Nombre</th><th>Código</th><th>Empezó</th><th>Última actividad</th><th>PDF descargado</th>${conT ? '<th class="num" title="Tiempo de trabajo: el que llevaba al descargar el PDF o, si aún no lo ha descargado, el que lleva">Tiempo</th>' : ''}<th></th></tr></thead><tbody>${filas.map(p => `<tr><td>${esc(p.apellidos)}</td><td>${esc(p.nombre)}</td><td class="cod">${p.codigos.length ? p.codigos.map(esc).join('<br>') : '<span class="n0">—</span>'}</td><td>${p.creado ? fecha(p.creado) : '—'}</td><td>${p.actualizado ? fecha(p.actualizado) : '—'}</td><td>${p.entrega ? `${ICO('check')} ${fecha(p.entrega.ultima)}${+p.entrega.veces > 1 ? ` (${p.entrega.veces} veces)` : ''}` : '<span class="n0">No</span>'}</td>${conT ? `<td class="num">${tiempoDe(p) != null ? `${fmtTiempo(tiempoDe(p))}${p.entrega ? '' : '<br><small class="n0">sin terminar</small>'}` : '<span class="n0">—</span>'}</td>` : ''}<td class="num"><button class="borrar" data-borrar="${p.i}" title="Borrar el registro de ${esc(p.nombre + ' ' + p.apellidos)}" aria-label="Borrar el registro de ${esc(p.nombre + ' ' + p.apellidos)}">${ICO('papelera')}</button></td></tr>`).join('')}</tbody></table></div>`
       : `<p class="vacio">${q ? 'Nadie coincide con la búsqueda.' : 'Todavía nadie de este ciclo ha empezado esta tarea.'}</p>`;
   }
   $('#detalle').innerHTML = h;

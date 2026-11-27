@@ -2,3 +2,7 @@
 <Files "comun.php">
   Require all denied
 </Files>
+# pdf.php recibe el PDF entero del alumno (con fotos puede pasar de los 8 MB por defecto de PHP)
+<Files "pdf.php">
+  php_value post_max_size 48M
+</Files>

@@ -13,6 +13,7 @@
 
 const COMUN = {
   codigo: 'UT6_SP',
+  cronometro: true,   // tiempo de trabajo interno de cada alumno (lo ve solo el profesor)
   corto: 'UT6 · Semipresencial',
   asignatura: 'Digitalización aplicada a los sectores productivos (DJK)',
   unidad: 'UT6 · Proyecto de transformación digital',

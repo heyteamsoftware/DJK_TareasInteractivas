@@ -35,10 +35,11 @@ try {
     if (empty($_SESSION['admin'])) salir(401, ['ok' => false, 'error' => 'Sin sesión.']);
 
     if ($accion === 'datos') {
-        $filas = $db->query('SELECT id, ejercicio, ciclo, nombre, apellidos, primera, ultima, veces FROM entregas ORDER BY ciclo, ejercicio, apellidos, nombre')->fetchAll(PDO::FETCH_ASSOC);
+        // segundos: tiempo de trabajo (solo los ejercicios con cronómetro; si no, vacío)
+        $filas = $db->query('SELECT id, ejercicio, ciclo, nombre, apellidos, primera, ultima, veces, segundos FROM entregas ORDER BY ciclo, ejercicio, apellidos, nombre')->fetchAll(PDO::FETCH_ASSOC);
         $bloqueos = $db->query('SELECT ejercicio, ciclo FROM bloqueos')->fetchAll(PDO::FETCH_ASSOC);
-        // Quién ha empezado cada tarea (sin sus respuestas): código, inicio y última actividad
-        $iniciados = bdb()->query('SELECT codigo, ejercicio, ciclo, nombre, apellidos, creado, actualizado FROM borradores ORDER BY ciclo, ejercicio, apellidos, nombre')->fetchAll(PDO::FETCH_ASSOC);
+        // Quién ha empezado cada tarea (sin sus respuestas): código, inicio, última actividad y tiempo que lleva
+        $iniciados = bdb()->query('SELECT codigo, ejercicio, ciclo, nombre, apellidos, creado, actualizado, segundos FROM borradores ORDER BY ciclo, ejercicio, apellidos, nombre')->fetchAll(PDO::FETCH_ASSOC);
         salir(200, ['ok' => true, 'ciclos' => CICLOS, 'entregas' => $filas, 'iniciados' => $iniciados, 'bloqueos' => $bloqueos]);
     }
     // POST {"accion":"borrar","id":123,"codigo":"…","ejercicio":"UT1_E1"}

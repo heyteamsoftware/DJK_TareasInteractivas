@@ -45,7 +45,11 @@ try {
     $nombre = mb_substr(trim((string) ($in['nombre'] ?? '')), 0, 60);
     $apellidos = mb_substr(trim((string) ($in['apellidos'] ?? '')), 0, 80);
     $datos = (string) ($in['datos'] ?? '');
-    if (!$codigoValido($codigo) || !$ejercicioValido($ejercicio) || $datos === '' || !is_array(json_decode($datos, true))) salir(400, ['ok' => false]);
+    $reg = $datos === '' ? null : json_decode($datos, true);
+    if (!$codigoValido($codigo) || !$ejercicioValido($ejercicio) || !is_array($reg)) salir(400, ['ok' => false]);
+    // Tiempo de trabajo que lleva (solo los ejercicios con COMUN.cronometro lo guardan en el borrador)
+    $segundos = segundos_validos($reg['tiempo'] ?? null);
+    unset($reg);
 
     // El centro comparte IP: tope holgado (una clase entera guardando cada minuto)
     if (!limite(bd(), 'copia', 5000, 3600)) salir(429, ['ok' => false]);
@@ -59,10 +63,10 @@ try {
         $q->execute([$codigo]);
         if ($q->fetchColumn() !== $alumno) salir(409, ['ok' => false, 'repetido' => true]);
     }
-    $db->prepare('INSERT INTO borradores (codigo, ejercicio, ciclo, nombre, apellidos, datos, actualizado, creado) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+    $db->prepare('INSERT INTO borradores (codigo, ejercicio, ciclo, nombre, apellidos, datos, actualizado, creado, segundos) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
         ON CONFLICT(codigo, ejercicio) DO UPDATE SET ciclo = excluded.ciclo, nombre = excluded.nombre, apellidos = excluded.apellidos,
-        datos = excluded.datos, actualizado = excluded.actualizado')
-       ->execute([$codigo, $ejercicio, $ciclo, $nombre, $apellidos, $datos, time(), time()]);
+        datos = excluded.datos, actualizado = excluded.actualizado, segundos = excluded.segundos')
+       ->execute([$codigo, $ejercicio, $ciclo, $nombre, $apellidos, $datos, time(), time(), $segundos]);
     if (random_int(1, 200) === 1) $db->prepare('DELETE FROM borradores WHERE actualizado < ?')->execute([time() - 365 * 86400]);
     salir(200, ['ok' => true]);
 } catch (Throwable $e) {

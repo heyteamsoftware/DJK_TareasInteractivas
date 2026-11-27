@@ -12,6 +12,7 @@
 //   ejemploCampos()       → { nombre: valor } de los campos a elegir en el ejemplo
 //   progresoPropio()      → { hechas, total, texto } si el ejercicio no mide el progreso por cajas (p. ej. un juego)
 //   COMUN.sinFuentes      → true si el ejercicio no lleva la sección «Fuentes y uso de IA»
+//   COMUN.cronometro      → true para medir el tiempo de trabajo de cada alumno (interno: el alumno no lo ve; lo ve el profesor)
 // Campos a elegir (radio, select, texto) con atributo data-campo="nombre" se guardan solos.
 // =====================================================================
 
@@ -237,6 +238,7 @@ function abrirEditor(esp, nombre, apellidos, reg){
   // Borradores con la clave antigua (solo ciclo): se pasan a la clave del alumno
   if (reg && reg.clave && reg.clave !== CLAVE && !EJEMPLO){ const vieja = reg.clave; reg.clave = CLAVE; guardarReg(reg).then(() => borrarClave(vieja)); }
   LEIDOS = Object.assign({}, reg && reg.leidos);
+  iniciarCrono(reg);
   if (EJEMPLO) TICKS().forEach(k => LEIDOS[k] = true);
   construir(esp);
   if (reg && reg.cajas) document.querySelectorAll('.ed').forEach(ed => { if (reg.cajas[ed.dataset.id] != null) ed.innerHTML = limpiarHTML(reg.cajas[ed.dataset.id]); });
@@ -343,7 +345,33 @@ function actualizarProgreso(){
 let tGuardar = null;
 function regActual(){
   const cajas = {}; document.querySelectorAll('.ed').forEach(ed => { cajas[ed.dataset.id] = tieneContenido(ed) ? ed.innerHTML : ''; });
-  return { clave: CLAVE, esp: ESP, nombre: NOMBRE, apellidos: APELLIDOS, fecha: Date.now(), leidos: LEIDOS, campos: leerCampos(), cajas };
+  const reg = { clave: CLAVE, esp: ESP, nombre: NOMBRE, apellidos: APELLIDOS, fecha: Date.now(), leidos: LEIDOS, campos: leerCampos(), cajas };
+  if (CRONO) reg.tiempo = segundosCrono();
+  return reg;
+}
+
+// ================= cronómetro interno (solo si el ejercicio pone COMUN.cronometro: true) =================
+// Cuenta el tiempo de trabajo real: con la tarea abierta, la pestaña a la vista y algo de actividad (tecla, ratón, dedo,
+// rueda o scroll) en los últimos CRONO_PAUSA segundos. Con la página olvidada o en otra pestaña no cuenta.
+// El alumno no lo ve. Se guarda en el borrador (reg.tiempo, en segundos), así que sigue al recargar y al recuperar con el
+// código en otro dispositivo; llega al servidor con la copia (api/borradores.php) y con la entrega del PDF (api/entregas.php).
+const CRONO = !!COMUN.cronometro && !EJEMPLO;
+const CRONO_PAUSA = 180;
+let cronoMs = 0, cronoActivo = 0, cronoMarcado = 0, cronoUltimo = Date.now();
+const segundosCrono = () => Math.round(cronoMs / 1000);
+function iniciarCrono(reg){ if (!CRONO) return; cronoMs = reg && +reg.tiempo > 0 ? Math.round(+reg.tiempo) * 1000 : 0; cronoMarcado = cronoMs; cronoActivo = cronoUltimo = Date.now(); }
+if (CRONO){
+  const marcar = () => { cronoActivo = Date.now(); };
+  ['keydown', 'pointerdown', 'pointermove', 'wheel', 'scroll', 'input', 'touchstart'].forEach(t => document.addEventListener(t, marcar, { passive: true, capture: true }));
+  document.addEventListener('visibilitychange', () => { cronoUltimo = Date.now(); if (document.visibilityState === 'visible') marcar(); });
+  setInterval(() => {
+    const ahora = Date.now(), dt = Math.min(ahora - cronoUltimo, 10000);   // tope: si el ordenador se ha dormido, ese hueco no cuenta
+    cronoUltimo = ahora;
+    if (!ESP || document.visibilityState !== 'visible' || $('#editor').classList.contains('hidden') || ahora - cronoActivo > CRONO_PAUSA * 1000) return;
+    cronoMs += dt;
+    // Cada 2 minutos de trabajo, la copia del servidor se pone al día aunque no haya cambios (así el profesor ve el tiempo de quien no ha terminado)
+    if (cronoMs - cronoMarcado >= 120000){ cronoMarcado = cronoMs; nubeSucia = true; }
+  }, 5000);
 }
 async function guardar(manual){
   if (!ESP) return;
@@ -800,19 +828,63 @@ async function descargarPDF(){
   const limpio = s => s.normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^A-Za-z0-9]+/g, '_').replace(/^_|_$/g, '');
   const nombreArchivo = `${COMUN.codigo}_${limpio(APELLIDOS) || 'Apellidos'}_${limpio(NOMBRE) || 'Nombre'}.pdf`;
   if (window.__PDF_PRUEBA) { window.__PDF_PRUEBA(doc, nombreArchivo); return; }
+  if (PDF_CON_TOQUE){
+    // iPhone / iPad / navegador dentro de una app: la descarga directa falla sin avisar (el toque del alumno ya «caducó»
+    // mientras se generaba el PDF). Se abre con un botón: primero el PDF del propio navegador y, en cuanto el servidor
+    // tiene la copia, un enlace normal a ella (funciona también dentro de las apps).
+    abrirPdfModal(doc, nombreArchivo);
+    registrarEntrega().then(() => copiaPDF(doc, nombreArchivo)).then(enlace => pdfModalListo(enlace));
+    return;
+  }
   doc.save(nombreArchivo);
-  registrarEntrega();
+  registrarEntrega().then(() => copiaPDF(doc, nombreArchivo));
   aviso('PDF generado. Revisa tu carpeta de descargas.');
+}
+// iOS (Safari, Chrome… todos usan WebKit; el iPad moderno se presenta como Mac con pantalla táctil) y navegadores
+// incrustados en apps (Instagram, WhatsApp, Classroom, Gmail…), donde la descarga de un PDF generado no funciona.
+const PDF_CON_TOQUE = (() => {
+  const ua = navigator.userAgent || '';
+  const ios = /iPad|iPhone|iPod/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  const enApp = /FBAN|FBAV|Instagram|Line\/|WhatsApp|GSA\/|; wv\)|Snapchat|TikTok|musical_ly/i.test(ua);
+  return ios || enApp;
+})();
+let pdfBlobUrl = '';
+function abrirPdfModal(doc, nombreArchivo){
+  if (pdfBlobUrl) URL.revokeObjectURL(pdfBlobUrl);
+  pdfBlobUrl = URL.createObjectURL(new File([doc.output('blob')], nombreArchivo, { type: 'application/pdf' }));
+  const a = $('#pdfAbrir');
+  a.href = pdfBlobUrl; a.setAttribute('download', nombreArchivo); a.removeAttribute('aria-disabled');
+  $('#pdfEstado').textContent = /^https?:$/.test(location.protocol) && !EJEMPLO ? 'Preparando también una copia segura…' : '';
+  $('#pdfModal').classList.remove('hidden'); a.focus();
+}
+// Con la copia en el servidor, el botón abre ese enlace (una dirección normal: Safari y las apps lo abren siempre)
+function pdfModalListo(enlace){
+  if (!enlace){ $('#pdfEstado').textContent = ''; return; }
+  const a = $('#pdfAbrir'); a.href = enlace; a.removeAttribute('download');
+  $('#pdfEstado').textContent = 'Si no se abre, comprueba tu conexión a internet y vuelve a pulsar «Abrir mi PDF».';
+}
+$('#pdfCerrar').addEventListener('click', () => $('#pdfModal').classList.add('hidden'));
+$('#pdfAbrir').addEventListener('click', () => setTimeout(() => aviso('Si no ves el PDF, vuelve a esta pestaña y pulsa de nuevo «Abrir mi PDF».'), 1500));
+// Copia del mismo PDF en el servidor (api/pdf.php): el profesor lo descarga desde el panel, uno a uno o todos en un ZIP.
+// Se guarda solo el de la última descarga de cada alumno. Devuelve el enlace temporal para abrirlo (iPhone) o '' si falla.
+function copiaPDF(doc, nombreArchivo){
+  try {
+    if (EJEMPLO || !/^https?:$/.test(location.protocol)) return Promise.resolve('');
+    const datos = { ejercicio: COMUN.codigo, ciclo: CICLOS[ESP].nombre, nombre: NOMBRE, apellidos: APELLIDOS, archivo: nombreArchivo };
+    return fetch('../api/pdf.php', { method: 'POST', headers: { 'Content-Type': 'application/pdf', 'X-Entrega': encodeURIComponent(JSON.stringify(datos)) },
+      body: doc.output('blob') }).then(r => r.ok ? r.json() : {}).then(j => j && j.enlace ? new URL('../api/' + j.enlace, location.href).href : '').catch(() => '');
+  } catch(e){ return Promise.resolve(''); }
 }
 // Avisa al profesor de que este alumno ha descargado su PDF (solo nombre, apellidos, ciclo y ejercicio).
 // Los ejercicios que se corrigen solos definen notaEntrega() (nota sobre 10) y la nota va también: el profesor la descarga en Excel.
+// Con COMUN.cronometro va también el tiempo de trabajo que lleva (segundos): el profesor ve el de cada alumno y la media.
 function registrarEntrega(){
   try {
-    if (EJEMPLO || !/^https?:$/.test(location.protocol)) return;
-    fetch('../api/entregas.php', { method: 'POST', keepalive: true, headers: { 'Content-Type': 'application/json' },
+    if (EJEMPLO || !/^https?:$/.test(location.protocol)) return Promise.resolve();
+    return fetch('../api/entregas.php', { method: 'POST', keepalive: true, headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(Object.assign({ ejercicio: COMUN.codigo, ciclo: CICLOS[ESP].nombre, nombre: NOMBRE, apellidos: APELLIDOS },
-        typeof notaEntrega === 'function' ? { nota: notaEntrega() } : {})) }).catch(() => {});
-  } catch(e){}
+        typeof notaEntrega === 'function' ? { nota: notaEntrega() } : {}, CRONO ? { segundos: segundosCrono() } : {})) }).catch(() => {});
+  } catch(e){ return Promise.resolve(); }
 }
 $('#btnPDF').addEventListener('click', intentarPDF);
 

@@ -180,6 +180,17 @@ ul.cod-info li{margin:.3rem 0}
 .cod-nube{font-size:.85rem;color:var(--muted);margin:0 0 .8rem!important}
 #modal .box p,#pendModal .box p{margin:0 0 1rem}
 #modal .bts,#pendModal .bts,#codModal .bts{display:flex;flex-wrap:wrap;gap:.5rem;justify-content:flex-end}
+/* iPhone / iPad y navegadores dentro de apps: el PDF se abre con un toque del alumno (si no, Safari bloquea la descarga sin avisar) */
+#pdfModal{position:fixed;inset:0;z-index:72;background:rgba(47,45,58,.35);display:flex;align-items:center;justify-content:center;padding:1rem}
+#pdfModal .box{background:#fff;border-radius:var(--r);padding:1.2rem;max-width:460px;width:100%;max-height:calc(100vh - 2rem);overflow:auto}
+#pdfModal h2{margin:0 0 .4rem;font-size:1.2rem}
+#pdfModal .box p{margin:0 0 .8rem}
+#pdfModal ol{margin:0 0 .9rem;padding-left:1.3rem}
+#pdfModal li{margin:.25rem 0}
+#pdfModal .bts{display:flex;flex-wrap:wrap;gap:.5rem;justify-content:flex-end}
+#pdfModal a.btn-main{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:.45rem 1rem;border-radius:10px;text-decoration:none;font-size:1.05rem}
+#pdfModal a.btn-main[aria-disabled="true"]{opacity:.55;pointer-events:none}
+#pdfEstado{font-size:.88rem;color:var(--muted)}
 ul.pend{list-style:none;margin:0 0 1rem;padding:0;display:grid;gap:.4rem}
 ul.pend li{background:var(--peach);border-radius:10px;padding:.5rem .75rem;font-size:.93rem;font-weight:600}
 ul.pend li small{display:block;color:var(--muted);font-weight:400}
@@ -339,5 +350,15 @@ ul.checks li.ok i{background:var(--mint3);border-color:var(--mint3)}
   <p>Puedes descargar el PDF igualmente, pero esto es lo que te falta:</p>
   <ul class="pend" id="pendList"></ul>
   <div class="bts"><button id="pendGo">Descargar igualmente</button><button class="btn-main" id="pendBack">Seguir trabajando</button></div>
+</div></div>
+<div id="pdfModal" class="hidden" role="dialog" aria-modal="true" aria-labelledby="pdfTit"><div class="box">
+  <h2 id="pdfTit">📄 Tu PDF está listo</h2>
+  <ol>
+    <li>Pulsa <b>Abrir mi PDF</b>.</li>
+    <li>Cuando se vea el PDF, toca <b>Compartir</b> (el cuadrado con la flecha hacia arriba).</li>
+    <li>Elige <b>Guardar en Archivos</b>, o envíalo directamente a donde tengas que entregarlo.</li>
+  </ol>
+  <p id="pdfEstado"></p>
+  <div class="bts"><button id="pdfCerrar">Cerrar</button><a class="btn-main" id="pdfAbrir" href="#" target="_blank" rel="noopener">Abrir mi PDF</a></div>
 </div></div>
 
